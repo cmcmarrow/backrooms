@@ -20,6 +20,7 @@ valid on initialization and on most class methods.
 
 from typing import Optional, Dict, List, Tuple
 from .name import is_name
+from functools import wraps
 
 
 class BackRoomsError(Exception):
@@ -45,7 +46,11 @@ class BackRoomsError(Exception):
 
     @classmethod
     def bad_backrooms_entity(cls, entity: object) -> "BackRoomsError":
-        return cls(f"Not a valid Backrooms cord: `{entity}`!")
+        return cls(f"Not a valid Backrooms entity: `{entity}`!")
+
+    @classmethod
+    def bad_backrooms_entities(cls, entities: object) -> "BackRoomsError":
+        return cls(f"Not a valid Backrooms entities: `{entities}`!")
 
     @classmethod
     def bad_hallways(cls, hallways: object) -> "BackRoomsError":
@@ -77,7 +82,9 @@ class BackRoomsError(Exception):
 
 
 class BackRoomsCord:
-    def __init__(self, x: int = 0, y: int = 0):
+    def __init__(self,
+                 x: int = 0,
+                 y: int = 0):
         self._x = x
         self._y = y
 
@@ -162,146 +169,6 @@ class Hallway:
         return self._cord.x
 
 
-class Backrooms:
-    def __init__(self,
-                 name: Optional[str] = None,
-                 raw_backroom: Optional[Dict[BackRoomsCord, str]] = None,
-                 hallways: Optional[List[Hallway]] = None):
-        self._name = name
-
-        # check for valid name
-        if self._name is not None and (not isinstance(self._name, str) or not is_name(self._name)):
-            raise BackRoomsError.bad_backroom_name(self._name)
-
-        if raw_backroom is None:
-            raw_backroom = {}
-
-        self._raw_backroom = raw_backroom
-
-        # check for valid raw backroom
-        if not isinstance(self._raw_backroom, dict):
-            raise BackRoomsError.bad_raw_backrooms(self._raw_backroom)
-
-        for cord, entity in self._raw_backroom.items():
-            # check if cord is valid
-            if not isinstance(cord, BackRoomsCord):
-                raise BackRoomsError.bad_backrooms_cord(cord)
-
-            # check if entity is valid
-            if not isinstance(entity, str) or len(entity) != 1:
-                raise BackRoomsError.bad_backrooms_entity(entity)
-
-        if hallways is None:
-            hallways = []
-
-        self._hallways = hallways
-
-        # check if hallways is valid
-        if not isinstance(self._hallways, list) or len(set([h.x for h in self._hallways])) != len(self._hallways):
-            raise BackRoomsError.bad_hallways(self._hallways)
-
-        for hallway in hallways:
-            # check if hallway is valid
-            if not isinstance(hallway, Hallway):
-                raise BackRoomsError.bad_hallway(hallway)
-
-        # sort hallways in reverse max to min
-        self._hallways.sort(reverse=True)
-
-        # make hallways immutable
-        self._hallways = tuple(self._hallways)
-
-        self._hallway_names = {}
-        self._hallway_ids = {}
-        self._hallways_set = set(self._hallways)
-
-        for hallway_id, hallway in enumerate(hallways):
-            self._hallway_names[hallway] = hallway.name
-            self._hallway_ids[hallway] = hallway_id
-
-    @property
-    def name(self) -> str:
-        return self._name
-
-    @property
-    def hallways(self) -> Tuple[Hallway]:
-        return self._hallways
-
-    def write(self,
-              cord: BackRoomsCord,
-              entity: str):
-
-        # check if cord is valid
-        if not isinstance(cord, BackRoomsCord):
-            raise BackRoomsError.bad_backrooms_cord(cord)
-
-        # check if entity is valid
-        if not isinstance(entity, str) or len(entity) != 1:
-            raise BackRoomsError.bad_backrooms_entity(entity)
-
-        self._raw_backroom[cord] = entity
-
-    def read(self,
-             cord: BackRoomsCord) -> str:
-        # check if cord is valid
-        if not isinstance(cord, BackRoomsCord):
-            raise BackRoomsError.bad_backrooms_cord(cord)
-        return self._raw_backroom.get(cord, " ")
-
-    def is_vacant(self, cord: BackRoomsCord) -> bool:
-        # check if cord is valid
-        if not isinstance(cord, BackRoomsCord):
-            raise BackRoomsError.bad_backrooms_cord(cord)
-        return cord in self._raw_backroom
-
-    def get_hallway(self, name: str) -> Optional[Hallway]:
-        # check for valid name
-        if not isinstance(name, str) or not is_name(name):
-            raise BackRoomsError.bad_hallway_name(name)
-        return self._hallway_names.get(name)
-
-    def get_higher_hallway(self, hallway: Hallway) -> Optional[Hallway]:
-        # check if hallway is valid
-        if not isinstance(hallway, Hallway):
-            raise BackRoomsError.bad_hallway(hallway)
-
-        # check that hallway is being used in theses backrooms
-        if hallway not in self._hallways_set:
-            raise BackRoomsError.unidentified_hallway(hallway)
-        hallway_id = self._hallway_ids[hallway]
-        if hallway_id == 0:
-            return
-        return self.hallways[hallway_id - 1]
-
-    def get_lower_hallway(self, hallway: Hallway) -> Optional[Hallway]:
-        # check if hallway is valid
-        if not isinstance(hallway, Hallway):
-            raise BackRoomsError.bad_hallway(hallway)
-
-        # check that hallway is being used in theses backrooms
-        if hallway not in self._hallways_set:
-            raise BackRoomsError.unidentified_hallway(hallway)
-        hallway_id = self._hallway_ids[hallway]
-        if hallway_id + 1 == len(self.hallways):
-            return
-        return self.hallways[hallway_id + 1]
-
-    def in_hallway(self, cord: BackRoomsCord) -> Optional[Hallway]:
-        # check if cord is valid
-        if not isinstance(cord, BackRoomsCord):
-            raise BackRoomsError.bad_backrooms_cord(cord)
-
-        # TODO make this faster
-        in_hallway = None
-        for hallway in self.hallways:
-            if cord.x <= hallway.x:
-                in_hallway = hallway
-        return in_hallway
-
-    def parallel(self, name: Optional[str] = None) -> "Backrooms":
-        return self.__class__(name=name, raw_backroom=self._raw_backroom.copy(), hallways=list(self.hallways))
-
-
 class BackRoomsCordD(BackRoomsCord):
     def __init__(self,
                  x: int = 0,
@@ -339,6 +206,201 @@ class BackRoomsCordD(BackRoomsCord):
               z: int = 0) -> "BackRoomsCordD":
         return self.__class__(self.x + x, self.y + y, self.z + z)
 
+    def cast(self) -> BackRoomsCord:
+        return BackRoomsCord(self.x, self.y)
+
+
+def cord_cast(func):
+    @wraps(func)
+    def cord_cast_wrapper(*args, **kwargs):
+        args = list(args)
+        for spot, obj in enumerate(args):
+            if isinstance(obj, BackRoomsCordD):
+                args[spot] = obj.cast()
+
+        for key, obj in kwargs.items():
+            if isinstance(obj, BackRoomsCordD):
+                kwargs[key] = obj.cast()
+        return func(*args, **kwargs)
+    return cord_cast_wrapper
+
+
+class Backrooms:
+    def __init__(self,
+                 name: Optional[str] = None,
+                 raw_backroom: Optional[Dict[BackRoomsCord, str]] = None,
+                 hallways: Optional[List[Hallway]] = None):
+        self._name = name
+
+        # check for valid name
+        if self._name is not None and (not isinstance(self._name, str) or not is_name(self._name)):
+            raise BackRoomsError.bad_backroom_name(self._name)
+
+        if raw_backroom is None:
+            raw_backroom = {}
+
+        self._raw_backroom = raw_backroom
+
+        # check for valid raw backroom
+        if not isinstance(self._raw_backroom, dict):
+            raise BackRoomsError.bad_raw_backrooms(self._raw_backroom)
+
+        for cord, entity in self._raw_backroom.items():
+            # check if cord is valid
+            if type(cord) != BackRoomsCord:
+                raise BackRoomsError.bad_backrooms_cord(cord)
+
+            # check if entity is valid
+            if not isinstance(entity, str) or len(entity) != 1:
+                raise BackRoomsError.bad_backrooms_entity(entity)
+
+        if hallways is None:
+            hallways = []
+
+        self._hallways = hallways
+
+        # check if hallways is valid
+        if not isinstance(self._hallways, list) or len(set([h.x for h in self._hallways])) != len(self._hallways):
+            raise BackRoomsError.bad_hallways(self._hallways)
+
+        for hallway in hallways:
+            # check if hallway is valid
+            if not isinstance(hallway, Hallway):
+                raise BackRoomsError.bad_hallway(hallway)
+
+        # sort hallways in reverse max to min
+        self._hallways.sort(reverse=True)
+
+        # make hallways immutable
+        self._hallways = tuple(self._hallways)
+
+        self._hallway_names = {}
+        self._hallway_ids = {}
+        self._hallways_set = set(self._hallways)
+
+        for hallway_id, hallway in enumerate(self._hallways):
+            self._hallway_names[hallway.name] = hallway
+            self._hallway_ids[hallway] = hallway_id
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def hallways(self) -> Tuple[Hallway]:
+        return self._hallways
+
+    @cord_cast
+    def write(self,
+              cord: BackRoomsCord,
+              entity: str) -> None:
+
+        # check if cord is valid
+        if type(cord) != BackRoomsCord:
+            raise BackRoomsError.bad_backrooms_cord(cord)
+
+        # check if entity is valid
+        if not isinstance(entity, str) or len(entity) != 1:
+            raise BackRoomsError.bad_backrooms_entity(entity)
+
+        self._raw_backroom[cord] = entity
+
+    @cord_cast
+    def read(self,
+             cord: BackRoomsCord) -> str:
+        # check if cord is valid
+        if type(cord) != BackRoomsCord:
+            raise BackRoomsError.bad_backrooms_cord(cord)
+        return self._raw_backroom.get(cord, " ")
+
+    @cord_cast
+    def is_vacant(self,
+                  cord: BackRoomsCord) -> bool:
+        # check if cord is valid
+        if type(cord) != BackRoomsCord:
+            raise BackRoomsError.bad_backrooms_cord(cord)
+        return cord not in self._raw_backroom
+
+    def get_hallway(self,
+                    name: str) -> Optional[Hallway]:
+        # check for valid name
+        if not isinstance(name, str) or not is_name(name):
+            raise BackRoomsError.bad_hallway_name(name)
+        return self._hallway_names.get(name)
+
+    def get_higher_hallway(self,
+                           hallway: Hallway) -> Optional[Hallway]:
+        # check if hallway is valid
+        if not isinstance(hallway, Hallway):
+            raise BackRoomsError.bad_hallway(hallway)
+
+        # check that hallway is being used in theses backrooms
+        if hallway not in self._hallways_set:
+            raise BackRoomsError.unidentified_hallway(hallway)
+        hallway_id = self._hallway_ids[hallway]
+        if hallway_id == 0:
+            return
+        return self.hallways[hallway_id - 1]
+
+    def get_lower_hallway(self,
+                          hallway: Hallway) -> Optional[Hallway]:
+        # check if hallway is valid
+        if not isinstance(hallway, Hallway):
+            raise BackRoomsError.bad_hallway(hallway)
+
+        # check that hallway is being used in theses backrooms
+        if hallway not in self._hallways_set:
+            raise BackRoomsError.unidentified_hallway(hallway)
+        hallway_id = self._hallway_ids[hallway]
+        if hallway_id + 1 == len(self.hallways):
+            return
+        return self.hallways[hallway_id + 1]
+
+    @cord_cast
+    def in_hallway(self,
+                   cord: BackRoomsCord) -> Optional[Hallway]:
+        # check if cord is valid
+        if type(cord) != BackRoomsCord:
+            raise BackRoomsError.bad_backrooms_cord(cord)
+
+        # TODO make this faster
+        in_hallway = None
+        for hallway in self.hallways:
+            if cord.x <= hallway.x:
+                in_hallway = hallway
+        return in_hallway
+
+    def parallel(self,
+                 name: Optional[str] = None) -> "Backrooms":
+        return self.__class__(name=name, raw_backroom=self._raw_backroom.copy(), hallways=list(self.hallways))
+
+    def add_hallway(self,
+                    hallway: Hallway) -> None:
+        # check if hallway is valid
+        if not isinstance(hallway, Hallway):
+            raise BackRoomsError.bad_hallway(hallway)
+
+        # sort hallways in reverse max to min
+        self._hallways = list(self._hallways)
+        self._hallways.append(hallway)
+
+        # check if hallways is valid
+        if len(set([h.x for h in self._hallways])) != len(self._hallways):
+            raise BackRoomsError.bad_hallways(self._hallways)
+
+        self._hallways.sort(reverse=True)
+
+        # make hallways immutable
+        self._hallways = tuple(self._hallways)
+
+        self._hallway_names = {}
+        self._hallway_ids = {}
+        self._hallways_set = set(self._hallways)
+
+        for hallway_id, hallway in enumerate(self._hallways):
+            self._hallway_names[hallway.name] = hallway
+            self._hallway_ids[hallway] = hallway_id
+
 
 class BackroomsD:
     def __init__(self,
@@ -363,7 +425,7 @@ class BackroomsD:
         self._rebuild()
 
     # "reconnect"
-    def _rebuild(self):
+    def _rebuild(self) -> None:
         # find all the first hallways that have a name
         self._first_hallways = {}
         # dick of all the first names of hallways which points to its cords
@@ -402,8 +464,8 @@ class BackroomsD:
         self._backrooms_d[backrooms_id] = backrooms
         self._rebuild()
 
-    def find_first_hallway(self,
-                           name: str = "GATE") -> Optional[BackRoomsCordD]:
+    def get_first_hallway(self,
+                          name: str = "GATE") -> Optional[BackRoomsCordD]:
         return self._first_hallways.get(name)
 
     def get_backrooms(self,
@@ -427,7 +489,7 @@ class BackroomsD:
 
     def write(self,
               cord: BackRoomsCordD,
-              entity: str):
+              entity: str) -> None:
 
         # check if cord is valid
         if not isinstance(cord, BackRoomsCordD):
@@ -444,7 +506,8 @@ class BackroomsD:
         backrooms = self.get_backrooms(cord.z)
         return backrooms.read(cord)
 
-    def is_vacant(self, cord: BackRoomsCord) -> bool:
+    def is_vacant(self,
+                  cord: BackRoomsCord) -> bool:
         # check if cord is valid
         if not isinstance(cord, BackRoomsCordD):
             raise BackRoomsError.bad_backrooms_cord_d(cord)
@@ -487,3 +550,33 @@ class BackroomsD:
 
         backrooms = self.get_backrooms(cord.z)
         return backrooms.in_hallway(cord)
+
+    def write_line(self,
+                   cord: BackRoomsCordD,
+                   vector: BackRoomsCordD,
+                   entities: str) -> None:
+
+        # check if cord is valid
+        if not isinstance(cord, BackRoomsCordD):
+            raise BackRoomsError.bad_backrooms_cord_d(cord)
+
+        # check if vector is valid
+        if not isinstance(vector, BackRoomsCordD):
+            raise BackRoomsError.bad_backrooms_cord_d(vector)
+
+        # check if entities is valid
+        if not isinstance(entities, str):
+            raise BackRoomsError.bad_backrooms_entities(entities)
+
+        for e in entities:
+            self.write(cord, e)
+            cord = cord.shift(vector.x, vector.y, vector.z)
+
+    # TODO write
+    def read_line(self):
+        pass
+    
+    # TODO wrtie
+    def add_hallway(self):
+        pass
+

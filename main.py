@@ -1,6 +1,28 @@
-from backrooms.backrooms import Hallway, BackRoomsCord, Backrooms, BackroomsD, BackRoomsCordD
+from backrooms import loader
+from backrooms.btime import BTime
 
-r = Backrooms("chad", {BackRoomsCord(1, 1): "d"}, [Hallway("Main", BackRoomsCord()), Hallway("ug", BackRoomsCord(-10))])
-d = BackroomsD({0: r})
+f = """
+# hello this is a commit
+~ M
+/ lol
+~ GATE
+/asd;lfjkasdfkl;ask;jldf
+/asfsfjasjasdqwerwqerqwe
+/asdfsadfdgdsfgdsfgqwerq
++ other
+/asfasdfsdfgdsfgqwerqwer
+/...... ...... . .. . . 
+%bob
+"""
 
-print(d.in_hallway(BackRoomsCordD()))
+bob = """
+~bob
+/lol
+"""
+
+l = loader.StrLoader("f", f)
+l2 = loader.StrLoader("bob", bob)
+
+i = loader.Iterator("f", [[l, l2]])
+d = loader.build(i)
+BTime(d, [])
