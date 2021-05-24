@@ -1,14 +1,14 @@
 from .backrooms import BackroomsD, BackRoomsCordD
-from . import stack
+from .stack import Stack
 
-from typing import Optional, List
+from typing import Optional, Tuple
 
 
 FRAGMENT_LOCATION_KEY = "location"
 
 FRAGMENT_VECTOR_KEY = "vector"
-FRAGMENT_VECTOR_LEFT = BackRoomsCordD(1, 0, 0)
-FRAGMENT_VECTOR_RIGHT = BackRoomsCordD(-1, 0, 0)
+FRAGMENT_VECTOR_LEFT = BackRoomsCordD(-1, 0, 0)
+FRAGMENT_VECTOR_RIGHT = BackRoomsCordD(1, 0, 0)
 FRAGMENT_VECTOR_UP = BackRoomsCordD(0, 1, 0)
 FRAGMENT_VECTOR_DOWN = BackRoomsCordD(0, -1, 0)
 FRAGMENT_VECTOR_ABOVE = BackRoomsCordD(0, 0, 1)
@@ -54,11 +54,10 @@ class Fragment(dict):
         self[FRAGMENT_BACKROOMS_D_KEY] = backrooms_d
         self[FRAGMENT_LOCATION_KEY] = location
         self[FRAGMENT_VECTOR_KEY] = vector
-        # TODO add stacks and other need it flags
+        self[FRAGMENT_WORKSPACE_STACK_KEY] = Stack()
+        self[FRAGMENT_RETURN_STACK_KEY] = Stack()
         self[FRAGMENT_LIVE_KEY] = True
-        # TODO make work
         self[FRAGMENT_HALT_KEY] = False
-        # TODO make work
         self[FRAGMENT_ERROR] = 0
 
         self.update(kwargs)
@@ -75,20 +74,24 @@ class Fragment(dict):
 
 
 class Rule:
+    def __init__(self, identifier: str):
+        self._identifier = identifier
+
     def __call__(self, fragment: Fragment, b_time: "BTime"):
-        pass
+        raise NotImplementedError()
 
     def get_identifier(self) -> str:
-        raise NotImplementedError()
+        return self._identifier
 
 
 class BTime:
     def __init__(self,
                  backrooms_d: BackroomsD,
-                 rules: List[Rule],
+                 rules: Tuple[Rule],
                  silent=False,
                  merciful=False):
         self._backrooms_d = backrooms_d
+        # TODO rule colletion
         self._rules = {rule.get_identifier(): rule for rule in rules}
         self._silent = silent
         self._merciful = merciful
@@ -114,7 +117,7 @@ class BTime:
         rule = self._rules.get(entity)
         # execute rule
         if rule is not None:
-            rule()
+            rule(self._fragment, self)
         else:
             # no rule given NOP do nothing but take a step
             self._fragment.step()

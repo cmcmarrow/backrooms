@@ -132,28 +132,28 @@ class Hallway:
         self._cord = cord
 
         # check if cord is valid
-        if not isinstance(cord, BackRoomsCord) or cord.y != 0:
+        if not isinstance(cord, BackRoomsCord) or cord.x != 0:
             raise BackRoomsError.bad_hallway_cord(cord)
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}: (name: {self.name}, x: {self.x})>"
+        return f"<{self.__class__.__name__}: (name: {self.name}, y: {self.y})>"
 
     def __hash__(self):
         return hash((self.name, self.cord))
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.x == other.x
+            return self.y == other.y
         return False
 
     def __lt__(self, other):
         if isinstance(other, self.__class__):
-            return self.x < other.x
+            return self.y < other.y
         return False
 
     def __gt__(self, other):
         if isinstance(other, self.__class__):
-            return self.x > other.x
+            return self.y > other.y
         return False
 
     @property
@@ -165,8 +165,8 @@ class Hallway:
         return self._cord
 
     @property
-    def x(self) -> int:
-        return self._cord.x
+    def y(self) -> int:
+        return self._cord.y
 
 
 class BackRoomsCordD(BackRoomsCord):
@@ -260,7 +260,7 @@ class Backrooms:
         self._hallways = hallways
 
         # check if hallways is valid
-        if not isinstance(self._hallways, list) or len(set([h.x for h in self._hallways])) != len(self._hallways):
+        if not isinstance(self._hallways, list) or len(set([h.y for h in self._hallways])) != len(self._hallways):
             raise BackRoomsError.bad_hallways(self._hallways)
 
         for hallway in hallways:
@@ -366,7 +366,7 @@ class Backrooms:
         # TODO make this faster
         in_hallway = None
         for hallway in self.hallways:
-            if cord.x <= hallway.x:
+            if cord.y <= hallway.y:
                 in_hallway = hallway
         return in_hallway
 
@@ -385,7 +385,7 @@ class Backrooms:
         self._hallways.append(hallway)
 
         # check if hallways is valid
-        if len(set([h.x for h in self._hallways])) != len(self._hallways):
+        if len(set([h.y for h in self._hallways])) != len(self._hallways):
             raise BackRoomsError.bad_hallways(self._hallways)
 
         self._hallways.sort(reverse=True)
@@ -437,7 +437,7 @@ class BackroomsD:
                 hallway_name = hallway.name
                 # check that hallway has name and it is the first hallway with that name
                 if hallway_name is not None and hallway_name not in self._first_hallways:
-                    self._first_hallways[hallway_name] = BackRoomsCordD(x=hallway.x, z=backrooms_d_id)
+                    self._first_hallways[hallway_name] = BackRoomsCordD(y=hallway.y, z=backrooms_d_id)
 
         self._backrooms_d_inverse = {backrooms: backrooms_id for backrooms_id, backrooms in self._backrooms_d.items()}
 
@@ -572,11 +572,12 @@ class BackroomsD:
             self.write(cord, e)
             cord = cord.shift(vector.x, vector.y, vector.z)
 
-    # TODO write
-    def read_line(self):
-        pass
-    
-    # TODO wrtie
-    def add_hallway(self):
-        pass
+    def add_hallway(self,
+                    backrooms_id: int,
+                    hallway: Hallway) -> None:
+        # check if backrooms_id is valid
+        if not isinstance(backrooms_id, int):
+            raise BackRoomsError.bad_backrooms_id(backrooms_id)
 
+        self.get_backrooms(backrooms_id).add_hallway(hallway)
+        self._rebuild()

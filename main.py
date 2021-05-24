@@ -1,28 +1,17 @@
 from backrooms import loader
 from backrooms.btime import BTime
+from backrooms.rules import get_built_in_rules
 
-f = """
-# hello this is a commit
-~ M
-/ lol
-~ GATE
-/asd;lfjkasdfkl;ask;jldf
-/asfsfjasjasdqwerwqerqwe
-/asdfsadfdgdsfgdsfgqwerq
-+ other
-/asfasdfsdfgdsfgqwerqwer
-/...... ...... . .. . . 
-%bob
+main = """
+~GATE
+/ts"Hello World"nneennha*
 """
 
-bob = """
-~bob
-/lol
-"""
 
-l = loader.StrLoader("f", f)
-l2 = loader.StrLoader("bob", bob)
+main_loader = loader.StrLoader("main", main)
 
-i = loader.Iterator("f", [[l, l2]])
-d = loader.build(i)
-BTime(d, [])
+loader_iterator = loader.LoaderIterator("main", [[main_loader]])
+backrooms_d = loader.build(loader_iterator)
+b = BTime(backrooms_d, get_built_in_rules())
+b.run()
+print("DONE!")

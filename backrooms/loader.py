@@ -1,5 +1,4 @@
-import os
-from .backrooms import BackroomsD, BackRoomsCordD, Backrooms
+from .backrooms import BackroomsD, BackRoomsCordD, Backrooms, BackRoomsCord, Hallway
 from .name import is_name
 from string import whitespace
 from typing import List, Optional
@@ -59,7 +58,7 @@ class FileLoader(Loader):
 
 
 # TODO this could be cleaned up
-class Iterator:
+class LoaderIterator:
     def __init__(self,
                  name: str,
                  priority_order_loaders: List[List[Loader]]):
@@ -171,8 +170,7 @@ def get_int(line: str) -> Optional[int]:
     return number
 
 
-def get_cord(line: str, loader_name: str, line_number: int) -> int:
-    full_line = line
+def get_cord(line: str, full_line: str, loader_name: str, line_number: int) -> int:
     line = remove_whitespace(line)
     if not is_int(line):
         raise LoaderError.bad_line(full_line, loader_name, line_number)
@@ -186,18 +184,18 @@ def get_cord(line: str, loader_name: str, line_number: int) -> int:
     return number
 
 
-def build(iterator: Iterator):
+def build(loader_iterator: LoaderIterator):
     at = BackRoomsCordD(0, 0, -1)
     backrooms_d = BackroomsD()
     line_number = 1
     loader_name = ""
-    for line in iterator:
+    for line in loader_iterator:
         full_line = line
-        if iterator.new_loader:
+        if loader_iterator.new_loader:
             line_number = 1
-            loader_name = iterator.name
+            loader_name = loader_iterator.name
             at = at.shift(0, 0, 1)
-            backrooms_d.add_backrooms(at.z, Backrooms(iterator.name))
+            backrooms_d.add_backrooms(at.z, Backrooms(loader_iterator.name))
         # row
         if line.startswith("/"):
             backrooms_d.write_line(at, BackRoomsCordD(1, 0, 0), line[1:])
@@ -219,8 +217,7 @@ def build(iterator: Iterator):
             line = remove_whitespace(line)
             if line:
                 raise LoaderError.bad_line(full_line, loader_name, line_number)
-            # TODO add hallway, backrooms don't support the method yet
-        # include
+            backrooms_d.add_hallway(at.z, Hallway(hallway, BackRoomsCord(y=at.y)))
         elif line.startswith("%"):
             # TODO clean up import errors
             line = remove_whitespace(line[1:])
@@ -230,7 +227,7 @@ def build(iterator: Iterator):
                 line = remove_whitespace(line)
                 if line:
                     raise LoaderError.bad_line(full_line, loader_name, line_number)
-                iterator.include(include)
+                loader_iterator.include(include)
             else:
                 raise LoaderError.bad_line(full_line, loader_name, line_number)
         # backrooms
@@ -280,33 +277,32 @@ def build(iterator: Iterator):
         # x shift
         elif line.startswith("XS"):
             line = line[2:]
-            at = at.shift(get_cord(line, loader_name, line_number), at.y, at.z)
+            at = at.shift(get_cord(line, full_line, loader_name, line_number), at.y, at.z)
         # y shift
         elif line.startswith("YS"):
             line = line[2:]
-            at = at.shift(at.x, get_cord(line, loader_name, line_number), at.z)
+            at = at.shift(at.x, get_cord(line, full_line, loader_name, line_number), at.z)
             # z shift
         elif line.startswith("ZS"):
             line = line[2:]
-            at = at.shift(at.x, at.y, get_cord(line, loader_name, line_number))
+            at = at.shift(at.x, at.y, get_cord(line, full_line, loader_name, line_number))
         # x
         elif line.startswith("X"):
             line = line[1:]
-            at = BackRoomsCordD(get_cord(line, loader_name, line_number), at.y, at.z)
+            at = BackRoomsCordD(get_cord(line, full_line, loader_name, line_number), at.y, at.z)
         # y
         elif line.startswith("Y"):
             line = line[1:]
-            at = BackRoomsCordD(at.x, get_cord(line, loader_name, line_number), at.z)
+            at = BackRoomsCordD(at.x, get_cord(line, full_line, loader_name, line_number), at.z)
         # z
         elif line.startswith("Z"):
             line = line[1:]
-            at = BackRoomsCordD(at.x, at.y, get_cord(line, loader_name, line_number))
-
+            at = BackRoomsCordD(at.x, at.y, get_cord(line, full_line, loader_name, line_number))
         # blank just throw away the line
         elif not line:
             pass
         else:
             # loader does not know what to do with this line
-            raise LoaderError.bad_line(line, line_number)
+            raise LoaderError.bad_line(full_line, loader_name, line_number)
         line_number += 1
     return backrooms_d
