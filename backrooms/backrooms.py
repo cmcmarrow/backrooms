@@ -9,12 +9,6 @@ Key Differences
     *   x: int
     *   y: int
     *   z: int
-
-Other than for some flags when a program is loaded into the VM must of the data will be loaded into Backrooms objects.
-The backrooms_d should be immortal and cannot get corrupted during run-time.
-You cannot hurt the backrooms_d but it sure can hurt you.
-Because of this all objects in this file verify that that data given is
-valid on initialization and on most class methods.
 """
 
 

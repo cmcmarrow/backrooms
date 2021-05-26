@@ -37,8 +37,6 @@ class BTimeError(Exception):
 
     @classmethod
     def rule_collision(cls, rule_identifier: str):
-        # some like to give rules that make it impossible to leave.
-        # For these types don't open the gate, they lack self control
         return cls(f"Rule collision: '{rule_identifier}'")
 
     @classmethod
