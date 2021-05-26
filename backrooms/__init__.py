@@ -1,7 +1,5 @@
 """
 Copyright 2021 Charles McMarrow
-
-The root of that portal that leads ETERNAL salvation.
 """
 
 from . import backrooms
