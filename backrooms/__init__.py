@@ -11,5 +11,5 @@ from . import loader
 
 AUTHOR = "Charles McMarrow"
 
-MAJOR, MINOR, MAINTENANCE = 0, 1, 0
+MAJOR, MINOR, MAINTENANCE = 0, 0, 1
 VERSION = (MAJOR, MINOR, MAINTENANCE)
