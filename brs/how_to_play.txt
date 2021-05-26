@@ -1,0 +1,47 @@
+It is cheating to change any puzzle file.
+You only interact with the puzzle by typing in input.
+You can and should open the puzzle file and look at it. Again no GUI yet.
+
+YOU LOST IF THE GAME GOES ON FOREVER! YOU GOT LOST IN THE BACKROOMS!
+JUST CLOSE IT AND TRY AGAIN
+
+How Characters Move
+> - go right
+< - go left
+^ - go up
+V - go down
+! - skip
+
+e - print item on stack
+
+tn - load number on to stack
+EX: tn-8234ajfaskl -> -8234, tn420^ -> 420
+
+ts - load string on to stack
+EX: ts@hello@ -> hello, ts"bob is fat" -> bob is fat
+
+ha~ - EXIT
+
+oa - +
+os - -
+om - *
+od - /
+
+1 - hop 1 spaces
+2 - hop 2 spaces
+3 - hop 3 spaces
+4 - hop 4 spaces
+5 - hop 5 spaces
+6 - hop 6 spaces
+7 - hop 7 spaces
+8 - hop 8 spaces
+9 - hop 9 spaces
+
+ss - give words: NOTE you cant write ~ it will just be removed
+sn - give number
+w - write
+example ts"cats"w%........ha~ -> ts"cats"w%ts%cats%ha~
+example tn-3w....ha~ -> tn-3wtn-3ha~
+
+. and ' ' are the same thing and does nothing
+ever other char does nothing
