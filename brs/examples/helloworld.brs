@@ -1,2 +1,0 @@
-~GATE
-/ts"HelloWorld"eha~
