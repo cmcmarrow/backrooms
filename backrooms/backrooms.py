@@ -480,6 +480,9 @@ class BackroomsD:
             self._backrooms_d_inverse[self._backrooms_d[backrooms_id]] = backrooms_id
         return self._backrooms_d[backrooms_id]
 
+    def get_backroom_id(self, backrooms: Backrooms):
+        return self._backrooms_d_inverse.get(backrooms)
+
     def get_backrooms_from_name(self,
                                 name: str) -> Optional[Backrooms]:
         # check if backrooms_id is valid

@@ -1,3 +1,8 @@
+"""
+Copyright 2021 Charles McMarrow
+"""
+
+
 from .backrooms import BackroomsD, BackRoomsCordD
 from .stack import Stack
 
@@ -11,17 +16,18 @@ FRAGMENT_VECTOR_LEFT = BackRoomsCordD(-1, 0, 0)
 FRAGMENT_VECTOR_RIGHT = BackRoomsCordD(1, 0, 0)
 FRAGMENT_VECTOR_UP = BackRoomsCordD(0, 1, 0)
 FRAGMENT_VECTOR_DOWN = BackRoomsCordD(0, -1, 0)
-FRAGMENT_VECTOR_ABOVE = BackRoomsCordD(0, 0, 1)
-FRAGMENT_VECTOR_BELOW = BackRoomsCordD(0, 0, -1)
+FRAGMENT_VECTOR_ABOVE = BackRoomsCordD(0, 0, -1)
+FRAGMENT_VECTOR_BELOW = BackRoomsCordD(0, 0, 1)
 
-FRAGMENT_LIVE_KEY = "live"
 FRAGMENT_HALT_KEY = "halt"
 FRAGMENT_SILENT_KEY = "silent"
 FRAGMENT_MERCIFUL_KEY = "merciful"
 FRAGMENT_BACKROOMS_D_KEY = "backrooms_d"
 FRAGMENT_WORKSPACE_STACK_KEY = "workspace_stack"
 FRAGMENT_RETURN_STACK_KEY = "return_stack"
-FRAGMENT_ERROR = "error"
+FRAGMENT_ERROR_KEY = "error"
+FRAGMENT_SKIP_KEY = "skip"
+FRAGMENT_BRANCH_KEY = "branch"
 
 
 class BTimeError(Exception):
@@ -56,10 +62,10 @@ class Fragment(dict):
         self[FRAGMENT_VECTOR_KEY] = vector
         self[FRAGMENT_WORKSPACE_STACK_KEY] = Stack()
         self[FRAGMENT_RETURN_STACK_KEY] = Stack()
-        self[FRAGMENT_LIVE_KEY] = True
         self[FRAGMENT_HALT_KEY] = False
-        self[FRAGMENT_ERROR] = 0
-
+        self[FRAGMENT_ERROR_KEY] = 0
+        self[FRAGMENT_SKIP_KEY] = 0
+        self[FRAGMENT_BRANCH_KEY] = "C"
         self.update(kwargs)
 
     def step(self):
@@ -89,7 +95,8 @@ class BTime:
                  backrooms_d: BackroomsD,
                  rules: Tuple[Rule],
                  silent=False,
-                 merciful=False):
+                 merciful=False,
+                 dummy_input=None):
         self._backrooms_d = backrooms_d
         # TODO rule colletion
         self._rules = {rule.get_identifier(): rule for rule in rules}
@@ -105,10 +112,18 @@ class BTime:
         self._fragment = Fragment(self._backrooms_d,
                                   entity_point)
 
+        self._dummy_output = []
+        if dummy_input is None:
+            dummy_input = []
+        self._dummy_input = dummy_input
+        self._dummy_input.reverse()
+
     def __next__(self):
         if self.is_haled():
             raise StopIteration()
-
+        print()
+        print("AT:", self._fragment[FRAGMENT_LOCATION_KEY], repr(self._fragment.read()))
+        print("STACK:", self._fragment[FRAGMENT_WORKSPACE_STACK_KEY])
         entity = self._fragment.read()
         # got lost in the backrooms
         if entity == " " and self._merciful:
@@ -137,3 +152,20 @@ class BTime:
 
     def get_step_count(self) -> int:
         return self._step_count
+
+    @property
+    def dummy_output(self):
+        return self._dummy_output
+
+    @property
+    def dummy_input(self):
+        return self._dummy_input
+
+    def dummy_write(self, output):
+        self.dummy_output.append(output)
+
+    def dummy_read(self):
+        if self.dummy_input:
+            return self.dummy_input.pop()
+        # ran out of dummy input
+        return ""

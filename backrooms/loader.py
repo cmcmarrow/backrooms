@@ -1,3 +1,8 @@
+"""
+Copyright 2021 Charles McMarrow
+"""
+
+
 from .backrooms import BackroomsD, BackRoomsCordD, Backrooms, BackRoomsCord, Hallway
 from .name import is_name
 from string import whitespace
@@ -195,6 +200,7 @@ def build(loader_iterator: LoaderIterator):
             line_number = 1
             loader_name = loader_iterator.name
             at = at.shift(0, 0, 1)
+            at = BackRoomsCordD(0, 0, at.z)
             backrooms_d.add_backrooms(at.z, Backrooms(loader_iterator.name))
         # row
         if line.startswith("/"):
@@ -245,6 +251,7 @@ def build(loader_iterator: LoaderIterator):
             if line:
                 raise LoaderError.bad_line(full_line, loader_name, line_number)
             at = at.shift(0, 0, 1)
+            at = BackRoomsCordD(0, 0, at.z)
             backrooms_d.add_backrooms(at.z, Backrooms(backrooms))
         # parallel
         elif line.startswith("="):

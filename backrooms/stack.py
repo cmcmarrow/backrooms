@@ -1,3 +1,7 @@
+"""
+Copyright 2021 Charles McMarrow
+"""
+
 
 class StackError(Exception):
     @classmethod
@@ -16,6 +20,9 @@ class StackFrame:
 class Stack:
     def __init__(self):
         self._stack = [StackBottom]
+
+    def __repr__(self):
+        return repr(self._stack)
 
     def pop(self) -> any:
         if self.peak() is StackBottom:

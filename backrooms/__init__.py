@@ -10,9 +10,8 @@ from . import name
 from . import btime
 from . import stack
 from . import loader
-from . import gate
 
 AUTHOR = "Charles McMarrow"
 
-MAJOR, MINOR, MAINTENANCE = 1, 0, 0
+MAJOR, MINOR, MAINTENANCE = 0, 1, 0
 VERSION = (MAJOR, MINOR, MAINTENANCE)
