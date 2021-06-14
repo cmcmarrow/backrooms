@@ -10,6 +10,7 @@ import unittest
 # backrooms
 from . import rooms_tests
 from . import translator_tests
+from . import stack_tests
 from . import test_files
 
 # add all tests to namespace

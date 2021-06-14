@@ -1,7 +1,7 @@
 """
 Copyright 2021 Charles McMarrow
 
-This module "backrooms" is a Esolang.
+This python module "backrooms" is a Esolang.
 
 backrooms was inspired by:
     * backrooms Creepypasta/MEME
@@ -20,6 +20,7 @@ from . import backrooms_error
 from . import rooms
 from . import rules
 from . import translator
+from . import stack
 
 AUTHOR = "Charles McMarrow"
 

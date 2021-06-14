@@ -32,6 +32,10 @@ class TranslatorError(BackroomsError):
         return cls(f"{repr(include)} is a missing include!")
 
     @classmethod
+    def name_collision(cls, name: str):
+        return cls(f"Name collision with {name}!")
+
+    @classmethod
     def bad_line(cls,
                  line: str,
                  line_number: int,
@@ -137,7 +141,7 @@ class StringHandler(Handler):
 class Handlers:
     def __init__(self,
                  main: Handler,
-                 name_spaces: Tuple[Tuple[Handler]] = ()):
+                 name_spaces: Tuple[Tuple[Handler, ...], ...] = ()):
         """
         info: Holder all the Handles need it for a program.
             Builds the name_spaces so includes can be prioritized.
@@ -152,6 +156,8 @@ class Handlers:
         for name_space in name_spaces:
             name_space_dict = {}
             for handler in name_space:
+                if handler.get_name() in name_space_dict:
+                    raise TranslatorError.name_collision(handler.get_name())
                 name_space_dict[handler.get_name()] = handler
             name_spaces_dicts.append(name_space_dict)
         self._name_spaces: Tuple[Dict[str, Handler]] = tuple(name_spaces_dicts)
@@ -168,8 +174,12 @@ class Handlers:
                 self._line_number += 1
                 return next(self._handlers[0])
             except StopIteration:
-                self._line_number = -1
+                if self._line_number == -1:
+                    # return a single bank line from the handler with no data
+                    self._line_number = 0
+                    return ""
                 self._handlers.popleft()
+                self._line_number = -1
         raise StopIteration()
 
     def __bool__(self):
@@ -362,17 +372,58 @@ def translator(handlers: Handlers) -> Rooms:
             # parallel
             elif line.startswith("="):
                 tokens = _tokenize_line(line[1:])
-                # TODo and remove _ from other function
+
                 from_name = None
                 to_name = None
                 from_spot = None
                 to_spot = None
 
-                if from_name is None and from_spot is None:
+                if tokens:
+                    if tokens[0] != "@":
+                        from_name = tokens.pop(0)
+                    else:
+                        tokens.pop(0)
+                    if tokens:
+                        if tokens[0] != "@":
+                            to_name = tokens.pop(0)
+                        else:
+                            tokens.pop(0)
+                        if tokens:
+                            if tokens[0] != "@":
+                                from_spot = int(tokens.pop(0))
+                            else:
+                                tokens.pop(0)
+                            if tokens:
+                                if tokens[0] != "@":
+                                    to_spot = int(tokens.pop(0))
+                                else:
+                                    tokens.pop(0)
+                                if tokens:
+                                    raise TranslatorError.bad_line(full_line,
+                                                                   handlers.get_line_number(),
+                                                                   handlers.get_name())
+
+                if from_name is not None and from_spot is not None:
+                    raise TranslatorError.bad_line(full_line,
+                                                   handlers.get_line_number(),
+                                                   handlers.get_name(),
+                                                   "Cant provided both 'from_name' and 'from_location'!")
+
+                if from_name is not None:
+                    # duplicate from name
+                    from_spot = rooms.get_floor_level(from_name)
+                elif from_spot is None:
                     from_spot = floor
 
-                if to_name is None and to_spot is None:
+                if to_spot is None:
+                    # duplicate onto the floor above
                     to_spot = floor + 1
+                    floor += 1
+
+                # duplicate floor
+                rooms.duplicate_floor(from_spot, to_spot)
+                # set floor name
+                rooms.set_floor_name(to_spot, to_name)
             # shift x
             elif line.startswith("XS"):
                 x += _read_single_number(line[2:], full_line, handlers.get_line_number(), handlers.get_name())

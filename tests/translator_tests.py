@@ -74,6 +74,101 @@ class TestStringHandler(unittest.TestCase):
         self.assertRaises(StopIteration, next, handler)
 
 
+class TestHandlers(unittest.TestCase):
+    def test_handlers_init(self):
+        self.assertIsInstance(Handlers(StringHandler("Main", "")), Handlers)
+
+    def test_handlers_init_2(self):
+        self.assertIsInstance(Handlers(
+                              StringHandler("Main", ""),
+                              ((StringHandler("12", ""), StringHandler("123", "$")),
+                               (StringHandler("123", "%"),))), Handlers)
+
+    def test_handlers_init_error(self):
+        self.assertRaises(TranslatorError,
+                          Handlers,
+                          StringHandler("Main", ""),
+                          ((StringHandler("123", ""), StringHandler("123", "$")),))
+
+    def test_handlers(self):
+        handlers = Handlers(StringHandler("Main", "test"),
+                            ((StringHandler("12", "12\n"), StringHandler("123", "66\n55")),
+                            (StringHandler("1235", "%\n5\n334"),)))
+
+        handlers.include("1235")
+        handlers.include("12")
+        handlers.include("123")
+
+        self.assertIsInstance(iter(handlers), Handlers)
+
+        self.assertTrue(bool(handlers))
+
+        self.assertEqual(handlers.get_name(), "Main")
+        self.assertIsNone(handlers.get_line_number())
+
+        self.assertEqual(next(handlers), "test")
+        self.assertEqual(handlers.get_name(), "Main")
+        self.assertEqual(handlers.get_line_number(), 0)
+
+        self.assertEqual(next(handlers), "%")
+        self.assertEqual(handlers.get_name(), "1235")
+        self.assertEqual(handlers.get_line_number(), 0)
+        self.assertEqual(next(handlers), "5")
+        self.assertEqual(handlers.get_name(), "1235")
+        self.assertEqual(handlers.get_line_number(), 1)
+        self.assertEqual(next(handlers), "334")
+        self.assertEqual(handlers.get_name(), "1235")
+        self.assertEqual(handlers.get_line_number(), 2)
+
+        self.assertTrue(bool(handlers))
+
+        self.assertEqual(next(handlers), "12")
+        self.assertEqual(handlers.get_name(), "12")
+        self.assertEqual(handlers.get_line_number(), 0)
+        self.assertEqual(next(handlers), "")
+        self.assertEqual(handlers.get_name(), "12")
+        self.assertEqual(handlers.get_line_number(), 1)
+
+        self.assertEqual(next(handlers), "66")
+        self.assertEqual(handlers.get_name(), "123")
+        self.assertEqual(handlers.get_line_number(), 0)
+
+        self.assertTrue(bool(handlers))
+
+        self.assertEqual(next(handlers), "55")
+        self.assertEqual(handlers.get_name(), "123")
+        self.assertEqual(handlers.get_line_number(), 1)
+
+        self.assertTrue(bool(handlers))
+
+        self.assertRaises(StopIteration, next, iter(handlers))
+        self.assertFalse(bool(handlers))
+
+    def test_handlers_empty_handler(self):
+        handlers = Handlers(StringHandler("Main", ""),
+                            ((StringHandler("12", ""), StringHandler("123", "$$\n55")),
+                            (StringHandler("123", "%"),)))
+
+        handlers.include("12")
+        handlers.include("123")
+
+        self.assertEqual(handlers.get_name(), "Main")
+        self.assertIsNone(handlers.get_line_number())
+        self.assertEqual(next(handlers), "")
+        self.assertEqual(handlers.get_name(), "Main")
+        self.assertEqual(handlers.get_line_number(), 0)
+        self.assertEqual(next(handlers), "")
+        self.assertEqual(handlers.get_name(), "12")
+        self.assertEqual(handlers.get_line_number(), 0)
+        self.assertEqual(next(handlers), "$$")
+        self.assertEqual(next(handlers), "55")
+
+    def test_missing_include(self):
+        handlers = Handlers(StringHandler("Main", ""))
+
+        self.assertRaises(TranslatorError, handlers.include, "math")
+
+
 class TranslatorTest(unittest.TestCase):
     def test_row(self):
         rooms = translator(Handlers(StringHandler("Main", "/test\n/1234")))
@@ -245,23 +340,135 @@ class TranslatorTest(unittest.TestCase):
         self.assertRaises(TranslatorError, translator, handlers)
 
     def test_parallel(self):
-        # TODO
-        pass
+        rooms = translator(Handlers(StringHandler("Main",
+                                                  """
+                                                  ~GATE
+                                                  /1
+                                                  /c
+                                                  =
+                                                  """)))
+        self.assertEqual(rooms.get_hallway_name(0, 1), "GATE")
+        self.assertEqual(rooms.read(0, 0, 1), "1")
+        self.assertEqual(rooms.read(0, -1, 1), "c")
 
     def test_parallel_2(self):
-        pass
+        rooms = translator(Handlers(StringHandler("Main",
+                                                  """
+                                                  ~GATE
+                                                  /1
+                                                  /c
+                                                  +
+                                                  +
+                                                  +
+                                                  =Main
+                                                  """)))
+        self.assertEqual(rooms.get_hallway_name(0, 4), "GATE")
+        self.assertEqual(rooms.read(0, 0, 4), "1")
+        self.assertEqual(rooms.read(0, -1, 4), "c")
 
     def test_parallel_3(self):
-        pass
+        rooms = translator(Handlers(StringHandler("Main",
+                                                  """
+                                                  ~GATE
+                                                  /1
+                                                  /c
+                                                  +
+                                                  +
+                                                  +
+                                                  =Main sqrt
+                                                  """)))
+        self.assertEqual(rooms.get_hallway_name(0, 4), "GATE")
+        self.assertEqual(rooms.read(0, 0, 4), "1")
+        self.assertEqual(rooms.read(0, -1, 4), "c")
+        self.assertEqual(rooms.get_floor_name(4), "sqrt")
+
+    def test_parallel_4(self):
+        rooms = translator(Handlers(StringHandler("Main",
+                                                  """
+                                                  +
+                                                  ~GATE
+                                                  /1
+                                                  /c
+                                                  +
+                                                  +
+                                                  +
+                                                  =@@1 -4
+                                                  """)))
+        self.assertEqual(rooms.get_hallway_name(0, -4), "GATE")
+        self.assertEqual(rooms.read(0, 0, -4), "1")
+        self.assertEqual(rooms.read(0, -1, -4), "c")
+
+    def test_parallel_5(self):
+        rooms = translator(Handlers(StringHandler("Main",
+                                                  """
+                                                  ~GATE
+                                                  /1
+                                                  /c
+                                                  =@@@@
+                                                  """)))
+        self.assertEqual(rooms.get_hallway_name(0, 1), "GATE")
+        self.assertEqual(rooms.read(0, 0, 1), "1")
+        self.assertEqual(rooms.read(0, -1, 1), "c")
 
     def test_parallel_error(self):
-        pass
+        self.assertRaises(TranslatorError,
+                          translator,
+                          Handlers(StringHandler("Main",
+                                                 """
+                                                 +C
+                                                 ~GATE
+                                                 /1
+                                                 /c
+                                                 +
+                                                 +
+                                                 +
+                                                 =C@-1111 -4
+                                                 """)))
 
-    def test_parallel_2_error(self):
-        pass
+    def test_parallel_error_2(self):
+        self.assertRaises(TranslatorError,
+                          translator,
+                          Handlers(StringHandler("Main",
+                                                 """
+                                                 +C
+                                                 ~GATE
+                                                 /1
+                                                 /c
+                                                 +
+                                                 +
+                                                 +
+                                                 =@@@@@
+                                                 """)))
 
-    def test_parallel_3_error(self):
-        pass
+    def test_parallel_error_3(self):
+        self.assertRaises(TranslatorError,
+                          translator,
+                          Handlers(StringHandler("Main",
+                                                 """
+                                                 +C
+                                                 ~GATE
+                                                 /1
+                                                 /c
+                                                 +
+                                                 +
+                                                 +
+                                                 =@@@ Cats
+                                                 """)))
+
+    def test_parallel_error_4(self):
+        self.assertRaises(TranslatorError,
+                          translator,
+                          Handlers(StringHandler("Main",
+                                                 """
+                                                 +C
+                                                 ~GATE
+                                                 /1
+                                                 /c
+                                                 +
+                                                 +
+                                                 +
+                                                 =@@4.44@
+                                                 """)))
 
     def test_shift_x_y_floor(self):
         rooms = translator(Handlers(StringHandler("Main",

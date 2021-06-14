@@ -211,7 +211,7 @@ class Rooms:
             if hallway_block_in_at is None:
                 hallway_block_in_at = -1
             # update hallway structures
-            # TODO list.insert is Big-O(n)
+            #   TODO list.insert is Big-O(n)
             self._hallways.setdefault(floor_level, []).insert(hallway_block_in_at + 1, y)
             self._hallways_set.setdefault(floor_level, set()).add(y)
             if hallway_name is not None:
@@ -235,7 +235,7 @@ class Rooms:
             # find hallway location
             hallway_block_at = self._find_hallway_at(y, floor_level)
             # update hallway structures
-            # TODO del list is Big-O(n)
+            #   TODO del list is Big-O(n)
             del self._hallways[floor_level][hallway_block_at]
             self._hallways_set[floor_level].remove(y)
             hallway_name = self._hallway_locations_to_names[floor_level].get(y)
