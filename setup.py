@@ -2,7 +2,7 @@
 Copyright 2021 Charles McMarrow
 """
 
-
+# built-in
 from distutils.core import setup
 import os
 
@@ -20,7 +20,10 @@ setup(
     description_content_type="text/plain",
     long_description=long_description,
     long_description_content_type="text/x-rst",
-    packages=["backrooms"],
+    packages=["backrooms",
+              "backrooms.backrooms_builtins"],
+
+    extras_require={"dev": ["wheel", "check-manifest", "twine", "pyinstaller"]},
 
     classifiers=["Development Status :: 3 - Alpha",
                  "Environment :: Console",
@@ -32,5 +35,7 @@ setup(
                  "Programming Language :: Python :: 3.6"
                  "Programming Language :: Python :: 3.7",
                  "Programming Language :: Python :: 3.8",
-                 "Programming Language :: Python :: 3.9"]
+                 "Programming Language :: Python :: 3.9"],
+
+    entry_points={"console_scripts": ["backrooms = backrooms.backrooms:backrooms"]}
 )

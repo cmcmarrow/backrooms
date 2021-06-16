@@ -17,10 +17,15 @@ Backrooms was designed to be:
 
 # backrooms
 from . import backrooms_error
+from . import backrooms
 from . import rooms
 from . import rules
 from . import translator
 from . import stack
+from . import conscious
+from . import portal
+from . import whisper
+from . import backrooms_builtins
 
 AUTHOR = "Charles McMarrow"
 

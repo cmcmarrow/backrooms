@@ -1,14 +1,10 @@
-from backrooms.translator import translator, Handlers, StringHandler
-# TODO write
-
-x = """
-x = 2345
-y =    435,32
+"""
+Copyright 2021 Charles McMarrow
 """
 
-y = """
-c = 2345,2532
-"""
-h = Handlers(StringHandler("x", x), ((StringHandler("y", y),),))
-h.include("y")
-rooms = translator(h)
+# backrooms
+from backrooms.backrooms import backrooms
+
+
+if __name__ == "__main__":
+    backrooms()
