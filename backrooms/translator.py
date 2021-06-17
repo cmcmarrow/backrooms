@@ -454,3 +454,21 @@ def translator(handlers: Handlers) -> Rooms:
         except Exception as e:
             raise TranslatorError.bad_line(full_line, handlers.get_line_number(), handlers.get_name(), str(e))
     return rooms
+
+
+def load_dir(file: str) -> Tuple[Handler, Tuple[Handler, ...]]:
+    """
+    info: Loads all files in a file dir into handlers.
+    :param file: str
+    :return: Tuple[Handler, Tuple[Handler, ...]]
+    """
+    # TODO test
+    file = os.path.abspath(file)
+    main_handler = FileHandler(file)
+    handlers = []
+    file_dir = os.path.join(*os.path.split(file)[:-1])
+    for file in os.listdir(file_dir):
+        file = os.path.join(file_dir, file)
+        if os.path.isfile(file):
+            handlers.append(FileHandler(file))
+    return main_handler, tuple(handlers)

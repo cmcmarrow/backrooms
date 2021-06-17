@@ -8,7 +8,7 @@ It holds the backrooms memory structure and everything need it for it to operate
 # built-in
 from functools import lru_cache
 from string import ascii_letters, digits
-from typing import Optional, Dict, Tuple, List, Set
+from typing import Optional, Dict, Tuple, List, Set, Union
 
 # backrooms
 from .backrooms_error import BackroomsError
@@ -412,3 +412,26 @@ class Rooms:
 
         if floor_level_from in self._hallway_locations_to_names:
             self._hallway_locations_to_names[floor_level_to] = self._hallway_locations_to_names[floor_level_from].copy()
+
+    def find_a_hallway(self,
+                       hallway_name: str) -> Optional[Tuple[int, int]]:
+        """
+        info: Finds a hallway with that name.
+            Works out from 0. EX: 0, 1, -1, 2, -2, 3, ...
+        :param hallway_name: str
+        :return: Optional[Tuple[int, int]]
+        """
+        # TODO write tests
+        def _key(key: int) -> Union[int, float]:
+            """
+            info: Makes sorted works out from 0. EX: 0, 1, -1, 2, -2, 3, ...
+            :param key: str
+            :return: Union[int,float]
+            """
+            if key < 0:
+                return abs(key) - 0.5
+            return key
+
+        for floor in sorted(self._hallway_names_to_locations, key=_key):
+            if hallway_name in self._hallway_names_to_locations[floor]:
+                return self._hallway_names_to_locations[floor][hallway_name], floor
