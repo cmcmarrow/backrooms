@@ -8,7 +8,7 @@ import os
 
 def get_path(file_name: str) -> str:
     """
-    info: Gets the absolute file to test file.
+    info: Gets the absolute path to test file.
     :param file_name: str
     :return: str
     """
