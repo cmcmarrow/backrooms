@@ -60,12 +60,13 @@ def backrooms() -> None:    # TODO write tests
         backrooms_api(code=args.file,
                       lost_count=args.lost_count,
                       lost_rule_count=args.lost_rule_count,
+                      error_on_space=args.error_on_space,
                       br_builtins=args.builtins,
                       whisper_level=args.whisper)()
     except backrooms_error.BackroomsError as e:
         print(f"ERROR: {e}")
     except KeyboardInterrupt:
-        pass
+        print("Keyboard Interrupt!")
 
 
 def backrooms_api(code: Union[str, Handler, Handlers],

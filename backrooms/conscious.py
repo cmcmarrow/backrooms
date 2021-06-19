@@ -23,6 +23,7 @@ WORK_STACK = "WORK_STACK"
 FUNCTION_STACK = "FUNCTION_RET_STACK"
 
 # Normal Registers
+WORKING_REGISTER = "WORKING_REGISTER"
 R0 = "R0"
 R1 = "R1"
 R2 = "R2"
@@ -33,9 +34,6 @@ R6 = "R6"
 R7 = "R7"
 R8 = "R8"
 R9 = "R9"
-
-# Error Register
-RE = "RE"
 
 # Program Counter Registers
 PC_X = "PC_X"
@@ -55,6 +53,15 @@ ALIVE = "ALIVE"
 HALT = "HALT"
 
 
+# Branch
+BRANCH = "BRANCH"
+BRANCH_CLEAR = "BRANCH_CLEAR"
+BRANCH_LESS_THAN_ZERO = "BRANCH_LESS_THAN_ZERO"
+BRANCH_GREATER_THAN_ZERO = "BRANCH_GREATER_THAN_ZERO"
+BRANCH_ZERO = "BRANCH_ZERO"
+BRANCH_NOT_ZERO = "BRANCH_NOT_ZERO"
+
+
 class Conscious(Dict):
     def __init__(self, **kwargs):
         """
@@ -64,6 +71,7 @@ class Conscious(Dict):
         """
         new_conscious = {WORK_STACK: stack.Stack(),
                          FUNCTION_STACK: stack.Stack(),
+                         WORKING_REGISTER: R0,
                          R0: None,
                          R1: None,
                          R2: None,
@@ -74,7 +82,6 @@ class Conscious(Dict):
                          R7: None,
                          R8: None,
                          R9: None,
-                         RE: None,
                          PC_X: 0,
                          PC_Y: 0,
                          PC_FLOOR: 0,
@@ -83,7 +90,8 @@ class Conscious(Dict):
                          PC_V_FLOOR: 0,
                          ID: None,
                          ALIVE: True,
-                         HALT: False}
+                         HALT: False,
+                         BRANCH: BRANCH_CLEAR}
         new_conscious.update(kwargs)
         super(Conscious, self).__init__(new_conscious)
 

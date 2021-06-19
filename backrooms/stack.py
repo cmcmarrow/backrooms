@@ -44,6 +44,13 @@ class Stack:
             return StackBottom
         return self._stack.pop()
 
+    def peak(self) -> object:   # TODO test
+        """
+        info: Peak at item on top of stack
+        :return: object
+        """
+        return self._stack[-1]
+
     def is_empty(self) -> bool:
         """
         info: Checks if stack is empty.

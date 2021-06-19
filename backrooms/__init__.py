@@ -9,7 +9,7 @@ backrooms was inspired by:
     * CISC Architecture
 
 Backrooms was designed to be:
-    * hackable VIA memory overflow attacks, poor unhandled error handling, ect.
+    * hackable VIA memory overflow attacks, poor error handling, ect.
     * visually pleasing.
     * enjoy able to write small/medium programs.
     * capable to rewrite all of a program at run-time.
