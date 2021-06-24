@@ -92,7 +92,7 @@ class Rooms:
               floor_level: int,
               character: str) -> None:
         """
-        info: Write a character to a memory cell.
+        info: _Write a character to a memory cell.
         :param x: int
         :param y: int
         :param floor_level: int

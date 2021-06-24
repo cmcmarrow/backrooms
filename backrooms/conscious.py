@@ -12,7 +12,7 @@ A conscious holds it own state.
 
 
 # built-in
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 
 # backrooms
 from . import stack
@@ -23,6 +23,7 @@ WORK_STACK = "WORK_STACK"
 FUNCTION_STACK = "FUNCTION_RET_STACK"
 
 # Normal Registers
+WORKING_REGISTER = "WORKING_REGISTER"
 R0 = "R0"
 R1 = "R1"
 R2 = "R2"
@@ -33,9 +34,6 @@ R6 = "R6"
 R7 = "R7"
 R8 = "R8"
 R9 = "R9"
-
-# Error Register
-RE = "RE"
 
 # Program Counter Registers
 PC_X = "PC_X"
@@ -55,6 +53,73 @@ ALIVE = "ALIVE"
 HALT = "HALT"
 
 
+# TODO test
+def _to_branch_int(obj: Union[int, str, stack.StackFrame, stack.StackBottom, None]) -> int:
+    if isinstance(obj, str):
+        return int(bool(obj))
+    elif obj is None:
+        return 0
+    elif obj is stack.StackFrame:
+        return 0
+    elif obj is stack.StackBottom:
+        return 0
+    return obj
+
+
+def _clear(conscious: 'Conscious') -> True:
+    return True
+
+
+def _less_than_zero(conscious: 'Conscious') -> True:
+    return _to_branch_int(conscious[WORK_STACK].peak()) < 0
+
+
+def _greater_than_zero(conscious: 'Conscious') -> True:
+    return _to_branch_int(conscious[WORK_STACK].peak()) > 0
+
+
+def _zero(conscious: 'Conscious') -> True:
+    return _to_branch_int(conscious[WORK_STACK].peak()) == 0
+
+
+def _not_zero(conscious: 'Conscious') -> True:
+    return _to_branch_int(conscious[WORK_STACK].peak()) != 0
+
+
+def _is_integer(conscious: 'Conscious') -> True:
+    return isinstance(conscious[WORK_STACK].peak(), int)
+
+
+def _is_string(conscious: 'Conscious') -> True:
+    return isinstance(conscious[WORK_STACK].peak(), str)
+
+
+def _is_none(conscious: 'Conscious') -> True:
+    return conscious[WORK_STACK].peak() is None
+
+
+def _is_stack_frame(conscious: 'Conscious') -> True:
+    return conscious[WORK_STACK].peak() is stack.StackFrame
+
+
+def _is_stack_bottom(conscious: 'Conscious') -> True:
+    return conscious[WORK_STACK].peak() is stack.StackBottom
+
+
+# Branch
+BRANCH = "BRANCH"
+BRANCH_CLEAR = _clear
+BRANCH_LESS_THAN_ZERO = _less_than_zero
+BRANCH_GREATER_THAN_ZERO = _greater_than_zero
+BRANCH_ZERO = _zero
+BRANCH_NOT_ZERO = _not_zero
+BRANCH_IS_INTEGER = _is_integer
+BRANCH_IS_STRING = _is_string
+BRANCH_IS_NONE = _is_none
+BRANCH_IS_STACK_FRAME = _is_stack_frame
+BRANCH_IS_STACK_BOTTOM = _is_stack_bottom
+
+
 class Conscious(Dict):
     def __init__(self, **kwargs):
         """
@@ -64,6 +129,7 @@ class Conscious(Dict):
         """
         new_conscious = {WORK_STACK: stack.Stack(),
                          FUNCTION_STACK: stack.Stack(),
+                         WORKING_REGISTER: R0,
                          R0: None,
                          R1: None,
                          R2: None,
@@ -74,7 +140,6 @@ class Conscious(Dict):
                          R7: None,
                          R8: None,
                          R9: None,
-                         RE: None,
                          PC_X: 0,
                          PC_Y: 0,
                          PC_FLOOR: 0,
@@ -83,7 +148,8 @@ class Conscious(Dict):
                          PC_V_FLOOR: 0,
                          ID: None,
                          ALIVE: True,
-                         HALT: False}
+                         HALT: False,
+                         BRANCH: BRANCH_CLEAR}
         new_conscious.update(kwargs)
         super(Conscious, self).__init__(new_conscious)
 
