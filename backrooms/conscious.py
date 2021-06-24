@@ -12,7 +12,7 @@ A conscious holds it own state.
 
 
 # built-in
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 
 # backrooms
 from . import stack
@@ -53,13 +53,71 @@ ALIVE = "ALIVE"
 HALT = "HALT"
 
 
+# TODO test
+def _to_branch_int(obj: Union[int, str, stack.StackFrame, stack.StackBottom, None]) -> int:
+    if isinstance(obj, str):
+        return int(bool(obj))
+    elif obj is None:
+        return 0
+    elif obj is stack.StackFrame:
+        return 0
+    elif obj is stack.StackBottom:
+        return 0
+    return obj
+
+
+def _clear(conscious: 'Conscious') -> True:
+    return True
+
+
+def _less_than_zero(conscious: 'Conscious') -> True:
+    return _to_branch_int(conscious[WORK_STACK].peak()) < 0
+
+
+def _greater_than_zero(conscious: 'Conscious') -> True:
+    return _to_branch_int(conscious[WORK_STACK].peak()) > 0
+
+
+def _zero(conscious: 'Conscious') -> True:
+    return _to_branch_int(conscious[WORK_STACK].peak()) == 0
+
+
+def _not_zero(conscious: 'Conscious') -> True:
+    return _to_branch_int(conscious[WORK_STACK].peak()) != 0
+
+
+def _is_integer(conscious: 'Conscious') -> True:
+    return isinstance(conscious[WORK_STACK].peak(), int)
+
+
+def _is_string(conscious: 'Conscious') -> True:
+    return isinstance(conscious[WORK_STACK].peak(), str)
+
+
+def _is_none(conscious: 'Conscious') -> True:
+    return conscious[WORK_STACK].peak() is None
+
+
+def _is_stack_frame(conscious: 'Conscious') -> True:
+    return conscious[WORK_STACK].peak() is stack.StackFrame
+
+
+def _is_stack_bottom(conscious: 'Conscious') -> True:
+    return conscious[WORK_STACK].peak() is stack.StackBottom
+
+
 # Branch
 BRANCH = "BRANCH"
-BRANCH_CLEAR = "BRANCH_CLEAR"
-BRANCH_LESS_THAN_ZERO = "BRANCH_LESS_THAN_ZERO"
-BRANCH_GREATER_THAN_ZERO = "BRANCH_GREATER_THAN_ZERO"
-BRANCH_ZERO = "BRANCH_ZERO"
-BRANCH_NOT_ZERO = "BRANCH_NOT_ZERO"
+BRANCH_CLEAR = _clear
+BRANCH_LESS_THAN_ZERO = _less_than_zero
+BRANCH_GREATER_THAN_ZERO = _greater_than_zero
+BRANCH_ZERO = _zero
+BRANCH_NOT_ZERO = _not_zero
+BRANCH_IS_INTEGER = _is_integer
+BRANCH_IS_STRING = _is_string
+BRANCH_IS_NONE = _is_none
+BRANCH_IS_STACK_FRAME = _is_stack_frame
+BRANCH_IS_STACK_BOTTOM = _is_stack_bottom
 
 
 class Conscious(Dict):

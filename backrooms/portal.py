@@ -15,7 +15,7 @@ from . import backrooms_error
 from .conscious import Conscious, ALIVE, ID, HALT
 from . import conscious as c
 from .rooms import Rooms
-from .rules import Rule, RULES
+from .rules import Rule, RULES, WorkSpace
 from . import whisper
 
 
@@ -38,6 +38,11 @@ class PortalError(backrooms_error.BackroomsError):
     @classmethod
     def error_on_space(cls, x: int, y: int, floor: int):
         return cls(f"Error on space at: ({x}, {y}, {floor})")
+
+    @classmethod
+    def start_character_collection(cls,
+                                   start_character: str):
+        return cls(f"{repr(start_character)} is used more then once in a work space!")
 
 
 class Portal:
@@ -71,7 +76,14 @@ class Portal:
         self._catch_output_steam: List[str] = []
         self._error_on_space: bool = error_on_space
 
-        self._rules: Dict[str: Rule] = {rule().get_start_character(): rule() for rule in RULES}
+        work_space = WorkSpace()
+        rules_obj = [rule(work_space=work_space) for rule in RULES]
+        self._rules: Dict[str: Rule] = {}
+
+        for rule in rules_obj:
+            if rule.get_start_character() in self._rules:
+                raise PortalError.start_character_collection(rule.get_start_character())
+            self._rules[rule.get_start_character()] = rule
 
         used_ids = set(conscious[ID] for conscious in self._consciouses)
         self._next_free_id = max(used_ids) + 1
@@ -206,7 +218,7 @@ class Portal:
         :return: None
         """
         if self._sys_output:
-            print(output, end="")
+            print(output, end="", flush=True)
 
         if self._catch_output:
             self._catch_output_steam.append(output)

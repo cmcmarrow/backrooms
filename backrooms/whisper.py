@@ -61,6 +61,7 @@ def _whisper(level: Callable, data: str) -> None:
     """
     if WHISPER_RUNNING:
         level(data)
+        WHISPER_HANDLER.flush()
 
 
 debug = partial(_whisper, WHISPER.debug)
