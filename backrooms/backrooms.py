@@ -6,6 +6,7 @@ This script holds a the backrooms API and console interface.
 
 # built-in
 import argparse
+import cProfile
 from typing import Optional, Tuple, Union
 
 # backrooms
@@ -18,6 +19,10 @@ from .whisper import NOTSET, enable_whisper
 
 class BackRoomsError(backrooms_error.BackroomsError):
     pass
+
+
+def _str_to_bool(boolean: str):
+    return boolean.lower() not in ("false", "f", "", "0")
 
 
 def backrooms() -> None:    # TODO write tests
@@ -43,12 +48,12 @@ def backrooms() -> None:    # TODO write tests
                             help="set lost rule count")
         parser.add_argument("--error-on-space",
                             default=False,
-                            type=bool,
+                            type=_str_to_bool,
                             action="store",
                             help="errors if portal lands on a space")
         parser.add_argument("--builtins",
                             default=True,
-                            type=bool,
+                            type=_str_to_bool,
                             action="store",
                             help="include built-in libraries")
         parser.add_argument("--whisper",
@@ -56,13 +61,25 @@ def backrooms() -> None:    # TODO write tests
                             type=str,
                             action="store",
                             help="set the log level [notset, debug, info, warning, error, critical]")
+        parser.add_argument("--profile",
+                            default=False,
+                            type=_str_to_bool,
+                            action="store",
+                            help="profiles backrooms")
         args = parser.parse_args()
-        backrooms_api(code=args.file,
-                      lost_count=args.lost_count,
-                      lost_rule_count=args.lost_rule_count,
-                      error_on_space=args.error_on_space,
-                      br_builtins=args.builtins,
-                      whisper_level=args.whisper)()
+        br = backrooms_api(code=args.file,
+                           lost_count=args.lost_count,
+                           lost_rule_count=args.lost_rule_count,
+                           error_on_space=args.error_on_space,
+                           br_builtins=args.builtins,
+                           whisper_level=args.whisper)
+        if args.profile:
+            with cProfile.Profile() as profiler:
+                br()
+            print(flush=True)
+            profiler.print_stats()
+        else:
+            br()
     except backrooms_error.BackroomsError as e:
         print(f"ERROR: {e}")
     except KeyboardInterrupt:

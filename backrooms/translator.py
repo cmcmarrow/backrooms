@@ -299,7 +299,7 @@ def translator(handlers: Handlers) -> Rooms:
     :return: Rooms
     """
     rooms = Rooms()
-    x, y, floor = 0, 0, -1
+    x, y, floor = 0, 0, 1
     for line in handlers:
         full_line = line
         # throw away lead white space
@@ -313,8 +313,8 @@ def translator(handlers: Handlers) -> Rooms:
                 # reset x and y to zero
                 x = 0
                 y = 0
-                # go up a floor
-                floor += 1
+                # go down a floor
+                floor += -1
                 # set the floor name to the handlers name
                 rooms.set_floor_name(floor, handlers.get_name())
 
@@ -355,7 +355,7 @@ def translator(handlers: Handlers) -> Rooms:
                     # check that we are out of tokens
                     if tokens:
                         raise TranslatorError.bad_line(full_line, handlers.get_line_number(), handlers.get_name())
-                floor += 1
+                floor += -1
                 y = 0
                 rooms.set_floor_name(floor, floor_name)
             # include
@@ -417,8 +417,8 @@ def translator(handlers: Handlers) -> Rooms:
 
                 if to_spot is None:
                     # duplicate onto the floor above
-                    to_spot = floor + 1
-                    floor += 1
+                    to_spot = floor - 1
+                    floor += -1
 
                 # duplicate floor
                 rooms.duplicate_floor(from_spot, to_spot)
