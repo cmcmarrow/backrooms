@@ -104,7 +104,11 @@ class RuleModule(Rule):
                  rules: Tuple):
         super(RuleModule, self).__init__(start_character, work_space)
         rules_obj = [rule(work_space) for rule in rules]
-        self._rules: Dict[str, Rule] = {rule.get_start_character(): rule for rule in rules_obj}
+        self._rules: Dict[str, Rule] = {}
+        for rule in rules_obj:
+            if rule.get_start_character() in self._rules:
+                raise RuleError.start_character_collection(rule.get_start_character())
+            self._rules[rule.get_start_character()] = rule
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -160,7 +164,7 @@ class Halt(Rule):
 class Output(Rule):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Output, self).__init__("o", work_space)
+        super(Output, self).__init__("e", work_space)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -188,7 +192,7 @@ class Output(Rule):
 class Input(Rule):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Input, self).__init__("i", work_space)
+        super(Input, self).__init__("c", work_space)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -367,16 +371,22 @@ class Down(Shifter):
         super(Down, self).__init__(0, -1, 0, "v", work_space)
 
 
+class DownUpper(Shifter):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(DownUpper, self).__init__(0, -1, 0, "V", work_space)
+
+
 class Upper(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Upper, self).__init__(0, 0, 1, "/", work_space)
+        super(Upper, self).__init__(0, 0, 1, "{", work_space)
 
 
 class Lower(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Lower, self).__init__(0, 0, -1, "\\", work_space)
+        super(Lower, self).__init__(0, 0, -1, "}", work_space)
 
 
 class Branch(Rule):
@@ -873,6 +883,116 @@ class StringJoin(Rule):
         yield
 
 
+class StringEqual(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(StringEqual, self).__init__("e", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        string_2 = conscious[c.WORK_STACK].pop()
+        string_1 = conscious[c.WORK_STACK].pop()
+        if isinstance(string_1, str) and isinstance(string_2, str):
+            conscious[c.WORK_STACK].push(int(string_1 == string_2))
+        else:
+            conscious[c.WORK_STACK].push(None)
+        conscious.step()
+        yield
+
+
+class StringIn(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(StringIn, self).__init__("i", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        string_2 = conscious[c.WORK_STACK].pop()
+        string_1 = conscious[c.WORK_STACK].pop()
+        if isinstance(string_1, str) and isinstance(string_2, str):
+            conscious[c.WORK_STACK].push(int(string_1 in string_2))
+        else:
+            conscious[c.WORK_STACK].push(None)
+        conscious.step()
+        yield
+
+
+class StringUpper(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(StringUpper, self).__init__("u", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        item = conscious[c.WORK_STACK].pop()
+        if isinstance(item, str):
+            conscious[c.WORK_STACK].push(item.upper())
+        else:
+            conscious[c.WORK_STACK].push(None)
+        conscious.step()
+        yield
+
+
+class StringLower(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(StringLower, self).__init__("o", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        item = conscious[c.WORK_STACK].pop()
+        if isinstance(item, str):
+            conscious[c.WORK_STACK].push(item.lower())
+        else:
+            conscious[c.WORK_STACK].push(None)
+        conscious.step()
+        yield
+
+
 class StringModule(RuleModule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -883,7 +1003,11 @@ class StringModule(RuleModule):
                                             StringAt,
                                             StringByte,
                                             StringSplit,
-                                            StringJoin))
+                                            StringJoin,
+                                            StringEqual,
+                                            StringIn,
+                                            StringUpper,
+                                            StringLower))
 
 
 class IntegerCast(Rule):
@@ -1010,7 +1134,7 @@ class IntegerByte(Rule):
 class IntegerModule(RuleModule):
     def __init__(self,
                  work_space: WorkSpace):
-        super(IntegerModule, self).__init__("a",
+        super(IntegerModule, self).__init__("i",
                                             work_space,
                                             (IntegerCast,
                                              IntegerAdd,
@@ -1145,13 +1269,37 @@ class ThreadJoin(Rule):
         yield
 
 
+class ThreadID(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(ThreadID, self).__init__("i", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious[c.WORK_STACK].push(conscious[c.ID])
+        conscious.step()
+        yield
+
+
 class ThreadModule(RuleModule):
     def __init__(self,
                  work_space: WorkSpace):
         super(ThreadModule, self).__init__("t",
                                            work_space,
                                            (ThreadThread,
-                                            ThreadJoin))
+                                            ThreadJoin,
+                                            ThreadID))
 
 
 class HallwayCall(Rule):
@@ -1271,6 +1419,36 @@ class HallwayReturn(Rule):
         yield
 
 
+class HallwayGetName(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(HallwayGetName, self).__init__("n", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        floor = conscious[c.WORK_STACK].pop()
+        hallway = conscious[c.WORK_STACK].pop()
+        if isinstance(hallway, int) and isinstance(floor, int):
+            hallway = rooms.find_hallway_location(hallway, floor)
+            if hallway is not None:
+                conscious[c.WORK_STACK].push(rooms.get_hallway_name(hallway, floor))
+            else:
+                conscious[c.WORK_STACK].push(None)
+        conscious.step()
+        yield
+
+
 class HallwayGetLocation(Rule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -1289,7 +1467,40 @@ class HallwayGetLocation(Rule):
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
-        conscious[c.WORK_STACK].push(rooms.find_hallway_location(conscious[c.PC_Y], conscious[c.PC_FLOOR]))
+        floor = conscious[c.WORK_STACK].pop()
+        hallway = conscious[c.WORK_STACK].pop()
+        if isinstance(hallway, str) and isinstance(floor, int):
+            conscious[c.WORK_STACK].push(rooms.get_hallway_location(floor, hallway))
+        elif isinstance(hallway, int) and isinstance(floor, int):
+            conscious[c.WORK_STACK].push(rooms.find_hallway_location(hallway, floor))
+        conscious.step()
+        yield
+
+
+class HallwaySet(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(HallwaySet, self).__init__("s", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        floor = conscious[c.WORK_STACK].pop()
+        hallway = conscious[c.WORK_STACK].pop()
+        hallway_name = conscious[c.WORK_STACK].pop()
+        if isinstance(floor, int) and isinstance(hallway, int)\
+                and (isinstance(hallway_name, str) or hallway_name is None):
+            rooms.set_hallway_name(hallway, floor, hallway_name)    # error handling
         conscious.step()
         yield
 
@@ -1312,7 +1523,11 @@ class HallwayRemove(Rule):
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
-        # TODO write
+        hallway = conscious[c.WORK_STACK].pop()
+        floor = conscious[c.WORK_STACK].pop()
+        if isinstance(hallway, int) and isinstance(floor, int):
+            rooms.remove_hallway(hallway, floor)
+        conscious.step()
         yield
 
 
@@ -1324,7 +1539,230 @@ class HallwayModule(RuleModule):
                                             (HallwayCall,
                                              HallwayLevelCall,
                                              HallwayReturn,
-                                             HallwayGetLocation))
+                                             HallwayGetLocation,
+                                             HallwayGetName,
+                                             HallwaySet,
+                                             HallwayRemove))
+
+
+class HallwayGetFloorName(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(HallwayGetFloorName, self).__init__("n", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        floor = conscious[c.WORK_STACK].pop()
+        if isinstance(floor, int):
+            conscious[c.WORK_STACK].push(rooms.get_floor_name(floor))
+        conscious.step()
+        yield
+
+
+class HallwayGetFloorLevel(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(HallwayGetFloorLevel, self).__init__("l", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        floor_name = conscious[c.WORK_STACK].pop()
+        if isinstance(floor_name, str):
+            conscious[c.WORK_STACK].push(rooms.get_floor_level(floor_name))
+        conscious.step()
+        yield
+
+
+class HallwaySetFloorLevel(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(HallwaySetFloorLevel, self).__init__("s", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        floor_name = conscious[c.WORK_STACK].pop()
+        floor_level = conscious[c.WORK_STACK].pop()
+        if isinstance(floor_level, int) and (isinstance(floor_name, str) or floor_name is None):
+            rooms.set_floor_name(floor_level, floor_name)
+        conscious.step()
+        yield
+
+
+class LevelModule(RuleModule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(LevelModule, self).__init__("l",
+                                          work_space,
+                                          (HallwayGetFloorName,
+                                           HallwayGetFloorLevel,
+                                           HallwaySetFloorLevel))
+
+
+class ReadFlip(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(ReadFlip, self).__init__("r", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        x = conscious[c.PC_X]
+        y = conscious[c.PC_Y]
+        floor = conscious[c.PC_FLOOR]
+        v_x = conscious[c.PC_V_X] * -1
+        v_y = conscious[c.PC_V_Y] * -1
+        v_floor = conscious[c.PC_V_FLOOR] * -1
+        conscious.step()
+        yield
+        for _ in _read(rooms, conscious, rule_step_visuals):
+            yield
+        conscious[c.PC_X] = x
+        conscious[c.PC_Y] = y
+        conscious[c.PC_FLOOR] = floor
+        conscious[c.PC_V_X] = v_x
+        conscious[c.PC_V_Y] = v_y
+        conscious[c.PC_V_FLOOR] = v_floor
+        conscious.step()
+        conscious.step()
+        yield
+
+
+class WriteFlip(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(WriteFlip, self).__init__("w", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        x = conscious[c.PC_X]
+        y = conscious[c.PC_Y]
+        floor = conscious[c.PC_FLOOR]
+        v_x = conscious[c.PC_V_X] * -1
+        v_y = conscious[c.PC_V_Y] * -1
+        v_floor = conscious[c.PC_V_FLOOR] * -1
+        conscious.step()
+        yield
+        for character in ">1vur" + _write(rooms, conscious, rule_step_visuals):
+            rooms.write(*conscious.at(), character=character)
+            rule_step_visuals.append(conscious.at())
+            conscious.step()
+            yield
+        conscious[c.PC_X] = x
+        conscious[c.PC_Y] = y
+        conscious[c.PC_FLOOR] = floor
+        conscious[c.PC_V_X] = v_x
+        conscious[c.PC_V_Y] = v_y
+        conscious[c.PC_V_FLOOR] = v_floor
+        conscious.step()
+        conscious.step()
+        yield
+
+
+class DynamicDump(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(DynamicDump, self).__init__("d", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        v_floor = conscious[c.WORK_STACK].pop()
+        v_y = conscious[c.WORK_STACK].pop()
+        v_x = conscious[c.WORK_STACK].pop()
+        floor = conscious[c.WORK_STACK].pop()
+        y = conscious[c.WORK_STACK].pop()
+        x = conscious[c.WORK_STACK].pop()
+        item = conscious[c.WORK_STACK].pop()
+        if isinstance(item, int):
+            item = str(item)
+        elif item is None or item is StackBottom:
+            item = "n"
+        elif item is StackFrame:
+            item = "f"
+        if isinstance(x, int) and isinstance(y, int) and isinstance(floor, int):
+            if isinstance(v_x, int) and isinstance(v_y, int) and isinstance(v_floor, int):
+                for character in item:
+                    rooms.write(x, y, floor, character)
+                    x += v_x
+                    y += v_y
+                    floor += v_floor
+                    yield
+        conscious.step()
+        yield
+
+
+class UncommonModule(RuleModule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(UncommonModule, self).__init__("u",
+                                             work_space,
+                                             (ReadFlip,
+                                              WriteFlip,
+                                              DynamicDump))
 
 
 RULES = (Halt,
@@ -1343,6 +1781,7 @@ RULES = (Halt,
          Left,
          Up,
          Down,
+         DownUpper,
          Upper,
          Lower,
          Clear,
@@ -1368,4 +1807,6 @@ RULES = (Halt,
          Y,
          Floor,
          ThreadModule,
-         HallwayModule)
+         HallwayModule,
+         LevelModule,
+         UncommonModule)

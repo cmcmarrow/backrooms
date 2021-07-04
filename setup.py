@@ -11,7 +11,7 @@ with open(os.path.join("README.rst")) as readme:
 
 setup(
     name="backrooms",
-    version="0.1.0",
+    version="0.2.0",
     author="Charles McMarrow",
     author_email="Charles.McMarrow.4@gmail.com",
     url="https://github.com/cmcmarrow/backrooms",
@@ -32,8 +32,6 @@ setup(
                  "Operating System :: Microsoft :: Windows",
                  "Operating System :: POSIX :: Linux",
                  "Operating System :: MacOS :: MacOS X",
-                 "Programming Language :: Python :: 3.6",
-                 "Programming Language :: Python :: 3.7",
                  "Programming Language :: Python :: 3.8",
                  "Programming Language :: Python :: 3.9"],
 

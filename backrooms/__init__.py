@@ -29,5 +29,5 @@ from . import backrooms_builtins
 
 AUTHOR = "Charles McMarrow"
 
-MAJOR, MINOR, MAINTENANCE = 0, 1, 0
+MAJOR, MINOR, MAINTENANCE = 0, 2, 0
 VERSION = (MAJOR, MINOR, MAINTENANCE)
