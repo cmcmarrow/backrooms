@@ -7,6 +7,7 @@ from typing import Tuple
 
 # backrooms
 from backrooms.translator import StringHandler
+from . import variables
 
 
 def get_builtins() -> Tuple[StringHandler, ...]:
@@ -14,5 +15,4 @@ def get_builtins() -> Tuple[StringHandler, ...]:
     info: Gets Backrooms builtins modules.
     :return: Tuple[StringHandler, ...]
     """
-    # TODO write me
-    return ()
+    return variables.get_handler(),

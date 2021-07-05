@@ -1196,7 +1196,8 @@ class IntegerModule(RuleModule):
                                              IntegerDivide,
                                              IntegerModular,
                                              IntegerPower,
-                                             IntegerByte))
+                                             IntegerByte,
+                                             IntegerAbsolute))
 
 
 class X(Rule):
@@ -1410,8 +1411,8 @@ class HallwayLevelCall(Rule):
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
-        hallway = conscious[c.WORK_STACK].pop()
         floor = conscious[c.WORK_STACK].pop()
+        hallway = conscious[c.WORK_STACK].pop()
         if isinstance(floor, str):
             floor = rooms.get_floor_level(floor)
         if isinstance(floor, int):
