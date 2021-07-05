@@ -250,14 +250,14 @@ class TranslatorTest(unittest.TestCase):
 
         self.assertEqual(rooms.get_floor_name(0), "Main")
         self.assertEqual(rooms.read(0, 0, 0), " ")
-        self.assertEqual(rooms.get_floor_name(1), "Floor")
-        self.assertEqual(rooms.get_floor_name(2), "Floor2")
-        self.assertEqual(rooms.read(0, 0, 2), "a")
-        self.assertEqual(rooms.get_floor_name(3), "Floor3")
-        self.assertEqual(rooms.read(0, 0, 3), "b")
-        self.assertEqual(rooms.read(0, -1, 3), "c")
-        self.assertEqual(rooms.get_floor_name(4), "Floor4")
-        self.assertEqual(rooms.read(0, 0, 4), "d")
+        self.assertEqual(rooms.get_floor_name(-1), "Floor")
+        self.assertEqual(rooms.get_floor_name(-2), "Floor2")
+        self.assertEqual(rooms.read(0, 0, -2), "a")
+        self.assertEqual(rooms.get_floor_name(-3), "Floor3")
+        self.assertEqual(rooms.read(0, 0, -3), "b")
+        self.assertEqual(rooms.read(0, -1, -3), "c")
+        self.assertEqual(rooms.get_floor_name(-4), "Floor4")
+        self.assertEqual(rooms.read(0, 0, -4), "d")
 
     def test_floor_none(self):
         rooms = translator(Handlers(StringHandler("Main",
@@ -273,9 +273,13 @@ class TranslatorTest(unittest.TestCase):
                                                   /f""")))
 
         self.assertEqual(rooms.get_floor_name(0), "Main")
+
         self.assertIsNone(rooms.get_floor_name(1))
         self.assertIsNone(rooms.get_floor_name(2))
         self.assertIsNone(rooms.get_floor_name(3))
+        self.assertIsNone(rooms.get_floor_name(-1))
+        self.assertIsNone(rooms.get_floor_name(-2))
+        self.assertIsNone(rooms.get_floor_name(-3))
 
     def test_floor_error(self):
         handlers = Handlers(StringHandler("Main",
@@ -304,8 +308,8 @@ class TranslatorTest(unittest.TestCase):
                                   "/3")
         rooms = translator(Handlers(handler, ((handler_2,),)))
 
-        self.assertEqual(rooms.get_floor_name(1), "S2")
-        self.assertEqual(rooms.read(0, 0, 1), "3")
+        self.assertEqual(rooms.get_floor_name(-1), "S2")
+        self.assertEqual(rooms.read(0, 0, -1), "3")
 
     def test_include_error(self):
         handlers = Handlers(StringHandler("Main",
@@ -347,9 +351,9 @@ class TranslatorTest(unittest.TestCase):
                                                   /c
                                                   =
                                                   """)))
-        self.assertEqual(rooms.get_hallway_name(0, 1), "GATE")
-        self.assertEqual(rooms.read(0, 0, 1), "1")
-        self.assertEqual(rooms.read(0, -1, 1), "c")
+        self.assertEqual(rooms.get_hallway_name(0, -1), "GATE")
+        self.assertEqual(rooms.read(0, 0, -1), "1")
+        self.assertEqual(rooms.read(0, -1, -1), "c")
 
     def test_parallel_2(self):
         rooms = translator(Handlers(StringHandler("Main",
@@ -362,9 +366,9 @@ class TranslatorTest(unittest.TestCase):
                                                   +
                                                   =Main
                                                   """)))
-        self.assertEqual(rooms.get_hallway_name(0, 4), "GATE")
-        self.assertEqual(rooms.read(0, 0, 4), "1")
-        self.assertEqual(rooms.read(0, -1, 4), "c")
+        self.assertEqual(rooms.get_hallway_name(0, -4), "GATE")
+        self.assertEqual(rooms.read(0, 0, -4), "1")
+        self.assertEqual(rooms.read(0, -1, -4), "c")
 
     def test_parallel_3(self):
         rooms = translator(Handlers(StringHandler("Main",
@@ -377,10 +381,10 @@ class TranslatorTest(unittest.TestCase):
                                                   +
                                                   =Main sqrt
                                                   """)))
-        self.assertEqual(rooms.get_hallway_name(0, 4), "GATE")
-        self.assertEqual(rooms.read(0, 0, 4), "1")
-        self.assertEqual(rooms.read(0, -1, 4), "c")
-        self.assertEqual(rooms.get_floor_name(4), "sqrt")
+        self.assertEqual(rooms.get_hallway_name(0, -4), "GATE")
+        self.assertEqual(rooms.read(0, 0, -4), "1")
+        self.assertEqual(rooms.read(0, -1, -4), "c")
+        self.assertEqual(rooms.get_floor_name(-4), "sqrt")
 
     def test_parallel_4(self):
         rooms = translator(Handlers(StringHandler("Main",
@@ -392,11 +396,11 @@ class TranslatorTest(unittest.TestCase):
                                                   +
                                                   +
                                                   +
-                                                  =@@1 -4
+                                                  =@@-1 5
                                                   """)))
-        self.assertEqual(rooms.get_hallway_name(0, -4), "GATE")
-        self.assertEqual(rooms.read(0, 0, -4), "1")
-        self.assertEqual(rooms.read(0, -1, -4), "c")
+        self.assertEqual(rooms.get_hallway_name(0, 5), "GATE")
+        self.assertEqual(rooms.read(0, 0, 5), "1")
+        self.assertEqual(rooms.read(0, -1, 5), "c")
 
     def test_parallel_5(self):
         rooms = translator(Handlers(StringHandler("Main",
@@ -406,9 +410,9 @@ class TranslatorTest(unittest.TestCase):
                                                   /c
                                                   =@@@@
                                                   """)))
-        self.assertEqual(rooms.get_hallway_name(0, 1), "GATE")
-        self.assertEqual(rooms.read(0, 0, 1), "1")
-        self.assertEqual(rooms.read(0, -1, 1), "c")
+        self.assertEqual(rooms.get_hallway_name(0, -1), "GATE")
+        self.assertEqual(rooms.read(0, 0, -1), "1")
+        self.assertEqual(rooms.read(0, -1, -1), "c")
 
     def test_parallel_error(self):
         self.assertRaises(TranslatorError,

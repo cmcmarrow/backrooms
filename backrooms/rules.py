@@ -498,6 +498,32 @@ class Pop(Rule):
         yield
 
 
+class Switch(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(Switch, self).__init__("z", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        item_2 = conscious[c.WORK_STACK].pop()
+        item_1 = conscious[c.WORK_STACK].pop()
+        conscious[c.WORK_STACK].push(item_2)
+        conscious[c.WORK_STACK].push(item_1)
+        conscious.step()
+        yield
+
+
 class Duplicate(Rule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -1131,6 +1157,33 @@ class IntegerByte(Rule):
         yield
 
 
+class IntegerAbsolute(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(IntegerAbsolute, self).__init__("l", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        item = conscious[c.WORK_STACK].pop()
+        if isinstance(item, int):
+            conscious[c.WORK_STACK].push(abs(item))
+        else:
+            conscious[c.WORK_STACK].push(None)
+        conscious.step()
+        yield
+
+
 class IntegerModule(RuleModule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -1755,6 +1808,33 @@ class DynamicDump(Rule):
         yield
 
 
+class DoubleDuplicate(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(DoubleDuplicate, self).__init__("o", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        item_2 = conscious[c.WORK_STACK].pop()
+        item_1 = conscious[c.WORK_STACK].pop()
+        for _ in range(2):
+            conscious[c.WORK_STACK].push(item_1)
+            conscious[c.WORK_STACK].push(item_2)
+        conscious.step()
+        yield
+
+
 class UncommonModule(RuleModule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -1762,7 +1842,8 @@ class UncommonModule(RuleModule):
                                              work_space,
                                              (ReadFlip,
                                               WriteFlip,
-                                              DynamicDump))
+                                              DynamicDump,
+                                              DoubleDuplicate))
 
 
 RULES = (Halt,
@@ -1796,6 +1877,7 @@ RULES = (Halt,
          IsStackBottom,
          Pop,
          Duplicate,
+         Switch,
          Worker,
          Keep,
          Store,
