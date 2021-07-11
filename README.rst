@@ -5,9 +5,9 @@ Backrooms - v0.3.0
 ********
 Warning!
 ********
-Backrooms is still in Development Status Beta!
-Expect to still see bugs, broken behavior.
-But backrooms rules are all implemented and not expected to change much.
+Backrooms is still in Development Status Alpha!
+This means rules “intrusions” MAY still change!
+But the Esolang is close to being finalized.
 
 *****
 About
