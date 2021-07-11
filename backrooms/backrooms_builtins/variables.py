@@ -10,9 +10,7 @@ VARIABLES_NAME = "vars"
 
 VARIABLES = """
 ~GET
-/sri10iaephr
 ~SET
-/ehr
 """
 
 

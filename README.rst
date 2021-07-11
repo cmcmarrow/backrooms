@@ -29,28 +29,29 @@ Backrooms was designed to be:
 ********
 Road Map
 ********
-    * v0.3.0
-        * Development Status :: 4 - Beta
-        * add builtin libraries
-        * add PopFrame rule
-        * add HallwayNext rule
-        * add HallwayPast rule
-        * Restore registers on HallwayReturn
-        * Update backrooms command line parser
-        * Add examples
-    * v0.4.0
-        * Tests and bug fixes
-        * Add examples
-        * Update translator
-    * v1.0.0
-        * Development Status :: 5 - Production/Stable
-        * Clean code
-        * Write documentation
-        * Tests and bug fixes
-    * v1.1.0
-        * Development Status :: 6 - Mature
-        * Make Backrooms faster
-            * Rooms.set_hallway_name, Big-O(n) -> Big-O(n log(n))
-            * Rooms.remove_hallway, Big-O(n) -> Big-O(n log(n))
-            * Portal.new_conscious, Big-O(n) -> Big-O(n log(n))
-            * etc ...
+* v0.3.0
+    * add PopFrame rule
+    * add HallwayNext rule
+    * add HallwayPast rule
+    * Restore registers on HallwayReturn
+    * Update backrooms command line parser
+    * Add examples
+* v0.4.0
+    * Development Status :: 4 - Beta
+    * add builtin libraries
+    * Tests and bug fixes
+    * Add examples
+    * Update translator
+    * work on rules error handling
+* v1.0.0
+    * Development Status :: 5 - Production/Stable
+    * Clean code
+    * Write documentation
+    * Tests and bug fixes
+* v1.1.0
+    * Development Status :: 6 - Mature
+    * Make Backrooms faster
+        * Rooms.set_hallway_name, Big-O(n) -> Big-O(n log(n))
+        * Rooms.remove_hallway, Big-O(n) -> Big-O(n log(n))
+        * Portal.new_conscious, Big-O(n) -> Big-O(n log(n))
+        * etc ...
