@@ -1,5 +1,5 @@
 ##################
-Backrooms - v0.3.0
+Backrooms - v0.4.0
 ##################
 
 ********
@@ -28,20 +28,13 @@ Backrooms was designed to be:
 ********
 Road Map
 ********
-* v0.3.0
-    * add PopFrame rule
-    * add HallwayNext rule
-    * add HallwayPast rule
-    * Restore registers on HallwayReturn
-    * Update backrooms command line parser
-    * Add examples
 * v0.4.0
     * Development Status :: 4 - Beta
-    * add builtin libraries
+    * Add builtin libraries
     * Tests and bug fixes
     * Add examples
     * Update translator
-    * work on rules error handling
+    * Improve rule error handling
 * v1.0.0
     * Development Status :: 5 - Production/Stable
     * Clean code

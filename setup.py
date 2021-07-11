@@ -30,7 +30,7 @@ setup(
 
     extras_require={"dev": ["wheel", "twine", "pyinstaller"]},
 
-    classifiers=["Development Status :: 3 - Alpha",
+    classifiers=["Development Status :: 4 - Beta",
                  "Environment :: Console",
                  "Intended Audience :: Developers",
                  "Natural Language :: English",
