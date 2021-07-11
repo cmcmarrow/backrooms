@@ -10,6 +10,7 @@ import cProfile
 from typing import Optional, Tuple, Union
 
 # backrooms
+import backrooms as brs
 from . import backrooms_error
 from .backrooms_builtins import get_builtins
 from .portal import Portal
@@ -19,10 +20,6 @@ from .whisper import NOTSET, enable_whisper
 
 class BackRoomsError(backrooms_error.BackroomsError):
     pass
-
-
-def _str_to_bool(boolean: str):
-    return boolean.lower() not in ("false", "f", "", "0")
 
 
 def backrooms() -> None:    # TODO write tests
@@ -36,6 +33,36 @@ def backrooms() -> None:    # TODO write tests
                             type=str,
                             action="store",
                             help="path to main file")
+        parser.add_argument("-a",
+                            "--author",
+                            default=False,
+                            action="store_true",
+                            help="get author of backrooms")
+        parser.add_argument("-b",
+                            "--builtins",
+                            default=True,
+                            action="store_false",
+                            help="don't include built-in libraries")
+        parser.add_argument("-e",
+                            "--error-on-space",
+                            default=False,
+                            action="store_true",
+                            help="errors if portal lands on a space")
+        parser.add_argument("-p",
+                            "--profile",
+                            default=False,
+                            action="store_true",
+                            help="profiles backrooms")
+        parser.add_argument("-s",
+                            "--system-out",
+                            default=True,
+                            action="store_false",
+                            help="don't write to stdio")
+        parser.add_argument("-v",
+                            "--version",
+                            default=False,
+                            action="store_true",
+                            help="get version of backrooms")
         parser.add_argument("--lost-count",
                             default=0,
                             type=int,
@@ -46,28 +73,21 @@ def backrooms() -> None:    # TODO write tests
                             type=int,
                             action="store",
                             help="set lost rule count")
-        parser.add_argument("--error-on-space",
-                            default=False,
-                            type=_str_to_bool,
-                            action="store",
-                            help="errors if portal lands on a space")
-        parser.add_argument("--builtins",
-                            default=True,
-                            type=_str_to_bool,
-                            action="store",
-                            help="include built-in libraries")
         parser.add_argument("--whisper",
                             default=NOTSET,
                             type=str,
                             action="store",
                             help="set the log level [notset, debug, info, warning, error, critical]")
-        parser.add_argument("--profile",
-                            default=False,
-                            type=_str_to_bool,
-                            action="store",
-                            help="profiles backrooms")
         args = parser.parse_args()
+
+        if args.author:
+            print(brs.AUTHOR)
+
+        if args.version:
+            print(f"v{brs.MAJOR}.{brs.MINOR}.{brs.MAINTENANCE}")
+
         br = backrooms_api(code=args.file,
+                           sys_output=args.system_out,
                            lost_count=args.lost_count,
                            lost_rule_count=args.lost_rule_count,
                            error_on_space=args.error_on_space,
@@ -75,9 +95,13 @@ def backrooms() -> None:    # TODO write tests
                            whisper_level=args.whisper)
         if args.profile:
             with cProfile.Profile() as profiler:
-                br()
-            print(flush=True)
-            profiler.print_stats()
+                try:
+                    br()
+                except Exception as e:
+                    raise e
+                finally:
+                    print(flush=True)
+                    profiler.print_stats()
         else:
             br()
     except backrooms_error.BackroomsError as e:

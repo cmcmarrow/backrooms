@@ -31,13 +31,17 @@ Road Map
 ********
     * v0.3.0
         * Development Status :: 4 - Beta
-        * Write builtin library
-        * Write PopFrame rule
+        * add builtin libraries
+        * add PopFrame rule
+        * add HallwayNext rule
+        * add HallwayPast rule
         * Restore registers on HallwayReturn
+        * Update backrooms command line parser
         * Add examples
     * v0.4.0
         * Tests and bug fixes
         * Add examples
+        * Update translator
     * v1.0.0
         * Development Status :: 5 - Production/Stable
         * Clean code
