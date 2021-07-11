@@ -6,13 +6,18 @@ Copyright 2021 Charles McMarrow
 from distutils.core import setup
 import os
 
+
+# backrooms
+import backrooms
+
+
 with open(os.path.join("README.rst")) as readme:
     long_description = readme.read()
 
 setup(
     name="backrooms",
-    version="0.3.0",
-    author="Charles McMarrow",
+    version=f"{backrooms.MAJOR}.{backrooms.MINOR}.{backrooms.MAINTENANCE}",
+    author=backrooms.AUTHOR,
     author_email="Charles.McMarrow.4@gmail.com",
     url="https://github.com/cmcmarrow/backrooms",
     license="Apache Software License 2.0",

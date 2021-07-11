@@ -1409,6 +1409,16 @@ class HallwayCall(Rule):
             conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_X])
             conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_Y])
             conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_FLOOR])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R0])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R1])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R2])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R3])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R4])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R5])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R6])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R7])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R8])
+            conscious[c.FUNCTION_STACK].push(conscious[c.R9])
             conscious[c.PC_X] = 0
             conscious[c.PC_Y] = hallway
         else:
@@ -1638,6 +1648,58 @@ class HallwayRemove(Rule):
         yield
 
 
+class HallwayPast(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(HallwayPast, self).__init__("p", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        hallway = conscious[c.WORK_STACK].pop()
+        floor = conscious[c.WORK_STACK].pop()
+        if isinstance(hallway, int) and isinstance(floor, int):
+            conscious[c.WORK_STACK].push(rooms.get_past_hallway_location(hallway, floor))
+        conscious.step()
+        yield
+
+
+class HallwayNext(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(HallwayNext, self).__init__("e", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        hallway = conscious[c.WORK_STACK].pop()
+        floor = conscious[c.WORK_STACK].pop()
+        if isinstance(hallway, int) and isinstance(floor, int):
+            conscious[c.WORK_STACK].push(rooms.get_next_hallway_location(hallway, floor))
+        conscious.step()
+        yield
+
+
 class HallwayModule(RuleModule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -1649,7 +1711,9 @@ class HallwayModule(RuleModule):
                                              HallwayGetLocation,
                                              HallwayGetName,
                                              HallwaySet,
-                                             HallwayRemove))
+                                             HallwayRemove,
+                                             HallwayPast,
+                                             HallwayNext))
 
 
 class HallwayGetFloorName(Rule):
