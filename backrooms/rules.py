@@ -498,6 +498,29 @@ class Pop(Rule):
         yield
 
 
+class PopFrame(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(PopFrame, self).__init__("a", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious[c.WORK_STACK].pop_frame()
+        conscious.step()
+        yield
+
+
 class Switch(Rule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -1427,6 +1450,16 @@ class HallwayLevelCall(Rule):
                 conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_X])
                 conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_Y])
                 conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_FLOOR])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R0])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R1])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R2])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R3])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R4])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R5])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R6])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R7])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R8])
+                conscious[c.FUNCTION_STACK].push(conscious[c.R9])
                 conscious[c.PC_X] = 0
                 conscious[c.PC_Y] = hallway
                 conscious[c.PC_FLOOR] = floor
@@ -1455,6 +1488,16 @@ class HallwayReturn(Rule):
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
+        r9 = conscious[c.FUNCTION_STACK].pop()
+        r8 = conscious[c.FUNCTION_STACK].pop()
+        r7 = conscious[c.FUNCTION_STACK].pop()
+        r6 = conscious[c.FUNCTION_STACK].pop()
+        r5 = conscious[c.FUNCTION_STACK].pop()
+        r4 = conscious[c.FUNCTION_STACK].pop()
+        r3 = conscious[c.FUNCTION_STACK].pop()
+        r2 = conscious[c.FUNCTION_STACK].pop()
+        r1 = conscious[c.FUNCTION_STACK].pop()
+        r0 = conscious[c.FUNCTION_STACK].pop()
         v_floor = conscious[c.FUNCTION_STACK].pop()
         v_y = conscious[c.FUNCTION_STACK].pop()
         v_x = conscious[c.FUNCTION_STACK].pop()
@@ -1463,6 +1506,16 @@ class HallwayReturn(Rule):
         x = conscious[c.FUNCTION_STACK].pop()
         if isinstance(v_x, int) and isinstance(v_y, int) and isinstance(v_floor, int):
             if isinstance(x, int) and isinstance(y, int) and isinstance(floor, int):
+                conscious[c.R0] = r0
+                conscious[c.R1] = r1
+                conscious[c.R2] = r2
+                conscious[c.R3] = r3
+                conscious[c.R4] = r4
+                conscious[c.R5] = r5
+                conscious[c.R6] = r6
+                conscious[c.R7] = r7
+                conscious[c.R8] = r8
+                conscious[c.R9] = r9
                 conscious[c.PC_X] = x
                 conscious[c.PC_Y] = y
                 conscious[c.PC_FLOOR] = floor
@@ -1847,6 +1900,14 @@ class UncommonModule(RuleModule):
                                               DoubleDuplicate))
 
 
+class FrameModule(RuleModule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(FrameModule, self).__init__("r",
+                                          work_space,
+                                          ())
+
+
 RULES = (Halt,
          Output,
          Input,
@@ -1877,6 +1938,7 @@ RULES = (Halt,
          IsStackFrame,
          IsStackBottom,
          Pop,
+         PopFrame,
          Duplicate,
          Switch,
          Worker,

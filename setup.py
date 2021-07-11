@@ -11,7 +11,7 @@ with open(os.path.join("README.rst")) as readme:
 
 setup(
     name="backrooms",
-    version="0.2.0",
+    version="0.3.0",
     author="Charles McMarrow",
     author_email="Charles.McMarrow.4@gmail.com",
     url="https://github.com/cmcmarrow/backrooms",
@@ -25,7 +25,7 @@ setup(
 
     extras_require={"dev": ["wheel", "check-manifest", "twine", "pyinstaller"]},
 
-    classifiers=["Development Status :: 3 - Alpha",
+    classifiers=["Development Status :: 4 - Beta",
                  "Environment :: Console",
                  "Intended Audience :: Developers",
                  "Natural Language :: English",
