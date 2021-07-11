@@ -6,7 +6,7 @@ Backrooms - v0.3.0
 Warning!
 ********
 Backrooms is still in Development Status Alpha!
-This means rules “intrusions" MAY still change!
+This means rules "intrusions" MAY still change!
 But the Esolang is close to being finalized.
 
 *****
