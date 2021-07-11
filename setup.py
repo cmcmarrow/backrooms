@@ -28,9 +28,9 @@ setup(
     packages=["backrooms",
               "backrooms.backrooms_builtins"],
 
-    extras_require={"dev": ["wheel", "check-manifest", "twine", "pyinstaller"]},
+    extras_require={"dev": ["wheel", "twine", "pyinstaller"]},
 
-    classifiers=["Development Status :: 4 - Beta",
+    classifiers=["Development Status :: 3 - Alpha",
                  "Environment :: Console",
                  "Intended Audience :: Developers",
                  "Natural Language :: English",
