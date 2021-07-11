@@ -3,6 +3,7 @@ Copyright 2021 Charles McMarrow
 """
 
 # built-in
+import setuptools
 from distutils.core import setup
 import os
 
@@ -22,7 +23,6 @@ setup(
     url="https://github.com/cmcmarrow/backrooms",
     license="Apache Software License 2.0",
     description="3D, CISC Architecture and Esolang",
-    description_content_type="text/plain",
     long_description=long_description,
     long_description_content_type="text/x-rst",
     packages=["backrooms",
