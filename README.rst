@@ -9,7 +9,6 @@ Backrooms is still in Development Status Beta!
 Expect to still see bugs, broken behavior.
 But backrooms rules are all implemented and not expected to change much.
 
-
 *****
 About
 *****
