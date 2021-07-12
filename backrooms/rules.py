@@ -785,8 +785,6 @@ class StringLength(Rule):
         item = conscious[c.WORK_STACK].pop()
         if isinstance(item, str):
             conscious[c.WORK_STACK].push(len(item))
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -840,8 +838,6 @@ class StringAt(Rule):
                 conscious[c.WORK_STACK].push(item[at])
             except IndexError:
                 conscious[c.WORK_STACK].push(None)
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -865,10 +861,11 @@ class StringByte(Rule):
         :return: Generator[None, None, None]
         """
         item = conscious[c.WORK_STACK].pop()
-        if isinstance(item, str) and len(item) == 1:
-            conscious[c.WORK_STACK].push(ord(item))
-        else:
-            conscious[c.WORK_STACK].push(None)
+        if isinstance(item, str):
+            if len(item) == 1:
+                conscious[c.WORK_STACK].push(ord(item))
+            else:
+                conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -898,8 +895,6 @@ class StringSplit(Rule):
             front = item[:at]
             conscious[c.WORK_STACK].push(front)
             conscious[c.WORK_STACK].push(back)
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -926,8 +921,6 @@ class StringJoin(Rule):
         front = conscious[c.WORK_STACK].pop()
         if isinstance(front, str) and isinstance(back, str):
             conscious[c.WORK_STACK].push(front + back)
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -954,8 +947,6 @@ class StringEqual(Rule):
         string_1 = conscious[c.WORK_STACK].pop()
         if isinstance(string_1, str) and isinstance(string_2, str):
             conscious[c.WORK_STACK].push(int(string_1 == string_2))
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -982,8 +973,6 @@ class StringIn(Rule):
         string_1 = conscious[c.WORK_STACK].pop()
         if isinstance(string_1, str) and isinstance(string_2, str):
             conscious[c.WORK_STACK].push(int(string_1 in string_2))
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -1009,8 +998,6 @@ class StringUpper(Rule):
         item = conscious[c.WORK_STACK].pop()
         if isinstance(item, str):
             conscious[c.WORK_STACK].push(item.upper())
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -1036,8 +1023,6 @@ class StringLower(Rule):
         item = conscious[c.WORK_STACK].pop()
         if isinstance(item, str):
             conscious[c.WORK_STACK].push(item.lower())
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -1108,11 +1093,9 @@ class IntegerOperation(Rule):
         front = conscious[c.WORK_STACK].pop()
         if isinstance(front, int) and isinstance(back, int):
             try:
-                conscious[c.WORK_STACK].push(self._operation(front, back))
+                conscious[c.WORK_STACK].push(int(self._operation(front, back)))
             except ZeroDivisionError:
                 conscious[c.WORK_STACK].push(None)
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -1150,7 +1133,7 @@ class IntegerModular(IntegerOperation):
 class IntegerPower(IntegerOperation):
     def __init__(self,
                  work_space: WorkSpace):
-        super(IntegerPower, self).__init__(int.__floordiv__, "p", work_space)
+        super(IntegerPower, self).__init__(int.__pow__, "p", work_space)
 
 
 class IntegerByte(Rule):
@@ -1172,10 +1155,11 @@ class IntegerByte(Rule):
         :return: Generator[None, None, None]
         """
         item = conscious[c.WORK_STACK].pop()
-        if isinstance(item, int) and 0 <= item < 256:
-            conscious[c.WORK_STACK].push(chr(item))
-        else:
-            conscious[c.WORK_STACK].push(None)
+        if isinstance(item, int):
+            if 0 <= item < 256:
+                conscious[c.WORK_STACK].push(chr(item))
+            else:
+                conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
@@ -1201,8 +1185,6 @@ class IntegerAbsolute(Rule):
         item = conscious[c.WORK_STACK].pop()
         if isinstance(item, int):
             conscious[c.WORK_STACK].push(abs(item))
-        else:
-            conscious[c.WORK_STACK].push(None)
         conscious.step()
         yield
 
