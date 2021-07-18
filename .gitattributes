@@ -1,4 +1,4 @@
-**/*.brs linguist-language=Text
+**/*.brs linguist-language=backrooms
 **/*.brs linguist-vendored=false
 **/*.brs linguist-generated=false
 **/*.brs linguist-documentation=false
