@@ -132,6 +132,167 @@ class RuleModule(Rule):
                 yield
 
 
+class Branch(Rule):
+    def __init__(self,
+                 branch_function: Callable,
+                 start_character: str,
+                 work_space: WorkSpace):
+        super(Branch, self).__init__(start_character, work_space)
+        self._branch_function = branch_function
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious[c.BRANCH] = self._branch_function
+        conscious.step()
+        yield
+
+
+class BranchClear(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchClear, self).__init__(c.BRANCH_CLEAR, "C", work_space)
+
+
+class BranchLessThanZero(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchLessThanZero, self).__init__(c.BRANCH_LESS_THAN_ZERO, "L", work_space)
+
+
+class BranchGreaterThanZero(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchGreaterThanZero, self).__init__(c.BRANCH_GREATER_THAN_ZERO, "G", work_space)
+
+
+class BranchZero(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchZero, self).__init__(c.BRANCH_ZERO, "Z", work_space)
+
+
+class BranchNotZero(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchNotZero, self).__init__(c.BRANCH_NOT_ZERO, "N", work_space)
+
+
+class BranchIsInteger(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchIsInteger, self).__init__(c.BRANCH_IS_INTEGER, "I", work_space)
+
+
+class BranchIsString(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchIsString, self).__init__(c.BRANCH_IS_STRING, "S", work_space)
+
+
+class BranchIsNone(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchIsNone, self).__init__(c.BRANCH_IS_NONE, "O", work_space)
+
+
+class BranchIsStackFrame(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchIsStackFrame, self).__init__(c.BRANCH_IS_STACK_FRAME, "F", work_space)
+
+
+class BranchIsStackBottom(Branch):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(BranchIsStackBottom, self).__init__(c.BRANCH_IS_STACK_BOTTOM, "B", work_space)
+
+
+class Cite(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(Cite, self).__init__("c", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious.step()
+        conscious[c.WORK_STACK].push(portal.read_input())
+        yield
+
+
+class Duplicate(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(Duplicate, self).__init__("d", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        work_space = conscious[c.WORK_STACK]
+        work_space.push(work_space.peak())
+        conscious.step()
+        yield
+
+
+class Echo(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(Echo, self).__init__("e", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious.step()
+        output = conscious[c.WORK_STACK].peak()
+        if output is StackFrame:
+            output = "StackFrame"
+        elif output is StackBottom:
+            output = "StackBottom"
+        portal.write_output(output)
+        yield
+
+
 class Halt(Rule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -159,57 +320,6 @@ class Halt(Rule):
             if rooms.read(*conscious.at()) == "a":
                 conscious.step()
                 conscious[c.HALT] = True
-
-
-class Output(Rule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Output, self).__init__("e", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        conscious.step()
-        output = conscious[c.WORK_STACK].peak()
-        if output is StackFrame:
-            output = "StackFrame"
-        elif output is StackBottom:
-            output = "StackBottom"
-        portal.write_output(output)
-        yield
-
-
-class Input(Rule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Input, self).__init__("c", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        conscious.step()
-        conscious[c.WORK_STACK].push(portal.read_input())
-        yield
 
 
 class Hope(Rule):
@@ -241,58 +351,130 @@ class Hope(Rule):
             conscious.step()
 
 
-class One(Hope):
+class HopeOne(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(One, self).__init__("1", work_space)
+        super(HopeOne, self).__init__("1", work_space)
 
 
-class Two(Hope):
+class HopeTwo(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Two, self).__init__("2", work_space)
+        super(HopeTwo, self).__init__("2", work_space)
 
 
-class Three(Hope):
+class HopeThree(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Three, self).__init__("3", work_space)
+        super(HopeThree, self).__init__("3", work_space)
 
 
-class Four(Hope):
+class HopeFour(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Four, self).__init__("4", work_space)
+        super(HopeFour, self).__init__("4", work_space)
 
 
-class Five(Hope):
+class HopeFive(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Five, self).__init__("5", work_space)
+        super(HopeFive, self).__init__("5", work_space)
 
 
-class Six(Hope):
+class HopeSix(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Six, self).__init__("6", work_space)
+        super(HopeSix, self).__init__("6", work_space)
 
 
-class Seven(Hope):
+class HopeSeven(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Seven, self).__init__("7", work_space)
+        super(HopeSeven, self).__init__("7", work_space)
 
 
-class Eighth(Hope):
+class HopeEighth(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Eighth, self).__init__("8", work_space)
+        super(HopeEighth, self).__init__("8", work_space)
 
 
-class Nine(Hope):
+class HopeNine(Hope):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Nine, self).__init__("9", work_space)
+        super(HopeNine, self).__init__("9", work_space)
+
+
+class Keep(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(Keep, self).__init__("k", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious.step()
+        yield
+        if rooms.read(*conscious.at()).isdigit():
+            conscious[f"R{rooms.read(*conscious.at())}"] = conscious[c.WORK_STACK].peak()
+            conscious.step()
+        yield
+
+
+class Pop(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(Pop, self).__init__("p", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious[c.WORK_STACK].pop()
+        conscious.step()
+        yield
+
+
+class PopFrame(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(PopFrame, self).__init__("a", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious[c.WORK_STACK].pop_frame()
+        conscious.step()
+        yield
 
 
 class Shifter(Rule):
@@ -347,55 +529,52 @@ class Shifter(Rule):
             yield
 
 
-class Right(Shifter):
+class ShifterRight(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Right, self).__init__(1, 0, 0, ">", work_space)
+        super(ShifterRight, self).__init__(1, 0, 0, ">", work_space)
 
 
-class Left(Shifter):
+class ShifterLeft(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Left, self).__init__(-1, 0, 0, "<", work_space)
+        super(ShifterLeft, self).__init__(-1, 0, 0, "<", work_space)
 
 
-class Up(Shifter):
+class ShifterUp(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Up, self).__init__(0, 1, 0, "^", work_space)
+        super(ShifterUp, self).__init__(0, 1, 0, "^", work_space)
 
 
-class Down(Shifter):
+class ShifterDown(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Down, self).__init__(0, -1, 0, "v", work_space)
+        super(ShifterDown, self).__init__(0, -1, 0, "v", work_space)
 
 
-class DownUpper(Shifter):
+class ShifterDownUpper(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(DownUpper, self).__init__(0, -1, 0, "V", work_space)
+        super(ShifterDownUpper, self).__init__(0, -1, 0, "V", work_space)
 
 
-class Upper(Shifter):
+class ShifterUpper(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Upper, self).__init__(0, 0, 1, "{", work_space)
+        super(ShifterUpper, self).__init__(0, 0, 1, "{", work_space)
 
 
-class Lower(Shifter):
+class ShifterLower(Shifter):
     def __init__(self,
                  work_space: WorkSpace):
-        super(Lower, self).__init__(0, 0, -1, "}", work_space)
+        super(ShifterLower, self).__init__(0, 0, -1, "}", work_space)
 
 
-class Branch(Rule):
+class Store(Rule):
     def __init__(self,
-                 branch_function: Callable,
-                 start_character: str,
                  work_space: WorkSpace):
-        super(Branch, self).__init__(start_character, work_space)
-        self._branch_function = branch_function
+        super(Store, self).__init__("s", work_space)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -410,114 +589,11 @@ class Branch(Rule):
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
-        conscious[c.BRANCH] = self._branch_function
         conscious.step()
         yield
-
-
-class Clear(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Clear, self).__init__(c.BRANCH_CLEAR, "C", work_space)
-
-
-class LessThanZero(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(LessThanZero, self).__init__(c.BRANCH_LESS_THAN_ZERO, "L", work_space)
-
-
-class GreaterThanZero(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(GreaterThanZero, self).__init__(c.BRANCH_GREATER_THAN_ZERO, "G", work_space)
-
-
-class Zero(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Zero, self).__init__(c.BRANCH_ZERO, "Z", work_space)
-
-
-class NotZero(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(NotZero, self).__init__(c.BRANCH_NOT_ZERO, "N", work_space)
-
-
-class IsInteger(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(IsInteger, self).__init__(c.BRANCH_IS_INTEGER, "I", work_space)
-
-
-class IsString(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(IsString, self).__init__(c.BRANCH_IS_STRING, "S", work_space)
-
-
-class IsNone(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(IsNone, self).__init__(c.BRANCH_IS_NONE, "O", work_space)
-
-
-class IsStackFrame(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(IsStackFrame, self).__init__(c.BRANCH_IS_STACK_FRAME, "F", work_space)
-
-
-class IsStackBottom(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(IsStackBottom, self).__init__(c.BRANCH_IS_STACK_BOTTOM, "B", work_space)
-
-
-class Pop(Rule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Pop, self).__init__("p", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        conscious[c.WORK_STACK].pop()
-        conscious.step()
-        yield
-
-
-class PopFrame(Rule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(PopFrame, self).__init__("a", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        conscious[c.WORK_STACK].pop_frame()
-        conscious.step()
+        if rooms.read(*conscious.at()).isdigit():
+            conscious[c.WORK_STACK].push(conscious[f"R{rooms.read(*conscious.at())}"])
+            conscious.step()
         yield
 
 
@@ -544,103 +620,6 @@ class Switch(Rule):
         conscious[c.WORK_STACK].push(item_2)
         conscious[c.WORK_STACK].push(item_1)
         conscious.step()
-        yield
-
-
-class Duplicate(Rule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Duplicate, self).__init__("d", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        work_space = conscious[c.WORK_STACK]
-        work_space.push(work_space.peak())
-        conscious.step()
-        yield
-
-
-class Worker(Rule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Worker, self).__init__("q", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        conscious.step()
-        yield
-        if rooms.read(*conscious.at()).isdigit():
-            conscious[c.WORKING_REGISTER] = "R" + rooms.read(*conscious.at())
-            rule_step_visuals.append(conscious.at())
-            conscious.step()
-            yield
-
-
-class Keep(Rule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Keep, self).__init__("k", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        conscious.step()
-        conscious[conscious[c.WORKING_REGISTER]] = conscious[c.WORK_STACK].peak()
-        yield
-
-
-class Store(Rule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(Store, self).__init__("s", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        conscious.step()
-        conscious[c.WORK_STACK].push(conscious[conscious[c.WORKING_REGISTER]])
         yield
 
 
@@ -1946,54 +1925,46 @@ class UncommonModule(RuleModule):
                                               DoubleDuplicate))
 
 
-class FrameModule(RuleModule):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(FrameModule, self).__init__("r",
-                                          work_space,
-                                          ())
-
-
-RULES = (Halt,
-         Output,
-         Input,
-         One,
-         Two,
-         Three,
-         Four,
-         Five,
-         Six,
-         Seven,
-         Eighth,
-         Nine,
-         Right,
-         Left,
-         Up,
-         Down,
-         DownUpper,
-         Upper,
-         Lower,
-         Clear,
-         LessThanZero,
-         GreaterThanZero,
-         Zero,
-         NotZero,
-         IsInteger,
-         IsString,
-         IsNone,
-         IsStackFrame,
-         IsStackBottom,
+RULES = (BranchClear,
+         BranchLessThanZero,
+         BranchGreaterThanZero,
+         BranchZero,
+         BranchNotZero,
+         BranchIsInteger,
+         BranchIsString,
+         BranchIsNone,
+         BranchIsStackFrame,
+         BranchIsStackBottom,
+         Cite,
+         Duplicate,
+         Echo,
+         Halt,
+         HopeOne,
+         HopeTwo,
+         HopeThree,
+         HopeFour,
+         HopeFive,
+         HopeSix,
+         HopeSeven,
+         HopeEighth,
+         HopeNine,
+         IntegerModule,
+         Keep,
          Pop,
          PopFrame,
-         Duplicate,
-         Switch,
-         Worker,
-         Keep,
+         ShifterRight,
+         ShifterLeft,
+         ShifterUp,
+         ShifterDown,
+         ShifterDownUpper,
+         ShifterUpper,
+         ShifterLower,
          Store,
+         Switch,
+
          Read,
          Write,
          StringModule,
-         IntegerModule,
          X,
          Y,
          Floor,

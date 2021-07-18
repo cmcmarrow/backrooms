@@ -35,6 +35,12 @@ Road Map
     * Add examples
     * Update translator only allow valid row characters
     * Improve rule error handling
+    * Drop Rule Worker
+    * Modified Store & Keep
+    * Add ClearStack Rule
+    * Modified Thread Rule
+    * Add ThreadLock
+    * Add ThreadUnlock
 * v1.0.0
     * Development Status :: 5 - Production/Stable
     * Clean code

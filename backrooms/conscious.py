@@ -23,7 +23,6 @@ WORK_STACK = "WORK_STACK"
 FUNCTION_STACK = "FUNCTION_RET_STACK"
 
 # Normal Registers
-WORKING_REGISTER = "WORKING_REGISTER"
 R0 = "R0"
 R1 = "R1"
 R2 = "R2"
@@ -129,7 +128,6 @@ class Conscious(Dict):
         """
         new_conscious = {WORK_STACK: stack.Stack(),
                          FUNCTION_STACK: stack.Stack(),
-                         WORKING_REGISTER: R0,
                          R0: None,
                          R1: None,
                          R2: None,
