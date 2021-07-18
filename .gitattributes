@@ -1,5 +1,1 @@
-**/*.brs linguist-language=Text
-**/*.brs linguist-vendored=false
-**/*.brs linguist-generated=false
-**/*.brs linguist-documentation=false
-**/*.brs linguist-detectable=true
+**/*.brs linguist-language=backrooms
