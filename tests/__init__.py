@@ -8,11 +8,13 @@ import sys
 import unittest
 
 # backrooms
+from . import full_test_runner
 from . import rooms_tests
 from . import translator_tests
 from . import stack_tests
 from . import conscious_tests
 from . import test_files
+from . import rules_tests
 
 # add all tests to namespace
 for module_name, module in vars().copy().items():

@@ -38,8 +38,8 @@ class TestFileHandler(unittest.TestCase):
         self.assertRaises(StopIteration, next, handler)
 
     def test_file_handler_2(self):
-        handler = FileHandler(test_files.get_path("test_file_handler"))
-        self.assertEqual(handler.get_name(), "test_file_handler")
+        handler = FileHandler(test_files.get_path("test_file_handler2"))
+        self.assertEqual(handler.get_name(), "test_file_handler2")
         self.assertIsInstance(iter(handler), FileHandler)
 
         self.assertEqual(next(handler), "TEST")
@@ -182,6 +182,11 @@ class TranslatorTest(unittest.TestCase):
         self.assertRaises(TranslatorError,
                           translator,
                           Handlers(StringHandler("Main", "/cats" + chr(500))))
+
+    def test_row_error_2(self):
+        self.assertRaises(TranslatorError,
+                          translator,
+                          Handlers(StringHandler("Main", "/cats" + chr(11))))
 
     def test_comment(self):
         rooms = translator(Handlers(StringHandler("Main", "#Comment\n# test")))

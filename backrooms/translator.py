@@ -18,6 +18,9 @@ from .backrooms_error import BackroomsError
 from .rooms import Rooms
 
 INCLUDE_FILE_EXTENSION = ".brs"
+VALID_ROW_CHARACTERS = set(string.ascii_letters
+                           + string.digits
+                           + "`~-_=+!@#$%^&*()_+[{]}\\|;:'\",<.>/? ")
 
 
 class TranslatorError(BackroomsError):
@@ -321,6 +324,8 @@ def translator(handlers: Handlers) -> Rooms:
             # row
             if line.startswith("/"):
                 # write row into rooms
+                if any((characters not in VALID_ROW_CHARACTERS for characters in line[1:])):
+                    raise TranslatorError.bad_line(full_line, handlers.get_line_number(), handlers.get_name())
                 rooms.write_line(x, y, floor, line[1:], 1, 0, 0)
                 # go down a row
                 y += -1
