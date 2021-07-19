@@ -48,6 +48,7 @@ Road Map
     * Tests and bug fixes
 * v1.1.0
     * Development Status :: 6 - Mature
+    * Clean code
     * Make Backrooms faster
         * Rooms.set_hallway_name, Big-O(n) -> Big-O(n log(n))
         * Rooms.remove_hallway, Big-O(n) -> Big-O(n log(n))

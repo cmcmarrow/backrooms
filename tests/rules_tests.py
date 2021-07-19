@@ -32,6 +32,14 @@ class TestRules(unittest.TestCase):
         self.assertEqual(stream[5], "")
         self.assertEqual(stream[6], "")
 
+    def test_clear_stack(self):
+        stream = full_test("clear_stack.brs").get_output_stream()
+        self.assertEqual(len(stream), 4)
+        self.assertEqual(stream[0], 41)
+        self.assertEqual(stream[1], "StackBottom")
+        self.assertEqual(stream[2], 5)
+        self.assertEqual(stream[3], "StackBottom")
+
     def test_duplicate(self):
         stream = full_test("duplicate.brs").get_output_stream()
         self.assertEqual(len(stream), 8)
@@ -238,3 +246,28 @@ class TestRules(unittest.TestCase):
         self.assertEqual(stream[4], "str")
         self.assertEqual(stream[5], "StackBottom")
         self.assertEqual(stream[6], "StackBottom")
+
+    def test_thread(self):
+        stream = full_test("thread.brs").get_output_stream()
+        self.assertEqual(len(stream), 70)
+        self.assertEqual(stream[0], 0)
+        self.assertEqual(stream[1], -1)
+        self.assertEqual(stream[2], 0)
+        self.assertEqual(stream[3], "not main thread")
+        ids = (1, 17, 9, 18, 5, 19, 10, 20, 3, 21, 11, 22, 6, 23, 12, 24,
+               2, 25, 13, 26, 7, 27, 14, 28, 4, 29, 15, 30, 8, 31, 16, 32)
+        for spot, i in enumerate(ids):
+            self.assertEqual(stream[spot * 2 + 4], i)
+            self.assertEqual(stream[spot * 2 + 5], " ")
+        self.assertEqual(stream[68], "done")
+        self.assertEqual(stream[69], "done")
+
+    def test_thread_2(self):
+        stream = full_test("thread_2.brs").get_output_stream()
+        self.assertEqual(len(stream), 1)
+        self.assertEqual(stream[0], "StackBottom")
+
+    def test_thread_3(self):
+        stream = full_test("thread_3.brs").get_output_stream()
+        self.assertEqual(len(stream), 1)
+        self.assertEqual(stream[0], 1)

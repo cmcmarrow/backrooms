@@ -19,7 +19,7 @@ class StackFrame:
 class Stack:
     def __init__(self):
         """
-        info: Simple stack with some stack frames
+        info: Simple stack with some stack frames.
         """
         self._stack: List[object] = [StackBottom]
 
@@ -46,7 +46,7 @@ class Stack:
 
     def peak(self) -> object:   # TODO test
         """
-        info: Peak at item on top of stack
+        info: Peak at item on top of stack.
         :return: object
         """
         return self._stack[-1]
@@ -73,3 +73,11 @@ class Stack:
         while not self.is_empty():
             if self.pop() is StackFrame:
                 return
+
+    def clear(self) -> None:    # TODO test
+        """
+        info: Clear data off stack.
+        :return:
+        """
+        self._stack.clear()
+        self._stack.append(StackBottom)
