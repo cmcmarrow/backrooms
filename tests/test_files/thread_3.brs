@@ -1,0 +1,3 @@
+~GATE
+/tttiZVCe~ha
+/     >Cp
