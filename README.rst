@@ -2,13 +2,6 @@
 Backrooms - v0.4.0
 ##################
 
-********
-Warning!
-********
-Backrooms is still in Development Status Alpha!
-This means rules "intrusions" MAY still change!
-But the Esolang is close to being finalized.
-
 *****
 About
 *****
@@ -22,25 +15,44 @@ backrooms was inspired by:
 Backrooms was designed to be:
     * hackable VIA memory overflow attacks, poor error handling, ect.
     * visually pleasing.
-    * enjoy able to write small/medium programs.
+    * enjoyable to write small/medium programs.
     * capable to rewrite all of a program at run-time.
+
+********
+Warning!
+********
+Backrooms is still in Development Status Beta!
+This means rules "intrusions" have been finalized!
+Expect to see some share edges still.
+
+******
+v0.4.0
+******
+* Development Status :: 4 - Beta
+* Add builtin libraries
+* Tests and bug fixes
+* Add examples
+* Update Translator only allow valid row characters
+* Improve Rule error handling
+* Remove Worker Rule
+* Add ThreadLock Rule
+* Add ThreadUnlock Rule
+* Add UncommonHotPatch Rule
+* Add UncommonSimpleDump Rule
+* Add Forward Mirror
+* Add Backward Mirror
+* Add Fall Back to must Rules
+* Modified Store Rule
+* Modified Keep Rule
+* Modified UncommonDynamicDump Rule
+* Modified Thread Rule
+* Modified HallwayModule
+* Modified LevelModule
 
 ********
 Road Map
 ********
-* v0.4.0
-    * Development Status :: 4 - Beta
-    * Add builtin libraries
-    * Tests and bug fixes
-    * Add examples
-    * Update translator only allow valid row characters
-    * Improve rule error handling
-    * Drop Rule Worker
-    * Modified Store & Keep
-    * Add ClearStack Rule
-    * Modified Thread Rule
-    * Add ThreadLock
-    * Add ThreadUnlock
+* Add ClearStack Rule
 * v1.0.0
     * Development Status :: 5 - Production/Stable
     * Clean code

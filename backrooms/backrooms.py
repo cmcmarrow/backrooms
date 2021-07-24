@@ -7,6 +7,9 @@ This script holds a the backrooms API and console interface.
 # built-in
 import argparse
 import cProfile
+from copy import deepcopy
+import pstats
+from pstats import SortKey
 from typing import Optional, Tuple, Union
 
 # backrooms
@@ -73,6 +76,11 @@ def backrooms() -> None:    # TODO write tests
                             type=int,
                             action="store",
                             help="set lost rule count")
+        parser.add_argument("--profile_range",
+                            default=1,
+                            type=int,
+                            action="store",
+                            help="")
         parser.add_argument("--whisper",
                             default=NOTSET,
                             type=str,
@@ -86,28 +94,49 @@ def backrooms() -> None:    # TODO write tests
         if args.version:
             print(f"v{brs.MAJOR}.{brs.MINOR}.{brs.MAINTENANCE}")
 
-        br = backrooms_api(code=args.file,
-                           sys_output=args.system_out,
-                           lost_count=args.lost_count,
-                           lost_rule_count=args.lost_rule_count,
-                           error_on_space=args.error_on_space,
-                           br_builtins=args.builtins,
-                           whisper_level=args.whisper)
         if args.profile:
-            with cProfile.Profile() as profiler:
-                try:
-                    br()
-                except Exception as e:
-                    raise e
-                finally:
-                    print(flush=True)
-                    profiler.print_stats()
+            try:
+                with cProfile.Profile(builtins=False) as profiler_translator:
+                    for _ in range(args.profile_range):
+                        br = backrooms_api(code=args.file,
+                                           sys_output=args.system_out,
+                                           lost_count=args.lost_count,
+                                           lost_rule_count=args.lost_rule_count,
+                                           error_on_space=args.error_on_space,
+                                           br_builtins=args.builtins,
+                                           whisper_level=args.whisper)
+
+                profiler_run_time = cProfile.Profile(builtins=False)
+                for _ in range(args.profile_range):
+                    profiler_run_time.disable()
+                    br_copy = deepcopy(br)
+                    profiler_run_time.enable(builtins=False)
+                    br_copy()
+                profiler_run_time.disable()
+            finally:
+                print(flush=True)
+                print("TRANSLATOR PROFILE:")
+                stats = pstats.Stats(profiler_translator)
+                stats.sort_stats(SortKey.TIME)
+                stats.print_stats()
+                print(flush=True)
+                print("RUN TIME PROFILE:")
+                stats = pstats.Stats(profiler_run_time)
+                stats.sort_stats(SortKey.TIME)
+                stats.print_stats()
         else:
+            br = backrooms_api(code=args.file,
+                               sys_output=args.system_out,
+                               lost_count=args.lost_count,
+                               lost_rule_count=args.lost_rule_count,
+                               error_on_space=args.error_on_space,
+                               br_builtins=args.builtins,
+                               whisper_level=args.whisper)
             br()
     except backrooms_error.BackroomsError as e:
-        print(f"ERROR: {e}")
+        print(f"\nERROR: {e}", flush=True)
     except KeyboardInterrupt:
-        print("Keyboard Interrupt!")
+        print("\nKeyboard Interrupt!", flush=True)
 
 
 def backrooms_api(code: Union[str, Handler, Handlers],
