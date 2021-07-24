@@ -56,6 +56,10 @@ class TranslatorError(BackroomsError):
             return cls(f"Bad line at {handler_name}:{line_number}: {repr(line)}!")
         return cls(f"Bad line at {handler_name}:{line_number}:{str(error)}: {repr(line)}!")
 
+    @classmethod
+    def file_not_found_error(cls, name: str):
+        return cls(f"File not found: {repr(name)}")
+
 
 class Handler:
     def __init__(self,
@@ -120,7 +124,10 @@ class FileHandler(Handler):
 
     def __next__(self) -> str:
         if self._file_iter is None:
-            self._file_handler = open(self._path)
+            try:
+                self._file_handler = open(self._path)
+            except FileNotFoundError:
+                raise TranslatorError.file_not_found_error(self._path)
             self._file_iter = iter(self._file_handler)
         return next(self._file_iter).rstrip("\n")
 

@@ -26,3 +26,12 @@ for module_name, module in vars().copy().items():
             del module_var
     del module_name
     del module
+
+
+def tests() -> None:
+    """
+    info: Run tests and write to stdio.
+    :return: None
+    """
+    unittest.main(module=__name__,
+                  exit=False)

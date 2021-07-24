@@ -17,7 +17,7 @@ def full_test(file: str,
               inputs: Optional[Tuple[str, ...]] = None,
               lost_count: int = 10000,
               lost_rule_count: int = 10000,
-              error_on_space: bool = False,
+              error_on_space: bool = True,
               br_builtins: bool = True) -> backrooms.portal.Portal:
     """
     info: Load file and run backrooms silently.

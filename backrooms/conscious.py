@@ -53,9 +53,9 @@ HALT = "HALT"
 
 
 # TODO test
-def _to_branch_int(obj: Union[int, str, stack.StackFrame, stack.StackBottom, None]) -> int:
+def _to_int(obj: Union[int, str, stack.StackFrame, stack.StackBottom, None]) -> int:
     if isinstance(obj, str):
-        return int(bool(obj))
+        return len(obj)
     elif obj is None:
         return 0
     elif obj is stack.StackFrame:
@@ -70,19 +70,19 @@ def _clear(conscious: 'Conscious') -> True:
 
 
 def _less_than_zero(conscious: 'Conscious') -> True:
-    return _to_branch_int(conscious[WORK_STACK].peak()) < 0
+    return _to_int(conscious[WORK_STACK].peak()) < 0
 
 
 def _greater_than_zero(conscious: 'Conscious') -> True:
-    return _to_branch_int(conscious[WORK_STACK].peak()) > 0
+    return _to_int(conscious[WORK_STACK].peak()) > 0
 
 
 def _zero(conscious: 'Conscious') -> True:
-    return _to_branch_int(conscious[WORK_STACK].peak()) == 0
+    return _to_int(conscious[WORK_STACK].peak()) == 0
 
 
 def _not_zero(conscious: 'Conscious') -> True:
-    return _to_branch_int(conscious[WORK_STACK].peak()) != 0
+    return _to_int(conscious[WORK_STACK].peak()) != 0
 
 
 def _is_integer(conscious: 'Conscious') -> True:

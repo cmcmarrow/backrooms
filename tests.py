@@ -2,9 +2,10 @@
 Copyright 2021 Charles McMarrow
 """
 
+
 # backrooms
-from tests import *
+from tests import tests
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    tests()
