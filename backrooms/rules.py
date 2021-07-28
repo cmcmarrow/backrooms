@@ -266,12 +266,6 @@ class Branch(Rule):
         yield
 
 
-class BranchClear(Branch):
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchClear, self).__init__(c.BRANCH_CLEAR, "C", work_space)
-
-
 class BranchLessThanZero(Branch):
     def __init__(self,
                  work_space: WorkSpace):
@@ -1407,6 +1401,7 @@ class Shifter(Rule):
         else:
             conscious.step()
             yield
+        conscious[c.BRANCH] = c.BRANCH_CLEAR
 
 
 class ShifterRight(Shifter):
@@ -2193,7 +2188,6 @@ class Write(Rule):
 
 
 RULES = (BackMirror,
-         BranchClear,
          BranchLessThanZero,
          BranchGreaterThanZero,
          BranchZero,

@@ -348,6 +348,55 @@ class TranslatorTest(unittest.TestCase):
                                           "%      "))
         self.assertRaises(TranslatorError, translator, handlers)
 
+    def test_include(self):
+        handler = StringHandler("Main",
+                                "!S2")
+        handler_2 = StringHandler("S2",
+                                  "/3")
+        rooms = translator(Handlers(handler, ((handler_2,),)))
+
+        self.assertEqual(rooms.get_floor_name(-1), "S2")
+        self.assertEqual(rooms.read(0, 0, -1), "3")
+
+    def test_include_error(self):
+        handlers = Handlers(StringHandler("Main",
+                                          "!@"))
+        self.assertRaises(TranslatorError, translator, handlers)
+
+    def test_include_error_2(self):
+        handlers = Handlers(StringHandler("Main",
+                                          "!^&*(^("))
+        self.assertRaises(TranslatorError, translator, handlers)
+
+    def test_include_error_3(self):
+        handler_2 = StringHandler("S2",
+                                  "/3")
+
+        handlers = Handlers(StringHandler("Main",
+                                          "!S2   @"),
+                            ((handler_2,),))
+        self.assertRaises(TranslatorError, translator, handlers)
+
+    def test_include_error_4(self):
+        handler_2 = StringHandler("S2",
+                                  "/3")
+        handlers = Handlers(StringHandler("Main",
+                                          "!S2  asdf cats"),
+                            ((handler_2,),))
+        self.assertRaises(TranslatorError, translator, handlers)
+
+    def test_include_error_5(self):
+        handlers = Handlers(StringHandler("Main",
+                                          "!      "))
+        self.assertRaises(TranslatorError, translator, handlers)
+
+    def test_include_error_6(self):
+        handler = StringHandler("Main",
+                                "!S2\n!S2")
+        handler_2 = StringHandler("S2",
+                                  "/3")
+        self.assertRaises(TranslatorError, translator, Handlers(handler, ((handler_2,),)))
+
     def test_parallel(self):
         rooms = translator(Handlers(StringHandler("Main",
                                                   """

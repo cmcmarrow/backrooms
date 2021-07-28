@@ -29,34 +29,38 @@ Expect to see some share edges still.
 v0.4.0
 ******
 * Development Status :: 4 - Beta
-* Add builtin libraries
 * Tests and bug fixes
-* Add examples
-* Update Translator only allow valid row characters
-* Improve Rule error handling
-* Remove Worker Rule
-* Add ThreadLock Rule
-* Add ThreadUnlock Rule
-* Add UncommonHotPatch Rule
-* Add UncommonSimpleDump Rule
-* Add Forward Mirror
-* Add Backward Mirror
-* Add Fall Back to must Rules
+* Added examples
+* Updated Translator only allow valid row characters
+* Added must include
+* Improved Rule error handling
+* Removed Worker Rule
+* Removed Clear Rule
+* Added ThreadLock Rule
+* Added ThreadUnlock Rule
+* Added ClearStack Rule
+* Added UncommonHotPatch Rule
+* Added UncommonSimpleDump Rule
+* Added Forward Mirror
+* Added Backward Mirror
+* Added Fall Back to must Rules
 * Modified Store Rule
 * Modified Keep Rule
 * Modified UncommonDynamicDump Rule
 * Modified Thread Rule
 * Modified HallwayModule
 * Modified LevelModule
+* Wrote documentation
 
 ********
 Road Map
 ********
-* Add ClearStack Rule
 * v1.0.0
     * Development Status :: 5 - Production/Stable
+    * Add builtin libraries
+    * Add examples
     * Clean code
-    * Write documentation
+    * Write more documentation
     * Tests and bug fixes
 * v1.1.0
     * Development Status :: 6 - Mature

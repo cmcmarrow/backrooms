@@ -13,9 +13,6 @@ class TestRules(unittest.TestCase):
     def test_branch(self):
         full_test("branch.brs")
 
-    def test_branch_clear(self):
-        full_test("branch_clear.brs")
-
     def test_branch_is_type(self):
         full_test("branch_is_type.brs")
 

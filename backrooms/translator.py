@@ -35,6 +35,16 @@ class TranslatorError(BackroomsError):
         return cls(f"{repr(include)} is a missing include!")
 
     @classmethod
+    def must_include(cls,
+                     include: str) -> 'TranslatorError':
+        """
+        info: Used to indicate that a script has all ready been included.
+        :param include: str
+        :return: TranslatorError
+        """
+        return cls(f"{repr(include)} has all ready been included!")
+
+    @classmethod
     def name_collision(cls, name: str):
         return cls(f"Name collision with {name}!")
 
@@ -212,7 +222,7 @@ class Handlers:
             return self._line_number
 
     def include(self,
-                name: str) -> None:
+                name: str) -> bool:
         """
         info: Includes name if it has not been included all ready.
         :param name: str
@@ -226,9 +236,10 @@ class Handlers:
                 if name in name_space:
                     self._used_names.add(name)
                     self._handlers.append(name_space[name])
-                    return
+                    return True
             # could not find the include handler
             raise TranslatorError.missing_include(name)
+        return False
 
 
 def _tokenize_line(line: str) -> List[str]:
@@ -376,6 +387,20 @@ def translator(handlers: Handlers) -> Rooms:
                 # check that we have include name
                 if tokens:
                     handlers.include(tokens.pop(0))
+                    # check that we are out of tokens
+                    if tokens:
+                        raise TranslatorError.bad_line(full_line, handlers.get_line_number(), handlers.get_name())
+                else:
+                    raise TranslatorError.bad_line(full_line, handlers.get_line_number(), handlers.get_name())
+            # must include
+            elif line.startswith("!"):
+                tokens = _tokenize_line(line[1:])
+                # check that we have include name
+                if tokens:
+                    script = tokens.pop(0)
+                    # include script and check that it was not all ready included
+                    if not handlers.include(script):
+                        raise TranslatorError.must_include(script)
                     # check that we are out of tokens
                     if tokens:
                         raise TranslatorError.bad_line(full_line, handlers.get_line_number(), handlers.get_name())
