@@ -6,13 +6,11 @@ Copyright 2021 Charles McMarrow
 # backrooms
 from backrooms.translator import StringHandler
 
-VARIABLES_NAME = "vars"
+NAME = "struct"
 
-VARIABLES = """
-~GET
-~SET
+SCRIPT = """
 """
 
 
 def get_handler() -> StringHandler:
-    return StringHandler(VARIABLES_NAME, VARIABLES)
+    return StringHandler(NAME, SCRIPT)

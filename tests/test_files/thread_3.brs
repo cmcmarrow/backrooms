@@ -1,3 +1,3 @@
 ~GATE
-/tttiZVCe~ha
-/     >Cp
+/tttiZVe~ha
+/     >p

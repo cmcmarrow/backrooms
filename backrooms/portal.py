@@ -117,10 +117,10 @@ class Portal:
                 conscious = self._consciouses.popleft()
                 # whisper conscious location
                 whisper.info(f"{conscious[ID]} {conscious.at()}: {repr(self._rooms.read(*conscious.at()))}")
-                whisper.debug(f"{conscious[c.R0]} {conscious[c.R1]}"
+                whisper.debug(f"{conscious[c.R0]} {conscious[c.R1]} "
                               f"{conscious[c.R2]} {conscious[c.R3]} {conscious[c.R4]} {conscious[c.R5]} "
                               f"{conscious[c.R6]} {conscious[c.R7]} {conscious[c.R8]} {conscious[c.R9]}")
-                whisper.debug(f"{conscious[c.BRANCH]} {conscious[c.WORK_STACK].peak()} "
+                whisper.debug(f"{conscious[c.BRANCH]} {repr(conscious[c.WORK_STACK].peak())} "
                               f"{conscious[c.FUNCTION_STACK].peak()}")
                 # get rule
                 rule = self._rules.get(self._rooms.read(*conscious.at()))

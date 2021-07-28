@@ -1,6 +1,6 @@
+# 1 will echo forever and 0 will echo a single time.
+# Any other input will default to a 1.
 ~GATE
-/cicOvCZVCpri1V
-/    C  C     .
-/    p  >...>Zv~ha
-/    .      e C
-/    >ri1...^.<
+/cicOvZVpri1V
+/    p >.e>NV~ha
+/    >ri1e^e<

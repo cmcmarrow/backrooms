@@ -1,7 +1,7 @@
 ~GATE
 /IVSVOVFVBV
-/         >Cri34SVOVFVBVIV
-/                        >pCrs"s"OVFVBVIVSV
-/                                         >pCrnFVBVIVSVOV
-/                                                       >pCrfBVIVSVOVFV
-/                                                                     >pC~ha
+/         >ri34SVOVFVBVIV
+/                       >prs"s"OVFVBVIVSV
+/                                       >prnFVBVIVSVOV
+/                                                    >prfBVIVSVOVFV
+/                                                                 >p~ha

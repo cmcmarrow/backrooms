@@ -32,9 +32,8 @@ class TestStack(unittest.TestCase):
         stack.push(StackBottom)
         stack.push(3)
 
-        stack.pop()
-        stack.pop()
-
+        self.assertEqual(stack.pop(), 3)
+        self.assertEqual(stack.pop(), 2)
         self.assertIs(stack.pop(), StackBottom)
         self.assertIs(stack.pop(), StackBottom)
 
