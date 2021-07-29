@@ -1,22 +1,25 @@
 {{WIP}}
 = backrooms =
-'''backrooms''' uses a 3d memory spaces that holds a single Extended ASCII character per room “cell”. It has 10 registers and 2 built in stacks. Rule’s “instructions” can be more than one character long. It also has 5 data types.
+'''backrooms''' uses a 3d memory spaces that holds a single Extended ASCII character per room “cell”.
+It has 10 registers and 2 built in stacks per conscious "thread". Rule’s “instructions” can be more than one character long.
+It also has 5 data types that can be used with the registers or stacks.
+Data can be stored across multiple rooms and could be read as instructions during run-time or be re-read into data.
 
 == About ==
 * Author: '''Charles McMarrow'''
 * Conceived: '''5/22/2021'''
-* Birthday: TBA
+* Birthday: '''SOON'''
 
-Official Interpreter:
+=== Official Interpreter ===
 * https://github.com/cmcmarrow/backrooms
 * '''pip install backrooms'''
 
-backrooms was inspired by:
+=== Inspiration ===
 * backrooms Creepypasta/MEME
 * ASCIIDOTS Esolang
 * CISC Architecture
 
-Backrooms was designed to be:
+=== backrooms was designed to be ===
 * hackable VIA memory overflow attacks, poor error handling, ect.
 * visually pleasing.
 * enjoyable to write small/medium programs.
@@ -60,98 +63,269 @@ Backrooms was designed to be:
 * StackBottom
 
 == Meta-Language ==
-* ::= is a definition
+Note: This Meta-Language is here to help describe backrooms.
+* ::= start to definition
 * | alternative definition
-* [ ] optional
-* { } zero or more occurrences
-* ( ) only one occurrence
-* x non-terminal symbol x
-* "x" terminal symbol x
-* \x99 byte reputation of character "c"
-* "\"" terminal symbol "
+* [] optional
+* {} zero or more occurrences
+* () only one occurrence
+* <X> name of definition <X>
+* "x" non-special symbol x
+* "\"" special symbol  "
+* \x120 byte reputation of symbol or special symbol x
+
 
 === Meta-Language Implementation ===
-* DIGIT ::= ("0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9")
-* CHARACTER ::= (\x0 | \x1 | \x2 | \x3 | \x4 | \x5 | \x6 | \x7 | \x8 | \x9 | \x10 | \x11 | \x12 | \x13 | \x14 | \x15 | \x16 | \x17 | \x18 | \x19 | \x20 | \x21 | \x22 | \x23 | \x24 | \x25 | \x26 | \x27 | \x28 | \x29 | \x30 | \x31 | \x32 | \x33 | \x34 | \x35 | \x36 | \x37 | \x38 | \x39 | \x40 | \x41 | \x42 | \x43 | \x44 | \x45 | \x46 | \x47 | \x48 | \x49 | \x50 | \x51 | \x52 | \x53 | \x54 | \x55 | \x56 | \x57 | \x58 | \x59 | \x60 | \x61 | \x62 | \x63 | \x64 | \x65 | \x66 | \x67 | \x68 | \x69 | \x70 | \x71 | \x72 | \x73 | \x74 | \x75 | \x76 | \x77 | \x78 | \x79 | \x80 | \x81 | \x82 | \x83 | \x84 | \x85 | \x86 | \x87 | \x88 | \x89 | \x90 | \x91 | \x92 | \x93 | \x94 | \x95 | \x96 | \x97 | \x98 | \x99 | \x100 | \x101 | \x102 | \x103 | \x104 | \x105 | \x106 | \x107 | \x108 | \x109 | \x110 | \x111 | \x112 | \x113 | \x114 | \x115 | \x116 | \x117 | \x118 | \x119 | \x120 | \x121 | \x122 | \x123 | \x124 | \x125 | \x126 | \x127 | \x128 | \x129 | \x130 | \x131 | \x132 | \x133 | \x134 | \x135 | \x136 | \x137 | \x138 | \x139 | \x140 | \x141 | \x142 | \x143 | \x144 | \x145 | \x146 | \x147 | \x148 | \x149 | \x150 | \x151 | \x152 | \x153 | \x154 | \x155 | \x156 | \x157 | \x158 | \x159 | \x160 | \x161 | \x162 | \x163 | \x164 | \x165 | \x166 | \x167 | \x168 | \x169 | \x170 | \x171 | \x172 | \x173 | \x174 | \x175 | \x176 | \x177 | \x178 | \x179 | \x180 | \x181 | \x182 | \x183 | \x184 | \x185 | \x186 | \x187 | \x188 | \x189 | \x190 | \x191 | \x192 | \x193 | \x194 | \x195 | \x196 | \x197 | \x198 | \x199 | \x200 | \x201 | \x202 | \x203 | \x204 | \x205 | \x206 | \x207 | \x208 | \x209 | \x210 | \x211 | \x212 | \x213 | \x214 | \x215 | \x216 | \x217 | \x218 | \x219 | \x220 | \x221 | \x222 | \x223 | \x224 | \x225 | \x226 | \x227 | \x228 | \x229 | \x230 | \x231 | \x232 | \x233 | \x234 | \x235 | \x236 | \x237 | \x238 | \x239 | \x240 | \x241 | \x242 | \x243 | \x244 | \x245 | \x246 | \x247 | \x248 | \x249 | \x250 | \x251 | \x252 | \x253 | \x254 | \x255)
-* COMMENT_CHARACTER ::= (\x0 | \x1 | \x2 | \x3 | \x4 | \x5 | \x6 | \x7 | \x8 | \x9 | \x11 | \x12 | \x13 | \x14 | \x15 | \x16 | \x17 | \x18 | \x19 | \x20 | \x21 | \x22 | \x23 | \x24 | \x25 | \x26 | \x27 | \x28 | \x29 | \x30 | \x31 | \x32 | \x33 | \x34 | \x35 | \x36 | \x37 | \x38 | \x39 | \x40 | \x41 | \x42 | \x43 | \x44 | \x45 | \x46 | \x47 | \x48 | \x49 | \x50 | \x51 | \x52 | \x53 | \x54 | \x55 | \x56 | \x57 | \x58 | \x59 | \x60 | \x61 | \x62 | \x63 | \x64 | \x65 | \x66 | \x67 | \x68 | \x69 | \x70 | \x71 | \x72 | \x73 | \x74 | \x75 | \x76 | \x77 | \x78 | \x79 | \x80 | \x81 | \x82 | \x83 | \x84 | \x85 | \x86 | \x87 | \x88 | \x89 | \x90 | \x91 | \x92 | \x93 | \x94 | \x95 | \x96 | \x97 | \x98 | \x99 | \x100 | \x101 | \x102 | \x103 | \x104 | \x105 | \x106 | \x107 | \x108 | \x109 | \x110 | \x111 | \x112 | \x113 | \x114 | \x115 | \x116 | \x117 | \x118 | \x119 | \x120 | \x121 | \x122 | \x123 | \x124 | \x125 | \x126 | \x127 | \x128 | \x129 | \x130 | \x131 | \x132 | \x133 | \x134 | \x135 | \x136 | \x137 | \x138 | \x139 | \x140 | \x141 | \x142 | \x143 | \x144 | \x145 | \x146 | \x147 | \x148 | \x149 | \x150 | \x151 | \x152 | \x153 | \x154 | \x155 | \x156 | \x157 | \x158 | \x159 | \x160 | \x161 | \x162 | \x163 | \x164 | \x165 | \x166 | \x167 | \x168 | \x169 | \x170 | \x171 | \x172 | \x173 | \x174 | \x175 | \x176 | \x177 | \x178 | \x179 | \x180 | \x181 | \x182 | \x183 | \x184 | \x185 | \x186 | \x187 | \x188 | \x189 | \x190 | \x191 | \x192 | \x193 | \x194 | \x195 | \x196 | \x197 | \x198 | \x199 | \x200 | \x201 | \x202 | \x203 | \x204 | \x205 | \x206 | \x207 | \x208 | \x209 | \x210 | \x211 | \x212 | \x213 | \x214 | \x215 | \x216 | \x217 | \x218 | \x219 | \x220 | \x221 | \x222 | \x223 | \x224 | \x225 | \x226 | \x227 | \x228 | \x229 | \x230 | \x231 | \x232 | \x233 | \x234 | \x235 | \x236 | \x237 | \x238 | \x239 | \x240 | \x241 | \x242 | \x243 | \x244 | \x245 | \x246 | \x247 | \x248 | \x249 | \x250 | \x251 | \x252 | \x253 | \x254 | \x255)
-* NUMBER ::= ["+" | "-"] DIGIT {DIGIT}
-* LETTER ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
-* NAME ::= (LETTER | DIGIT | "_"){LETTERS | DIGIT | "_"}
-* INPUT ::= {LETTER | DIGIT | "," | "<" | "." | "> " | "/" | "?" | ";" | ":" | "'" | "\"" | "[" | "{" | "]" | "}" | "\\" | "|" | "`" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | " "}
-* ROW_CHARACTER ::= (LETTER | DIGIT | "," | "<" | "." | "> " | "/" | "?" | ";" | ":" | "'" | "\"" | "[" | "{" | "]" | "}" | "\\" | "|" | "`" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | " " | "~")
-* NEWLINE ::= "\n"
-* WHITESPACE ::= {"\t" | "\r" | "\v" |"\f" | " "}
+* <DIGIT> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+* <CHARACTER> ::= \x0 | \x1 | \x2 | \x3 | \x4 | \x5 | \x6 | \x7 | \x8 | \x9 | \x10 | \x11 | \x12 | \x13 | \x14 | \x15 | \x16 | \x17 | \x18 | \x19 | \x20 | \x21 | \x22 | \x23 | \x24 | \x25 | \x26 | \x27 | \x28 | \x29 | \x30 | \x31 | \x32 | \x33 | \x34 | \x35 | \x36 | \x37 | \x38 | \x39 | \x40 | \x41 | \x42 | \x43 | \x44 | \x45 | \x46 | \x47 | \x48 | \x49 | \x50 | \x51 | \x52 | \x53 | \x54 | \x55 | \x56 | \x57 | \x58 | \x59 | \x60 | \x61 | \x62 | \x63 | \x64 | \x65 | \x66 | \x67 | \x68 | \x69 | \x70 | \x71 | \x72 | \x73 | \x74 | \x75 | \x76 | \x77 | \x78 | \x79 | \x80 | \x81 | \x82 | \x83 | \x84 | \x85 | \x86 | \x87 | \x88 | \x89 | \x90 | \x91 | \x92 | \x93 | \x94 | \x95 | \x96 | \x97 | \x98 | \x99 | \x100 | \x101 | \x102 | \x103 | \x104 | \x105 | \x106 | \x107 | \x108 | \x109 | \x110 | \x111 | \x112 | \x113 | \x114 | \x115 | \x116 | \x117 | \x118 | \x119 | \x120 | \x121 | \x122 | \x123 | \x124 | \x125 | \x126 | \x127 | \x128 | \x129 | \x130 | \x131 | \x132 | \x133 | \x134 | \x135 | \x136 | \x137 | \x138 | \x139 | \x140 | \x141 | \x142 | \x143 | \x144 | \x145 | \x146 | \x147 | \x148 | \x149 | \x150 | \x151 | \x152 | \x153 | \x154 | \x155 | \x156 | \x157 | \x158 | \x159 | \x160 | \x161 | \x162 | \x163 | \x164 | \x165 | \x166 | \x167 | \x168 | \x169 | \x170 | \x171 | \x172 | \x173 | \x174 | \x175 | \x176 | \x177 | \x178 | \x179 | \x180 | \x181 | \x182 | \x183 | \x184 | \x185 | \x186 | \x187 | \x188 | \x189 | \x190 | \x191 | \x192 | \x193 | \x194 | \x195 | \x196 | \x197 | \x198 | \x199 | \x200 | \x201 | \x202 | \x203 | \x204 | \x205 | \x206 | \x207 | \x208 | \x209 | \x210 | \x211 | \x212 | \x213 | \x214 | \x215 | \x216 | \x217 | \x218 | \x219 | \x220 | \x221 | \x222 | \x223 | \x224 | \x225 | \x226 | \x227 | \x228 | \x229 | \x230 | \x231 | \x232 | \x233 | \x234 | \x235 | \x236 | \x237 | \x238 | \x239 | \x240 | \x241 | \x242 | \x243 | \x244 | \x245 | \x246 | \x247 | \x248 | \x249 | \x250 | \x251 | \x252 | \x253 | \x254 | \x255
+* <COMMENT_CHARACTER> ::= \x0 | \x1 | \x2 | \x3 | \x4 | \x5 | \x6 | \x7 | \x8 | \x9 | \x11 | \x12 | \x13 | \x14 | \x15 | \x16 | \x17 | \x18 | \x19 | \x20 | \x21 | \x22 | \x23 | \x24 | \x25 | \x26 | \x27 | \x28 | \x29 | \x30 | \x31 | \x32 | \x33 | \x34 | \x35 | \x36 | \x37 | \x38 | \x39 | \x40 | \x41 | \x42 | \x43 | \x44 | \x45 | \x46 | \x47 | \x48 | \x49 | \x50 | \x51 | \x52 | \x53 | \x54 | \x55 | \x56 | \x57 | \x58 | \x59 | \x60 | \x61 | \x62 | \x63 | \x64 | \x65 | \x66 | \x67 | \x68 | \x69 | \x70 | \x71 | \x72 | \x73 | \x74 | \x75 | \x76 | \x77 | \x78 | \x79 | \x80 | \x81 | \x82 | \x83 | \x84 | \x85 | \x86 | \x87 | \x88 | \x89 | \x90 | \x91 | \x92 | \x93 | \x94 | \x95 | \x96 | \x97 | \x98 | \x99 | \x100 | \x101 | \x102 | \x103 | \x104 | \x105 | \x106 | \x107 | \x108 | \x109 | \x110 | \x111 | \x112 | \x113 | \x114 | \x115 | \x116 | \x117 | \x118 | \x119 | \x120 | \x121 | \x122 | \x123 | \x124 | \x125 | \x126 | \x127 | \x128 | \x129 | \x130 | \x131 | \x132 | \x133 | \x134 | \x135 | \x136 | \x137 | \x138 | \x139 | \x140 | \x141 | \x142 | \x143 | \x144 | \x145 | \x146 | \x147 | \x148 | \x149 | \x150 | \x151 | \x152 | \x153 | \x154 | \x155 | \x156 | \x157 | \x158 | \x159 | \x160 | \x161 | \x162 | \x163 | \x164 | \x165 | \x166 | \x167 | \x168 | \x169 | \x170 | \x171 | \x172 | \x173 | \x174 | \x175 | \x176 | \x177 | \x178 | \x179 | \x180 | \x181 | \x182 | \x183 | \x184 | \x185 | \x186 | \x187 | \x188 | \x189 | \x190 | \x191 | \x192 | \x193 | \x194 | \x195 | \x196 | \x197 | \x198 | \x199 | \x200 | \x201 | \x202 | \x203 | \x204 | \x205 | \x206 | \x207 | \x208 | \x209 | \x210 | \x211 | \x212 | \x213 | \x214 | \x215 | \x216 | \x217 | \x218 | \x219 | \x220 | \x221 | \x222 | \x223 | \x224 | \x225 | \x226 | \x227 | \x228 | \x229 | \x230 | \x231 | \x232 | \x233 | \x234 | \x235 | \x236 | \x237 | \x238 | \x239 | \x240 | \x241 | \x242 | \x243 | \x244 | \x245 | \x246 | \x247 | \x248 | \x249 | \x250 | \x251 | \x252 | \x253 | \x254 | \x255
+* <NUMBER> ::= ["+" | "-"] <DIGIT> { <DIGIT> }
+* <LETTER> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+* <NAME> ::= ( <LETTER> | <DIGIT> | "_") { <LETTERS> | <DIGIT> | "_" }
+* <INPUT_CHARACTER> ::= ( <LETTER> | <DIGIT> | "," | "<" | "." | "> " | "/" | "?" | ";" | ":" | "'" | "\"" | "[" | "{" | "]" | "}" | "\\" | "|" | "`" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | " ")
+* <ROW_CHARACTER> ::= <LETTER> | <DIGIT> | "," | "<" | "." | "> " | "/" | "?" | ";" | ":" | "'" | "\"" | "[" | "{" | "]" | "}" | "\\" | "|" | "`" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | " " | "~"
+* <NEWLINE> ::= "\n"
+* <WHITESPACE> ::= {"\t" | "\r" | "\v" |"\f" | " "}
+
+
+== Memory ==
+backrooms memory space is 3D with the axis X, Y, Floor every room "cell" holds <CHARACTER> and the default character is " ". Every axis is an integer. It is infinite in every direction. backrooms also allows some parts of the 3D memory space to be named <NAME>.
+
+=== Floor ===
+Every Floor can be given its own name <NAME> or have the name of None. During runtime you can change or remove names. No two floors can have the same name. The last floor to be given the same name will keep it. The reset will default to None. A Floor cord looks like <Floor>.
+
+=== Hallways ===
+Every Floor can be given multiple Hallways. A Hallway an be given its own name <NAME> or have the name of None or not exist. A Hallway cord looks like <Y, Floor> X is all ways 0. No two hallways on the same floor can have the same name. The last hallway to be given the same name will keep it. The reset will default to None on that floor.
+
+== Scripts ==
+* Scripts can have the file extension ".brs" or no extension at all.
+* Other Scripts in the same main directory can be included.
+* The include check order is main directory then built-in directory of a script.
+
+== Built-In Scripts  ==
+Although its not necessary for a backrooms interpreter to supply built-in script. The official one does offer scripts that makes it much easier to allocate memory and handle data structures.
+* brs_heap
+* brs_heap_load
+* brs_si_vector
+* brs_si_vector_load
+* brs_struct
+* brs_utils
+* brs_variables
+* brs_variables_load
+* brs_vector
 
 == Translator ==
-Note: The Translator throw's away unnecessary WHITESPACE.
-* ROW ::= "/" {ROW_CHARACTER} NEWLINE
-* COMMENT ::= "#" {COMMENT_CHARACTER} NEWLINE
-* HALLWAY ::= "~" [NAME | "@"] NEWLINE
-* FLOOR ::= "+" [NAME | "@"] NEWLINE
-* INCLUDE ::= "%" NAME NEWLINE
-* MUST_INCLUDE ::= "!" NAME NEWLINE
-* PARALLEL ::= "=" [NAME | "@"] [NAME | "@"] [NUMBER | "@"] [NUMBER | "@"] NEWLINE
-* X ::= "X" NUMBER NEWLINE
-* XS ::= "XS" NUMBER NEWLINE
-* Y ::= "Y" NUMBER NEWLINE
-* YS ::= "YS" NUMBER NEWLINE
-* F ::= "F" NUMBER NEWLINE
-* FS ::= "FS" NUMBER NEWLINE
-* Translator ::= {ROW | COMMENT | HALLWAY | FLOOR | INCLUDE | MUST_INCLUDE | PARALLEL | X | XS | Y | YS | F | FS}
+The translator "assembler" of backrooms simplifies the way you can load a program into backrooms. It will ingest a script "file" or scripts and raise a syntax error if one is present.
+The Translator throw's away any unnecessary <WHITESPACE>. The character "@" represents the data type None and the translator will replace "@" when necessary.
+* <ROW> ::= "/" { <ROW_CHARACTER> } <NEWLINE>
+** will write the row characters to memory
+** X axis will shift by 1 after every row character is written to memory
+** will shift the Y axis by -1 when all writes are done
+** X axis will reset to pervious value when all writes are done
+* <COMMENT> ::= "#" { <COMMENT_CHARACTER> } <NEWLINE>
+** will just throws away the line
+* <HALLWAY> ::= "~" [ <NAME> | "@" ] <NEWLINE>
+** will make and set a hallway with the current location
+* <FLOOR> ::= "+" [ <NAME> | "@" ] <NEWLINE>
+** will set the name of a floor with the current location
+* <INCLUDE> ::= "%" <NAME> <NEWLINE>
+** will include another script if not all ready included
+* <MUST_INCLUDE> ::= "!" <NAME> <NEWLINE>
+** will include another script if not all ready included
+** will raise an error if script is all ready included
+* <PARALLEL> ::= "=" [ <NAME> | "@" ] [ <NAME> | "@" ] [ <NUMBER> | "@" ] [ <NUMBER> | "@" ] <NEWLINE>
+* will copy a floor onto another floor
+** arg 1 the name of the floor that will be copied
+** arg 2 the name assigned to the floor you copy to
+** arg 3 the location of the floor that will be copied
+** arg 4 the location which the floor will be copied onto
+** if arg 1 and arg 3 are both None then arg1 will default to current Floor
+** if arg 4 is None then if default to current Floor - 1 and shift Floor by -1
+** cant provide both arg 1 and arg3 at the same time
+* <X> ::= "X" <NUMBER> <NEWLINE>
+** will set the current X location
+* <XS> ::= "XS" <NUMBER> <NEWLINE>
+** will shift the current X location
+* <Y> ::= "Y" <NUMBER> <NEWLINE>
+** will set the current Y location
+* <YS> ::= "YS" <NUMBER> <NEWLINE>
+** will shift the current Y location
+* <F> ::= "F" <NUMBER> <NEWLINE>
+** will set the current Floor location
+* <FS> ::= "FS" <NUMBER> <NEWLINE>
+** will shift the current Flooor location
+* <Translator> ::= { <ROW> | <COMMENT> | <HALLWAY> | <FLOOR> | <INCLUDE> | <MUST_INCLUDE> | <PARALLEL> | <X> | <XS> | <Y> | <YS> | <F> | <FS> }
+** root definition for translator
+
+
+== Conscious ==
+The conscious "thread" holds its own state. Each conscious gets it own register, work stack, function stack and branch condition.
+
+=== Registers ===
+Each conscious gets 10 registers which can store all 5 data types.
+
+=== Work Stack ===
+The work stack allows an unlimited amount of data to be pushed onto it. Note: StackBottom cant be pushed onto the stack.
+
+=== Hallway Stack ===
+Hallway "Function" Stack
+Preserves registers, current location and current vector. When a the program makes a hallway call.
+
+=== Branch Condition ===
+The branch conditions can hold
+* Clear
+* LESS_THAN_ZERO
+* GREATER_THAN_ZERO
+* ZERO
+* NOT_ZERO
+* IS_INTEGER
+* IS_STRING
+* IS_NONE
+* IS_STACK_FRAME
+* IS_STACK_BOTTOM
+
+Some branch conditions need to convert its data to an Integer.
+It uses ```to_integer``` logic.
 
 == Rules ==
-Rules AKA Instructions
+The rules "instructions" do not care if they are read up, down, left, right, etc, as long as the order of characters matches the rules signature.
+Note: "WS[item] -> WS[item2]" does not use the meta-language.
+Working Stack: WS[items in stack]
+Function Stack: FS[items in stack]
+Registers: R[registers id]
+Branch Condition: B[condition]
+Vector: V<x, y, floor>
+Before and After: ->
+
+
+'''to_integer'''
+* String -> len(String)
+* None -> 0
+* StackFrame -> 0
+* StackBottom -> 0
+
+
+'''to_string'''
+* Integer-> str(Integer)
+* None -> "None"
+* StackFrame -> "StackFrame"
+* StackBottom -> "StackBottom"
 
 === BackMirror ===
  \
 
 === BranchLessThanZero ===
  L
+ -> B[LessThanZero]
+Will set the Branch Condition to LessThanZero.
 
 === BranchGreaterThanZero ===
  G
+ -> B[GreaterThanZero]
+Will set the Branch Condition to GreaterThanZero.
 
 === BranchZero ===
  Z
+ -> B[Zero]
+Will set the Branch Condition to Zero.
 
 === BranchNotZero ===
  N
+ -> B[NotZero]
+Will set the Branch Condition to NotZero.
 
 === BranchIsInteger ===
  I
+ -> B[IsInteger]
+Will set the Branch Condition to IsInteger.
 
 === BranchIsString ===
  S
+ -> B[IsString]
+Will set the Branch Condition to IsString.
 
 === BranchIsNone ===
  O
+ -> B[IsNone]
+Will set the Branch Condition to IsNone.
 
 === BranchIsStackFrame ===
  F
+ -> B[IsStackFrame]
+Will set the Branch Condition to IsStackFrame.
 
 === BranchIsStackBottom ===
  B
+ -> B[IsStackBottom]
+Will set the Branch Condition to IsStackBottom.
 
 === Cite ===
  c
+ -> WS[input]
+Will read input from the console and will filer out and character not in <INPUT_CHARACTER>. input will always be an String.
+'''Example'''
+ ~GATE
+ /ce~ha
 
 === ClearStack ===
  n
+Will clear the Working Stack.
+-> WS[]
+'''Example'''
+ ~GATE
+ /ri1ri2ri3ne~ha
+'''Output'''
+ StackBottom
 
 === CoordinateX ===
  x
+Will put Conscious current X location onto the Working Stack. x will always be an Integer.
+-> WS[x, ...]
+'''Example'''
+ ~GATE
+ /xe~ha
+'''Output'''
+ 0
 
 === CoordinateY ===
  y
+Will put Conscious current Y location onto the Working Stack. y will always be an Integer.
+-> WS[y, ...]
+'''Example'''
+ ~GATE
+ /ye~ha
+'''Output'''
+ 0
 
 === CoordinateFloor ===
  f
+Will put Conscious current Floor location onto the Working Stack. floor will always be an Integer.
+ -> WS[floor, ...]
+'''Example'''
+ ~GATE
+ /fe~ha
+'''Output'''
+ 0
 
 === Duplicate ===
  d
+Will duplicate the item on top of the Working Stack.
+  WS[item, ...] -> WS[item, item, ...]
+'''Example'''
+ ~GATE
+ /ri1diae~ha
+'''Output'''
+ 2
 
 === Echo ===
  e
+Will peak at top item on the Working Stack and write it onto the console.
+  WS[to_string(item), ...] -> WS[item, ...]
+'''Example'''
+ ~GATE
+ /rs"hello"e~ha
+'''Output'''
+ hello
 
 === ForwardMirror ===
  /
@@ -194,30 +368,59 @@ Rules AKA Instructions
 
 === IntegerCast ===
  ic
+ WS[item, ...] -> WS[result, ...]
+Will take the top item from the stack and make it into an Integer. result can be a Integer or None.
+* String -> int(String)
+** If String cant be made into Integer then None will be returned.
+* None -> 0
+* StackFrame -> 0
+* StackBottom -> 0
 
 === IntegerAdd ===
  ia
+ WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
+ item2 + item1 = result
+Will take the first two items from the Working Stack and add them together. result will always be an Integer.
 
 === IntegerSubtract ===
  is
+ WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
+ item2 - item1 = result
+Will take the first two items from the Working Stack and subtract them together. result will always be an Integer.
 
 ===  IntegerMultiply ===
  im
+ WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
+ item2 * item1 = result
+Will take the first two items from the Working Stack and multiply them together. result will always be an Integer.
 
 === IntegerDivide ===
  id
+ WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
+ item2 / item1 = result
+Will take the first two items from the Working Stack and divide them together. result will always be an Integer.
 
 === IntegerModular ===
  io
+ WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
+ item2 % item1 = result
+Will take the first two items from the Working Stack and mod them together. result will always be an Integer.
 
 === IntegerPower ===
  ip
+ WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
+ item2^item1 = result
+Will take the first two items from the Working Stack and power them together. result will always be an Integer.
 
 === IntegerByte ===
  ib
+ WS[to_integer(item1), ...] -> WS[result, ...]
+Will take the first item from the Working Stack and make it into its Extended ASCII character. The result will be None if no character can be mapped to item. result can be a String or None.
 
 === IntegerAbsolute ===
  il
+ WS[to_integer(item1), ...] -> WS[result, ...]
+Will take the first item from the Working Stack and get its absolute value. result will always be an Integer.
 
 === LevelGetFloorName ===
  ln
@@ -230,9 +433,23 @@ Rules AKA Instructions
 
 === Pop ===
  p
+Will remove the first item on the Working Stack.
+  WS[item, ...] -> WS[...]
+'''Example'''
+ ~GATE
+ /ri34pe~ha
+'''Output'''
+ StackBottom
 
 === PopFrame ===
  a
+Will remove the first StackFrame and every item before it. If no StackFrame is on the stack all items on the will be removed.
+  WS[.., StackFrame, ...] -> WS[...]
+'''Example'''
+ ~GATE
+ /ri34rfri5ri1ae~ha
+'''Output'''
+ 34
 
 === Read ===
  r
@@ -287,12 +504,32 @@ Rules AKA Instructions
 
 === StringUpper ===
  bu
+Will take the top item on the Working Stack put it all in uppercase. result will always be an String.
+  WS[to_string(item), ...] -> WS[result, ...]
+'''Example'''
+ ~GATE
+ /rs"HELlo 123"bue~ha
+'''Output'''
+ HELLO 123
 
 === StringLower ===
  bo
-
+Will take the top item on the Working Stack put it all in lowercase. result will always be an String.
+  WS[to_string(item), ...] -> WS[result, ...]
+'''Example'''
+ ~GATE
+ /rs"HELlo 123"boe~ha
+'''Output'''
+ hello 123
 === Switch ===
  z
+Will switch the the top two items on the Working Stack.
+ WS[item1, item2, ...] -> WS[item2, item1, ...]
+'''Example'''
+ ~GATE
+ /ri4rs"cats"eze~ha
+'''Output'''
+ cats4
 
 === ThreadThread ===
  tt
@@ -302,6 +539,18 @@ Rules AKA Instructions
 
 === ThreadID ===
  ti
+Will put the Conscious id onto the Working Stack. id will always be an Integer. The main Conscious is always 0.
+  -> WS[id, ...]
+'''Example'''
+ ~GATE
+ /tie~ha
+'''Output'''
+ 0
+'''Example 2'''
+ ~GATE
+ /tttie~ha
+'''Output'''
+ 10
 
 === ThreadLock ===
  tl
@@ -329,24 +578,6 @@ Rules AKA Instructions
 
 === Write ===
  w
-
-
-== Scripts ==
-* Scripts can have the file extension ".brs" or no extension at all.
-* Other Scripts in the same main directory can be included.
-* The include check order is main directory then built-in directory of a script.
-
-== Built-In Scripts  ==
-Although its not necessary for a backrooms interpreter to supply built-in script. The official one does offer scripts that makes it much easier to allocate memory and handle data structures.
-* brs_heap
-* brs_heap_load
-* brs_si_vector
-* brs_si_vector_load
-* brs_struct
-* brs_utils
-* brs_variables
-* brs_variables_load
-* brs_vector
 
 == Programs ==
 === bottles ===
