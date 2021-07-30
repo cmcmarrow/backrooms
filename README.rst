@@ -2,6 +2,13 @@
 Backrooms - v0.4.0
 ##################
 
+********
+Warning!
+********
+Backrooms is still in Development Status Beta!
+This means rules "intrusions" have been finalized!
+Expect to see some sharp edges still.
+
 *****
 About
 *****
@@ -18,55 +25,170 @@ Backrooms was designed to be:
     * enjoyable to write small/medium programs.
     * capable to rewrite all of a program at run-time.
 
-********
-Warning!
-********
-Backrooms is still in Development Status Beta!
-This means rules "intrusions" have been finalized!
-Expect to see some share edges still.
+***********
+Hello World
+***********
+``hello_world.brs``
+
+.. code-block:: text
+
+   ~GATE
+   /rs"Hello World!"e~ha
+
+*****************
+Console Interface
+*****************
+.. code-block:: text
+
+   backrooms hello_world.brs
+
+.. code-block:: text
+
+   backrooms
+
+   positional arguments:
+     file                  path to main file
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -a, --author          get author of backrooms
+     -b, --builtins        don't include built-in libraries
+     -e, --error-on-space  errors if portal lands on a space
+     -p, --profile         profiles backrooms
+     -s, --system-out      don't write to stdio
+     -v, --version         get version of backrooms
+     --lost-count LOST_COUNT
+                           set lost count
+     --lost-rule-count LOST_RULE_COUNT
+                           set lost rule count
+     --profile_range PROFILE_RANGE
+     --whisper WHISPER     set the log level [notset, debug, info, warning, error, critical]
+
+*************
+Documentation
+*************
+* `Documentation <https://esolangs.org/wiki/Backrooms>`_
+* `Raw Documentation <https://github.com/cmcmarrow/backrooms/blob/master/DOCUMENTATION>`_
+
+***
+API
+***
+``backrooms_api.py``
+
+.. code-block:: python
+
+   from backrooms.backrooms import backrooms_api, StringHandler
+
+
+   main_brs = """
+   ~GATE
+   /rs"Hello World"e~ha
+   """
+
+   main_handler = StringHandler("main", main_brs)
+   backrooms_api(main_handler)()
+
+.. code-block:: text
+
+   info: An API to backrooms.
+   :param code: Union[str, Handler, Handlers]
+       str: Will treat str as main file and load its dir.
+       Handler: Will load just the single Handler.
+       Handlers: Will load the Handlers.
+   :param inputs: Optional[Tuple[str, ...]]
+   :param sys_output: bool
+   :param catch_output: bool
+   :param lost_count: int
+   :param lost_rule_count: int
+   :param error_on_space: bool
+   :param br_builtins: bool
+       Only adds builtins if code is str or Handler.
+   :param whisper_level: str
+   :param rules: Optional[Tuple[Type[Rule]]]
+   :return: Portal
+
+*******
+bottles
+*******
+``bottles.brs``
+
+.. code-block:: text
+
+   ~GATE
+   /ri10ibri99>ers" bottles of beer on the wall, "epers" bottles of beer."epzezri-1iaV
+   /Vzeezpe".llaw eht no reeb fo selttob "srepe" ,dnuora ti ssap dna nwod eno ekaT"sr<
+   /.>e~ha    1 >rs"1 bottle of beer on the wall, 1 bottle of beer."epers"Take one"epV
+   /.p        p pVe".llaw eht no reeb fo selttob erom on ,dnuora ti ssap dna nwod "sr<
+   /.e        . p>peers"No more bottles of beer on the wall, no more bottles of beer"V
+   />.dri-1iaN^.^                                                                    e
+   / ^".llaw eht no reeb fo selttob 99 ,erom emos yub dna erots eht ot oG"srepe"."srp<
+
+******
+turing
+******
+``turing.brs``
+
+.. code-block:: text
+
+   ~GATE
+   /cicOvZVpri1V
+   /    p >.e>NV~ha
+   /    >ri1e^e<
+
+*********
+fibonacci
+*********
+``fibonacci.brs``
+
+.. code-block:: text
+
+   ~GATE
+   /ri0>dri16isZVpri1zdV
+   /   .     ah~<      >....V
+   /   ^aipe" "srpech"BIF"sr<
+   ~FIB
+   />ZVdri3isLVpdri1isrs"FIB"hczri2isrs"FIB"hciahr
+   /rh<rh1irpp<
 
 ******
 v0.4.0
 ******
 * Development Status :: 4 - Beta
 * Tests and bug fixes
-* Added examples
-* Updated Translator only allow valid row characters
-* Added must include
-* Improved Rule error handling
-* Removed Worker Rule
-* Removed Clear Rule
-* Added ThreadLock Rule
-* Added ThreadUnlock Rule
-* Added ClearStack Rule
-* Added UncommonHotPatch Rule
-* Added UncommonSimpleDump Rule
-* Added Forward Mirror
-* Added Backward Mirror
-* Added Fall Back to must Rules
-* Modified Store Rule
-* Modified Keep Rule
-* Modified UncommonDynamicDump Rule
-* Modified Thread Rule
-* Modified HallwayModule
-* Modified LevelModule
+* Added: examples
+* Updated: Translator only allow valid row characters
+* Added: must include
+* Improved: Rule error handling
+* Removed: Worker Rule
+* Removed: Clear Rule
+* Added: ThreadLock Rule
+* Added: ThreadUnlock Rule
+* Added: ClearStack Rule
+* Added: UncommonHotPatch Rule
+* Added: UncommonSimpleDump Rule
+* Added: Forward Mirror
+* Added: Backward Mirror
+* Added: Fall Back to must Rules
+* Modified: Store Rule
+* Modified: Keep Rule
+* Modified: UncommonDynamicDump Rule
+* Modified: Thread Rule
+* Modified: HallwayModule
+* Modified: LevelModule
 * Wrote documentation
 
 ********
 Road Map
 ********
 * v1.0.0
-    * Development Status :: 5 - Production/Stable
+    * Development Status :: 6 - Mature
     * Add builtin libraries
     * Add examples
     * Clean code
     * Write more documentation
     * Tests and bug fixes
-* v1.1.0
-    * Development Status :: 6 - Mature
-    * Clean code
-    * Make Backrooms faster
-        * Rooms.set_hallway_name, Big-O(n) -> Big-O(n log(n))
-        * Rooms.remove_hallway, Big-O(n) -> Big-O(n log(n))
-        * Portal.new_conscious, Big-O(n) -> Big-O(n log(n))
-        * etc ...
+    * Fix ThreadJoin to give up ThreadLock
+    * Make Portal keep start
+    * Clean Log
+    * Fix Typing
+    * able to disable must Rule yields

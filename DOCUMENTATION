@@ -190,12 +190,12 @@ It uses ```to_integer``` logic.
 == Rules ==
 The rules "instructions" do not care if they are read up, down, left, right, etc, as long as the order of characters matches the rules signature.
 Note: "WS[item] -> WS[item2]" does not use the meta-language.
-Working Stack: WS[items in stack]
-Function Stack: FS[items in stack]
-Registers: R[registers id]
-Branch Condition: B[condition]
-Vector: V<x, y, floor>
-Before and After: ->
+* Working Stack: WS[items in stack]
+* Function Stack: FS[items in stack]
+* Registers: R[registers id]
+* Branch Condition: B[condition]
+* Vector: V<x, y, floor>
+* Before and After: ->
 
 
 '''to_integer'''
@@ -216,53 +216,53 @@ Before and After: ->
 
 === BranchLessThanZero ===
  L
- -> B[LessThanZero]
 Will set the Branch Condition to LessThanZero.
+ -> B[LessThanZero]
 
 === BranchGreaterThanZero ===
  G
- -> B[GreaterThanZero]
 Will set the Branch Condition to GreaterThanZero.
+ -> B[GreaterThanZero]
 
 === BranchZero ===
  Z
- -> B[Zero]
 Will set the Branch Condition to Zero.
+ -> B[Zero]
 
 === BranchNotZero ===
  N
- -> B[NotZero]
 Will set the Branch Condition to NotZero.
+ -> B[NotZero]
 
 === BranchIsInteger ===
  I
- -> B[IsInteger]
 Will set the Branch Condition to IsInteger.
+ -> B[IsInteger]
 
 === BranchIsString ===
  S
- -> B[IsString]
 Will set the Branch Condition to IsString.
+ -> B[IsString]
 
 === BranchIsNone ===
  O
- -> B[IsNone]
 Will set the Branch Condition to IsNone.
+ -> B[IsNone]
 
 === BranchIsStackFrame ===
  F
- -> B[IsStackFrame]
 Will set the Branch Condition to IsStackFrame.
+ -> B[IsStackFrame]
 
 === BranchIsStackBottom ===
  B
- -> B[IsStackBottom]
 Will set the Branch Condition to IsStackBottom.
+ -> B[IsStackBottom]
 
 === Cite ===
  c
- -> WS[input]
 Will read input from the console and will filer out and character not in <INPUT_CHARACTER>. input will always be an String.
+ -> WS[input]
 '''Example'''
  ~GATE
  /ce~ha
@@ -270,7 +270,7 @@ Will read input from the console and will filer out and character not in <INPUT_
 === ClearStack ===
  n
 Will clear the Working Stack.
--> WS[]
+ -> WS[]
 '''Example'''
  ~GATE
  /ri1ri2ri3ne~ha
@@ -280,7 +280,7 @@ Will clear the Working Stack.
 === CoordinateX ===
  x
 Will put Conscious current X location onto the Working Stack. x will always be an Integer.
--> WS[x, ...]
+ -> WS[x, ...]
 '''Example'''
  ~GATE
  /xe~ha
@@ -290,7 +290,7 @@ Will put Conscious current X location onto the Working Stack. x will always be a
 === CoordinateY ===
  y
 Will put Conscious current Y location onto the Working Stack. y will always be an Integer.
--> WS[y, ...]
+ -> WS[y, ...]
 '''Example'''
  ~GATE
  /ye~ha
@@ -310,7 +310,7 @@ Will put Conscious current Floor location onto the Working Stack. floor will alw
 === Duplicate ===
  d
 Will duplicate the item on top of the Working Stack.
-  WS[item, ...] -> WS[item, item, ...]
+ WS[item, ...] -> WS[item, item, ...]
 '''Example'''
  ~GATE
  /ri1diae~ha
@@ -320,7 +320,7 @@ Will duplicate the item on top of the Working Stack.
 === Echo ===
  e
 Will peak at top item on the Working Stack and write it onto the console.
-  WS[to_string(item), ...] -> WS[item, ...]
+ WS[to_string(item), ...] -> WS[item, ...]
 '''Example'''
  ~GATE
  /rs"hello"e~ha
@@ -368,8 +368,8 @@ Will peak at top item on the Working Stack and write it onto the console.
 
 === IntegerCast ===
  ic
- WS[item, ...] -> WS[result, ...]
 Will take the top item from the stack and make it into an Integer. result can be a Integer or None.
+ WS[item, ...] -> WS[result, ...]
 * String -> int(String)
 ** If String cant be made into Integer then None will be returned.
 * None -> 0
@@ -378,49 +378,49 @@ Will take the top item from the stack and make it into an Integer. result can be
 
 === IntegerAdd ===
  ia
+Will take the first two items from the Working Stack and add them together. result will always be an Integer.
  WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
  item2 + item1 = result
-Will take the first two items from the Working Stack and add them together. result will always be an Integer.
 
 === IntegerSubtract ===
  is
+Will take the first two items from the Working Stack and subtract them together. result will always be an Integer.
  WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
  item2 - item1 = result
-Will take the first two items from the Working Stack and subtract them together. result will always be an Integer.
 
 ===  IntegerMultiply ===
  im
+Will take the first two items from the Working Stack and multiply them together. result will always be an Integer.
  WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
  item2 * item1 = result
-Will take the first two items from the Working Stack and multiply them together. result will always be an Integer.
 
 === IntegerDivide ===
  id
+Will take the first two items from the Working Stack and divide them together. result will always be an Integer.
  WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
  item2 / item1 = result
-Will take the first two items from the Working Stack and divide them together. result will always be an Integer.
 
 === IntegerModular ===
  io
+Will take the first two items from the Working Stack and mod them together. result will always be an Integer.
  WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
  item2 % item1 = result
-Will take the first two items from the Working Stack and mod them together. result will always be an Integer.
 
 === IntegerPower ===
  ip
+Will take the first two items from the Working Stack and power them together. result will always be an Integer.
  WS[to_integer(item1), to_integer(item2), ...] -> WS[result, ...]
  item2^item1 = result
-Will take the first two items from the Working Stack and power them together. result will always be an Integer.
 
 === IntegerByte ===
  ib
- WS[to_integer(item1), ...] -> WS[result, ...]
 Will take the first item from the Working Stack and make it into its Extended ASCII character. The result will be None if no character can be mapped to item. result can be a String or None.
+ WS[to_integer(item1), ...] -> WS[result, ...]
 
 === IntegerAbsolute ===
  il
- WS[to_integer(item1), ...] -> WS[result, ...]
 Will take the first item from the Working Stack and get its absolute value. result will always be an Integer.
+ WS[to_integer(item1), ...] -> WS[result, ...]
 
 === LevelGetFloorName ===
  ln
@@ -533,14 +533,18 @@ Will switch the the top two items on the Working Stack.
 
 === ThreadThread ===
  tt
+Will make a new Conscious. The Conscious will inherent a copy for its parent Conscious data.
+ ->
 
 === ThreadJoin ===
  tj
+Will halt Conscious excluding the main Conscious.
+ ->
 
 === ThreadID ===
  ti
 Will put the Conscious id onto the Working Stack. id will always be an Integer. The main Conscious is always 0.
-  -> WS[id, ...]
+ -> WS[id, ...]
 '''Example'''
  ~GATE
  /tie~ha
@@ -554,10 +558,10 @@ Will put the Conscious id onto the Working Stack. id will always be an Integer. 
 
 === ThreadLock ===
  tl
-
+ ->
 === ThreadUnLock ===
  tu
-
+ ->
 === UncommonReadFlip ===
  ur
 
