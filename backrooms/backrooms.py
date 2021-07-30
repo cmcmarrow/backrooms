@@ -10,15 +10,16 @@ import cProfile
 from copy import deepcopy
 import pstats
 from pstats import SortKey
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, Type
 
 # backrooms
 import backrooms as brs
 from . import backrooms_error
 from .backrooms_builtins import get_builtins
 from .portal import Portal
-from .translator import translator, Handlers, Handler, load_dir
+from .translator import translator, Handlers, Handler, load_dir, StringHandler, FileHandler
 from .whisper import NOTSET, enable_whisper
+from .rules import Rule
 
 
 class BackRoomsError(backrooms_error.BackroomsError):
@@ -119,11 +120,12 @@ def backrooms() -> None:    # TODO write tests
                 stats = pstats.Stats(profiler_translator)
                 stats.sort_stats(SortKey.TIME)
                 stats.print_stats()
-                print(flush=True)
-                print("RUN TIME PROFILE:")
-                stats = pstats.Stats(profiler_run_time)
-                stats.sort_stats(SortKey.TIME)
-                stats.print_stats()
+                if "profiler_run_time" in locals():
+                    print(flush=True)
+                    print("RUN TIME PROFILE:")
+                    stats = pstats.Stats(profiler_run_time)
+                    stats.sort_stats(SortKey.TIME)
+                    stats.print_stats()
         else:
             br = backrooms_api(code=args.file,
                                sys_output=args.system_out,
@@ -147,7 +149,8 @@ def backrooms_api(code: Union[str, Handler, Handlers],
                   lost_rule_count: int = 0,
                   error_on_space: bool = False,
                   br_builtins: bool = True,
-                  whisper_level: str = NOTSET) -> Portal:
+                  whisper_level: str = NOTSET,
+                  rules: Optional[Tuple[Type[Rule]]] = None) -> Portal:
     """
     info: An API to backrooms.
     :param code: Union[str, Handler, Handlers]
@@ -163,6 +166,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
     :param br_builtins: bool
         Only adds builtins if code is str or Handler.
     :param whisper_level: str
+    :param rules: Optional[Tuple[Type[Rule]]]
     :return: Portal
     """
     try:
@@ -188,6 +192,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
                       catch_output=catch_output,
                       lost_count=lost_count,
                       lost_rule_count=lost_rule_count,
-                      error_on_space=error_on_space)
+                      error_on_space=error_on_space,
+                      rules=rules)
     except backrooms_error.BackroomsError as e:
         raise BackRoomsError(e)
