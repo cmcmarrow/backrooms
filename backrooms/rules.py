@@ -2187,6 +2187,37 @@ class Write(Rule):
             yield
 
 
+class ConsciousDump(Rule):      # TODO write
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(ConsciousDump, self).__init__("?", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        portal.write_output("#####\n")
+        portal.write_output("Stacks\nWorking\tFunction\n")
+        conscious_copy = deepcopy(conscious)
+        while conscious_copy[c.WORK_STACK].peak() is not StackBottom or conscious_copy[c.FUNCTION_STACK].peak() is not StackBottom:
+            portal.write_output(f"{conscious_copy[c.WORK_STACK].pop()}\t{conscious_copy[c.FUNCTION_STACK].pop()}\n")
+        portal.write_output(f"{conscious_copy[c.WORK_STACK].pop()}\t{conscious_copy[c.FUNCTION_STACK].pop()}\n")
+        portal.write_output(">> ")
+        portal.read_input()
+        portal.write_output("#####\n")
+        conscious.step()
+        yield
+
+
 RULES = (BackMirror,
          BranchLessThanZero,
          BranchGreaterThanZero,

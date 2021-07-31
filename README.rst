@@ -35,10 +35,17 @@ Hello World
    ~GATE
    /rs"Hello World!"e~ha
 
+************
+Installation
+************
+.. code-block:: bash
+
+   pip install backrooms
+
 *****************
 Console Interface
 *****************
-.. code-block:: text
+.. code-block:: bash
 
    backrooms hello_world.brs
 
@@ -68,7 +75,59 @@ Console Interface
 Documentation
 *************
 * `Documentation <https://esolangs.org/wiki/Backrooms>`_
-* `Raw Documentation <https://github.com/cmcmarrow/backrooms/blob/master/DOCUMENTATION>`_
+* `Raw Documentation <https://github.com/cmcmarrow/backrooms/blob/master/DOCUMENTATION.txt>`_
+
+*******
+Bottles
+*******
+``bottles.brs``
+
+.. code-block:: text
+
+   ~GATE
+   /ri10ibri99>ers" bottles of beer on the wall, "epers" bottles of beer."epzezri-1iaV
+   /Vzeezpe".llaw eht no reeb fo selttob "srepe" ,dnuora ti ssap dna nwod eno ekaT"sr<
+   /.>e~ha    1 >rs"1 bottle of beer on the wall, 1 bottle of beer."epers"Take one"epV
+   /.p        p pVe".llaw eht no reeb fo selttob erom on ,dnuora ti ssap dna nwod "sr<
+   /.e        . p>peers"No more bottles of beer on the wall, no more bottles of beer"V
+   />.dri-1iaN^.^                                                                    e
+   / ^".llaw eht no reeb fo selttob 99 ,erom emos yub dna erots eht ot oG"srepe"."srp<
+
+******
+Turing
+******
+``turing.brs``
+
+.. code-block:: text
+
+   ~GATE
+   /cicOvZVpri1V
+   /    p >.e>NV~ha
+   /    >ri1e^e<
+
+*********
+Fibonacci
+*********
+``fibonacci.brs``
+
+.. code-block:: text
+
+   ~GATE
+   /ri0>dri16isZVpri1zdV
+   /   .     ah~<      >....V
+   /   ^aipe" "srpech"BIF"sr<
+   ~FIB
+   />ZVdri3isLVpdri1isrs"FIB"hczri2isrs"FIB"hciahr
+   /rh<rh1irpp<
+
+****************
+Build Executable
+****************
+.. code-block:: bash
+
+   git clone https://github.com/cmcmarrow/backrooms.git
+   pip install -e .[dev]
+   python build.py
 
 ***
 API
@@ -107,76 +166,6 @@ API
    :param rules: Optional[Tuple[Type[Rule]]]
    :return: Portal
 
-*******
-bottles
-*******
-``bottles.brs``
-
-.. code-block:: text
-
-   ~GATE
-   /ri10ibri99>ers" bottles of beer on the wall, "epers" bottles of beer."epzezri-1iaV
-   /Vzeezpe".llaw eht no reeb fo selttob "srepe" ,dnuora ti ssap dna nwod eno ekaT"sr<
-   /.>e~ha    1 >rs"1 bottle of beer on the wall, 1 bottle of beer."epers"Take one"epV
-   /.p        p pVe".llaw eht no reeb fo selttob erom on ,dnuora ti ssap dna nwod "sr<
-   /.e        . p>peers"No more bottles of beer on the wall, no more bottles of beer"V
-   />.dri-1iaN^.^                                                                    e
-   / ^".llaw eht no reeb fo selttob 99 ,erom emos yub dna erots eht ot oG"srepe"."srp<
-
-******
-turing
-******
-``turing.brs``
-
-.. code-block:: text
-
-   ~GATE
-   /cicOvZVpri1V
-   /    p >.e>NV~ha
-   /    >ri1e^e<
-
-*********
-fibonacci
-*********
-``fibonacci.brs``
-
-.. code-block:: text
-
-   ~GATE
-   /ri0>dri16isZVpri1zdV
-   /   .     ah~<      >....V
-   /   ^aipe" "srpech"BIF"sr<
-   ~FIB
-   />ZVdri3isLVpdri1isrs"FIB"hczri2isrs"FIB"hciahr
-   /rh<rh1irpp<
-
-******
-v0.4.0
-******
-* Development Status :: 4 - Beta
-* Tests and bug fixes
-* Added: examples
-* Updated: Translator only allow valid row characters
-* Added: must include
-* Improved: Rule error handling
-* Removed: Worker Rule
-* Removed: Clear Rule
-* Added: ThreadLock Rule
-* Added: ThreadUnlock Rule
-* Added: ClearStack Rule
-* Added: UncommonHotPatch Rule
-* Added: UncommonSimpleDump Rule
-* Added: Forward Mirror
-* Added: Backward Mirror
-* Added: Fall Back to must Rules
-* Modified: Store Rule
-* Modified: Keep Rule
-* Modified: UncommonDynamicDump Rule
-* Modified: Thread Rule
-* Modified: HallwayModule
-* Modified: LevelModule
-* Wrote documentation
-
 ********
 Road Map
 ********
@@ -191,4 +180,4 @@ Road Map
     * Make Portal keep start
     * Clean Log
     * Fix Typing
-    * able to disable must Rule yields
+    * Enable or disable most Rule yields
