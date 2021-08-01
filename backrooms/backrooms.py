@@ -47,6 +47,11 @@ def backrooms() -> None:    # TODO write tests
                             default=True,
                             action="store_false",
                             help="don't include built-in libraries")
+        parser.add_argument("-c",
+                            "--core_dump",
+                            default=False,
+                            action="store_true",
+                            help="enables CoreDump rule \"?\"")
         parser.add_argument("-e",
                             "--error-on-space",
                             default=False,
@@ -105,6 +110,7 @@ def backrooms() -> None:    # TODO write tests
                                            lost_rule_count=args.lost_rule_count,
                                            error_on_space=args.error_on_space,
                                            br_builtins=args.builtins,
+                                           core_dump=args.core_dump,
                                            whisper_level=args.whisper)
 
                 profiler_run_time = cProfile.Profile(builtins=False)
@@ -133,6 +139,7 @@ def backrooms() -> None:    # TODO write tests
                                lost_rule_count=args.lost_rule_count,
                                error_on_space=args.error_on_space,
                                br_builtins=args.builtins,
+                               core_dump=args.core_dump,
                                whisper_level=args.whisper)
             br()
     except backrooms_error.BackroomsError as e:
@@ -149,8 +156,9 @@ def backrooms_api(code: Union[str, Handler, Handlers],
                   lost_rule_count: int = 0,
                   error_on_space: bool = False,
                   br_builtins: bool = True,
-                  whisper_level: str = NOTSET,
-                  rules: Optional[Tuple[Type[Rule]]] = None) -> Portal:
+                  core_dump: bool = False,
+                  rules: Optional[Tuple[Type[Rule]]] = None,
+                  whisper_level: str = NOTSET) -> Portal:
     """
     info: An API to backrooms.
     :param code: Union[str, Handler, Handlers]
@@ -165,8 +173,9 @@ def backrooms_api(code: Union[str, Handler, Handlers],
     :param error_on_space: bool
     :param br_builtins: bool
         Only adds builtins if code is str or Handler.
-    :param whisper_level: str
+    :param core_dump: bool
     :param rules: Optional[Tuple[Type[Rule]]]
+    :param whisper_level: str
     :return: Portal
     """
     try:
@@ -193,6 +202,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
                       lost_count=lost_count,
                       lost_rule_count=lost_rule_count,
                       error_on_space=error_on_space,
+                      core_dump=core_dump,
                       rules=rules)
     except backrooms_error.BackroomsError as e:
         raise BackRoomsError(e)

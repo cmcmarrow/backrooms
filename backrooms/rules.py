@@ -6,6 +6,7 @@ Copyright 2021 Charles McMarrow
 from typing import Generator, Tuple, List, Dict, Union, Optional, Callable
 from copy import deepcopy
 import string
+from pprint import pformat
 
 # backrooms
 import backrooms    # import backrooms to avoid circular imports
@@ -2187,10 +2188,10 @@ class Write(Rule):
             yield
 
 
-class ConsciousDump(Rule):      # TODO write
+class CoreDump(Rule):      # TODO write tests
     def __init__(self,
                  work_space: WorkSpace):
-        super(ConsciousDump, self).__init__("?", work_space)
+        super(CoreDump, self).__init__("?", work_space)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2205,15 +2206,19 @@ class ConsciousDump(Rule):      # TODO write
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
-        portal.write_output("#####\n")
+        portal.write_output("#" * 5 + "\n")
         portal.write_output("Stacks\nWorking\tFunction\n")
         conscious_copy = deepcopy(conscious)
-        while conscious_copy[c.WORK_STACK].peak() is not StackBottom or conscious_copy[c.FUNCTION_STACK].peak() is not StackBottom:
-            portal.write_output(f"{conscious_copy[c.WORK_STACK].pop()}\t{conscious_copy[c.FUNCTION_STACK].pop()}\n")
+        while conscious_copy[c.WORK_STACK].peak() is not StackBottom\
+                or conscious_copy[c.FUNCTION_STACK].peak() is not StackBottom:
+            portal.write_output(pformat(conscious_copy[c.WORK_STACK].pop()))
+            portal.write_output(f"\t{pformat(conscious_copy[c.FUNCTION_STACK].pop())}\n")
         portal.write_output(f"{conscious_copy[c.WORK_STACK].pop()}\t{conscious_copy[c.FUNCTION_STACK].pop()}\n")
-        portal.write_output(">> ")
+        portal.write_output("#" * 5 + "\n")
+        portal.write_output(pformat(conscious))
+        portal.write_output("\n>> ")
         portal.read_input()
-        portal.write_output("#####\n")
+        portal.write_output("#" * 5 + "\n")
         conscious.step()
         yield
 

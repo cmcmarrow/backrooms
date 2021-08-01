@@ -15,7 +15,7 @@ from . import backrooms_error
 from .conscious import Conscious, ALIVE, ID, HALT
 from . import conscious as c
 from .rooms import Rooms
-from .rules import Rule, RULES, WorkSpace
+from .rules import Rule, RULES, WorkSpace, CoreDump
 from . import whisper
 
 
@@ -55,6 +55,7 @@ class Portal:
                  lost_count: int = 0,
                  lost_rule_count: int = 0,
                  error_on_space: bool = False,
+                 core_dump: bool = False,
                  rules: Optional[Tuple[Type[Rule]]] = None):
         self._done: bool = False
         self._rooms: Rooms = rooms
@@ -81,6 +82,9 @@ class Portal:
 
         if rules is None:
             rules = RULES
+
+        if core_dump:
+            rules = tuple(list(rules) + [CoreDump])
         rules_obj = [rule(work_space=work_space) for rule in rules]
         self._rules: Dict[str: Rule] = {}
 
