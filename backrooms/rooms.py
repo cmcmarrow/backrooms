@@ -419,7 +419,6 @@ class Rooms:
         :param hallway_name: str
         :return: Optional[Tuple[int, int]]
         """
-        # TODO write tests
         def _key(key: int) -> Union[int, float]:
             """
             info: Makes sorted works out from 0. EX: 0, 1, -1, 2, -2, 3, ...

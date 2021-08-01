@@ -436,6 +436,41 @@ class CoordinateFloor(Rule):
         yield
 
 
+class CoreDump(Rule):
+    def __init__(self,
+                 work_space: WorkSpace):
+        super(CoreDump, self).__init__("?", work_space)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        portal.write_output("#" * 5 + "\n")
+        portal.write_output("Stacks\nWorking\tFunction\n")
+        conscious_copy = deepcopy(conscious)
+        while conscious_copy[c.WORK_STACK].peak() is not StackBottom\
+                or conscious_copy[c.FUNCTION_STACK].peak() is not StackBottom:
+            portal.write_output(pformat(conscious_copy[c.WORK_STACK].pop()))
+            portal.write_output(f"\t{pformat(conscious_copy[c.FUNCTION_STACK].pop())}\n")
+        portal.write_output(f"{conscious_copy[c.WORK_STACK].pop()}\t{conscious_copy[c.FUNCTION_STACK].pop()}\n")
+        portal.write_output("#" * 5 + "\n")
+        portal.write_output(pformat(conscious))
+        portal.write_output("\n>> ")
+        portal.read_input()
+        portal.write_output("#" * 5 + "\n")
+        conscious.step()
+        yield
+
+
 class Duplicate(Rule):
     def __init__(self,
                  work_space: WorkSpace):
@@ -2186,41 +2221,6 @@ class Write(Rule):
             rule_step_visuals.append(conscious.at())
             conscious.step()
             yield
-
-
-class CoreDump(Rule):      # TODO write tests
-    def __init__(self,
-                 work_space: WorkSpace):
-        super(CoreDump, self).__init__("?", work_space)
-
-    def __call__(self,
-                 portal: 'backrooms.portal.Portal',
-                 rooms: Rooms,
-                 conscious: c.Conscious,
-                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
-        """
-        info: Runs a rule.
-        :param portal: Portal
-        :param rooms: Rooms
-        :param conscious: Conscious
-        :param rule_step_visuals: List[Tuple[int, int, int]]
-        :return: Generator[None, None, None]
-        """
-        portal.write_output("#" * 5 + "\n")
-        portal.write_output("Stacks\nWorking\tFunction\n")
-        conscious_copy = deepcopy(conscious)
-        while conscious_copy[c.WORK_STACK].peak() is not StackBottom\
-                or conscious_copy[c.FUNCTION_STACK].peak() is not StackBottom:
-            portal.write_output(pformat(conscious_copy[c.WORK_STACK].pop()))
-            portal.write_output(f"\t{pformat(conscious_copy[c.FUNCTION_STACK].pop())}\n")
-        portal.write_output(f"{conscious_copy[c.WORK_STACK].pop()}\t{conscious_copy[c.FUNCTION_STACK].pop()}\n")
-        portal.write_output("#" * 5 + "\n")
-        portal.write_output(pformat(conscious))
-        portal.write_output("\n>> ")
-        portal.read_input()
-        portal.write_output("#" * 5 + "\n")
-        conscious.step()
-        yield
 
 
 RULES = (BackMirror,

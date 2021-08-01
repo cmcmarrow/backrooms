@@ -6,7 +6,8 @@ Copyright 2021 Charles McMarrow
 import unittest
 
 # backrooms
-from backrooms.translator import Handler, translator, StringHandler, FileHandler, Handlers, TranslatorError
+from tests import test_files
+from backrooms.translator import Handler, translator, StringHandler, FileHandler, Handlers, TranslatorError, load_dir
 
 # test
 from . import test_files
@@ -348,7 +349,7 @@ class TranslatorTest(unittest.TestCase):
                                           "%      "))
         self.assertRaises(TranslatorError, translator, handlers)
 
-    def test_include(self):
+    def test_must_include(self):
         handler = StringHandler("Main",
                                 "!S2")
         handler_2 = StringHandler("S2",
@@ -358,17 +359,17 @@ class TranslatorTest(unittest.TestCase):
         self.assertEqual(rooms.get_floor_name(-1), "S2")
         self.assertEqual(rooms.read(0, 0, -1), "3")
 
-    def test_include_error(self):
+    def test_must_include_error(self):
         handlers = Handlers(StringHandler("Main",
                                           "!@"))
         self.assertRaises(TranslatorError, translator, handlers)
 
-    def test_include_error_2(self):
+    def test_must_include_error_2(self):
         handlers = Handlers(StringHandler("Main",
                                           "!^&*(^("))
         self.assertRaises(TranslatorError, translator, handlers)
 
-    def test_include_error_3(self):
+    def test_must_include_error_3(self):
         handler_2 = StringHandler("S2",
                                   "/3")
 
@@ -377,7 +378,7 @@ class TranslatorTest(unittest.TestCase):
                             ((handler_2,),))
         self.assertRaises(TranslatorError, translator, handlers)
 
-    def test_include_error_4(self):
+    def test_must_include_error_4(self):
         handler_2 = StringHandler("S2",
                                   "/3")
         handlers = Handlers(StringHandler("Main",
@@ -385,12 +386,12 @@ class TranslatorTest(unittest.TestCase):
                             ((handler_2,),))
         self.assertRaises(TranslatorError, translator, handlers)
 
-    def test_include_error_5(self):
+    def test_must_include_error_5(self):
         handlers = Handlers(StringHandler("Main",
                                           "!      "))
         self.assertRaises(TranslatorError, translator, handlers)
 
-    def test_include_error_6(self):
+    def test_must_include_error_6(self):
         handler = StringHandler("Main",
                                 "!S2\n!S2")
         handler_2 = StringHandler("S2",
@@ -604,3 +605,14 @@ class TranslatorTest(unittest.TestCase):
         handlers = Handlers(StringHandler("Main",
                                           "      2384095 *(*&)"))
         self.assertRaises(TranslatorError, translator, handlers)
+
+
+class LoadDirTest(unittest.TestCase):
+    def test_load_dir(self):
+        file_path = test_files.get_path("hello.brs")
+        main, handlers = load_dir(file_path)
+        self.assertIsInstance(main, Handler)
+        self.assertIsInstance(handlers, tuple)
+        self.assertNotEqual(len(handlers), 0)
+        for handler in handlers:
+            self.assertIsInstance(handler, Handler)

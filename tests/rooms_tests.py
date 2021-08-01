@@ -286,3 +286,30 @@ class RoomsTests(unittest.TestCase):
                 self.assertEqual(rooms.read(x, y, 4), rooms.read(x, y, 50))
 
         self.assertIsNone(rooms.find_hallway_location(-1234, 50))
+
+    def test_find_a_hallway(self):
+        rooms = Rooms()
+        rooms.set_hallway_name(0, 0, "gate")
+        rooms.set_hallway_name(40, 9, "hallway2")
+        rooms.set_hallway_name(40, 10, "hallway")
+        rooms.set_hallway_name(40, 11, "hallway3")
+        self.assertEqual(rooms.find_a_hallway("hallway"), (40, 10))
+
+    def test_find_a_hallway_right_order(self):
+        rooms = Rooms()
+        rooms.set_hallway_name(0, 0, "gate")
+        rooms.set_hallway_name(33, -5, "hallway")
+        rooms.set_hallway_name(40, 9, "hallway2")
+        rooms.set_hallway_name(40, 10, "hallway")
+        rooms.set_hallway_name(40, 11, "hallway3")
+        self.assertEqual(rooms.find_a_hallway("hallway"), (33, -5))
+
+    def test_find_a_hallway_right_order_2(self):
+        rooms = Rooms()
+        rooms.set_hallway_name(40, 11, "hallway")
+        rooms.set_hallway_name(100, -11, "hallway")
+        self.assertEqual(rooms.find_a_hallway("hallway"), (100, -11))
+
+    def test_find_a_hallway_does_not_exist(self):
+        rooms = Rooms()
+        self.assertIsNone(rooms.find_a_hallway("cats"))

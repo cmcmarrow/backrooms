@@ -12,7 +12,7 @@ A conscious holds it own state.
 
 
 # built-in
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple, Union, Type
 
 # backrooms
 from . import stack
@@ -52,8 +52,7 @@ ALIVE = "ALIVE"
 HALT = "HALT"
 
 
-# TODO test
-def _to_int(obj: Union[int, str, stack.StackFrame, stack.StackBottom, None]) -> int:
+def _to_int(obj: Union[int, str, Type[stack.StackFrame], Type[stack.StackBottom], None]) -> int:
     if isinstance(obj, str):
         return len(obj)
     elif obj is None:
@@ -65,43 +64,43 @@ def _to_int(obj: Union[int, str, stack.StackFrame, stack.StackBottom, None]) -> 
     return obj
 
 
-def _clear(conscious: 'Conscious') -> True:
+def _clear(conscious: 'Conscious') -> bool:
     return True
 
 
-def _less_than_zero(conscious: 'Conscious') -> True:
+def _less_than_zero(conscious: 'Conscious') -> bool:
     return _to_int(conscious[WORK_STACK].peak()) < 0
 
 
-def _greater_than_zero(conscious: 'Conscious') -> True:
+def _greater_than_zero(conscious: 'Conscious') -> bool:
     return _to_int(conscious[WORK_STACK].peak()) > 0
 
 
-def _zero(conscious: 'Conscious') -> True:
+def _zero(conscious: 'Conscious') -> bool:
     return _to_int(conscious[WORK_STACK].peak()) == 0
 
 
-def _not_zero(conscious: 'Conscious') -> True:
+def _not_zero(conscious: 'Conscious') -> bool:
     return _to_int(conscious[WORK_STACK].peak()) != 0
 
 
-def _is_integer(conscious: 'Conscious') -> True:
+def _is_integer(conscious: 'Conscious') -> bool:
     return isinstance(conscious[WORK_STACK].peak(), int)
 
 
-def _is_string(conscious: 'Conscious') -> True:
+def _is_string(conscious: 'Conscious') -> bool:
     return isinstance(conscious[WORK_STACK].peak(), str)
 
 
-def _is_none(conscious: 'Conscious') -> True:
+def _is_none(conscious: 'Conscious') -> bool:
     return conscious[WORK_STACK].peak() is None
 
 
-def _is_stack_frame(conscious: 'Conscious') -> True:
+def _is_stack_frame(conscious: 'Conscious') -> bool:
     return conscious[WORK_STACK].peak() is stack.StackFrame
 
 
-def _is_stack_bottom(conscious: 'Conscious') -> True:
+def _is_stack_bottom(conscious: 'Conscious') -> bool:
     return conscious[WORK_STACK].peak() is stack.StackBottom
 
 

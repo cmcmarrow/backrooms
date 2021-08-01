@@ -37,6 +37,17 @@ class TestStack(unittest.TestCase):
         self.assertIs(stack.pop(), StackBottom)
         self.assertIs(stack.pop(), StackBottom)
 
+    def test_peak(self):
+        stack = Stack()
+        self.assertIs(stack.peak(), StackBottom)
+        for i in range(100):
+            stack.push(i)
+            self.assertEqual(stack.peak(), i)
+        for i in range(99, -1, -1):
+            self.assertEqual(stack.peak(), i)
+            self.assertEqual(stack.pop(), i)
+        self.assertIs(stack.peak(), StackBottom)
+
     def test_is_empty(self):
         stack = Stack()
         self.assertTrue(stack.is_empty())
@@ -62,3 +73,14 @@ class TestStack(unittest.TestCase):
         stack.push(None)
         stack.pop_frame()
         self.assertEqual(stack.pop(), 1)
+
+    def test_clear(self):
+        stack = Stack()
+        stack.clear()
+        self.assertIs(stack.pop(), StackBottom)
+        for i in range(100):
+            stack.push(i)
+            stack.push(i*2)
+            stack.push(StackFrame)
+        stack.clear()
+        self.assertIs(stack.pop(), StackBottom)

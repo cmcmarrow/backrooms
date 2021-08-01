@@ -102,7 +102,7 @@ class Handler:
         """
         self._is_open = False
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.close()
     
     def __iter__(self) -> 'Handler':
@@ -499,7 +499,6 @@ def load_dir(file: str) -> Tuple[Handler, Tuple[Handler, ...]]:
     :param file: str
     :return: Tuple[Handler, Tuple[Handler, ...]]
     """
-    # TODO test
     file = os.path.abspath(file)
     main_handler = FileHandler(file)
     handlers = []
