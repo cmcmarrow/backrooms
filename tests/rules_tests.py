@@ -478,6 +478,12 @@ class TestRules(unittest.TestCase):
         self.assertEqual(len(stream), 1)
         self.assertEqual(stream[0], 1)
 
+    def test_thread_4(self):
+        stream = full_test("thread_4.brs").get_output_stream()
+        self.assertEqual(len(stream), 2)
+        self.assertEqual(stream[0], "thread")
+        self.assertEqual(stream[1], "done")
+
     def test_uncommon_double_duplicate(self):
         stream = full_test("uncommon_double_duplicate.brs").get_output_stream()
         self.assertEqual(len(stream), 11)
