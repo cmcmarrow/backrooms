@@ -8,7 +8,7 @@ backrooms was inspired by:
     * ASCIIDOTS Esolang
     * CISC Architecture
 
-Backrooms was designed to be:
+backrooms was designed to be:
     * hackable VIA memory overflow attacks, poor error handling, ect.
     * visually pleasing.
     * enjoyable to write small/medium programs.
@@ -29,5 +29,5 @@ from . import backrooms_builtins
 
 AUTHOR = "Charles McMarrow"
 
-MAJOR, MINOR, MAINTENANCE = 0, 4, 0
+MAJOR, MINOR, MAINTENANCE = 1, 0, 0
 VERSION = (MAJOR, MINOR, MAINTENANCE)

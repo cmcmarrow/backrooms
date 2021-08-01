@@ -1,5 +1,5 @@
 ##################
-Backrooms - v0.4.0
+backrooms - v1.0.0
 ##################
 
 ********
@@ -200,19 +200,3 @@ API
    :param rules: Optional[Tuple[Type[Rule]]]
    :param whisper_level: str
    :return: Portal
-
-********
-Road Map
-********
-* v1.0.0
-    * Development Status :: 6 - Mature
-    * Add builtin libraries
-    * Add examples
-    * Clean code
-    * Write more documentation
-    * Tests and bug fixes
-    * Fix ThreadJoin to give up ThreadLock
-    * Make Portal keep start
-    * Clean Log
-    * Fix Typing
-    * Enable or disable most Rule yields
