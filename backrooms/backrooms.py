@@ -110,8 +110,8 @@ def backrooms() -> None:    # TODO write tests
                                            lost_rule_count=args.lost_rule_count,
                                            error_on_space=args.error_on_space,
                                            br_builtins=args.builtins,
-                                           whisper_level=args.whisper,
-                                           core_dump=args.core_dump)
+                                           core_dump=args.core_dump,
+                                           whisper_level=args.whisper)
 
                 profiler_run_time = cProfile.Profile(builtins=False)
                 for _ in range(args.profile_range):
@@ -139,8 +139,8 @@ def backrooms() -> None:    # TODO write tests
                                lost_rule_count=args.lost_rule_count,
                                error_on_space=args.error_on_space,
                                br_builtins=args.builtins,
-                               whisper_level=args.whisper,
-                               core_dump=args.core_dump)
+                               core_dump=args.core_dump,
+                               whisper_level=args.whisper)
             br()
     except backrooms_error.BackroomsError as e:
         print(f"\nERROR: {e}", flush=True)
