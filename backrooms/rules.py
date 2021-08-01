@@ -1865,6 +1865,9 @@ class ThreadJoin(Rule):
         """
         if conscious[c.ID] != 0:
             conscious[c.ALIVE] = False
+            # free thread lock
+            if self.get_work_space()[KEY_HOLDER] == conscious[c.ID]:
+                self.get_work_space()[KEY_HOLDER] = None
         else:
             conscious.step()
         yield
