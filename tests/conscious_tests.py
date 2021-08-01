@@ -6,7 +6,28 @@ Copyright 2021 Charles McMarrow
 import unittest
 
 # backrooms
+from backrooms.stack import StackFrame, StackBottom
 from backrooms import conscious
+
+
+class ToIntTest(unittest.TestCase):
+    def test_string(self):
+        self.assertEqual(conscious._to_int(""), 0)
+        self.assertEqual(conscious._to_int("cat"), 3)
+        self.assertEqual(conscious._to_int("cats"), 4)
+
+    def test_integer(self):
+        for i in range(-100, 100):
+            self.assertEqual(conscious._to_int(i), i)
+
+    def test_none(self):
+        self.assertEqual(conscious._to_int(None), 0)
+
+    def test_stack_frame(self):
+        self.assertEqual(conscious._to_int(StackFrame), 0)
+
+    def test_stack_bottom(self):
+        self.assertEqual(conscious._to_int(StackBottom), 0)
 
 
 class ConsciousTest(unittest.TestCase):
@@ -40,3 +61,16 @@ class ConsciousTest(unittest.TestCase):
         self.assertEqual(this_conscious.at(), (1, 2, 1))
         this_conscious.step()
         self.assertEqual(this_conscious.at(), (0, 4, 2))
+
+    def test_next_step(self):
+        this_conscious = conscious.Conscious()
+        this_conscious[conscious.PC_V_X] = -1
+        this_conscious[conscious.PC_V_Y] = 2
+        this_conscious[conscious.PC_V_FLOOR] = 1
+        self.assertEqual(this_conscious.next_step(), (-1, 2, 1))
+
+        this_conscious.step()
+        this_conscious[conscious.PC_V_X] = 0
+        this_conscious[conscious.PC_V_Y] = 0
+        this_conscious[conscious.PC_V_FLOOR] = -1
+        self.assertEqual(this_conscious.next_step(), (-1, 2, 0))

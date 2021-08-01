@@ -52,6 +52,18 @@ class TestRules(unittest.TestCase):
         self.assertEqual(stream[10], 40)
         self.assertEqual(stream[11], -1)
 
+    def test_core_dump(self):
+        stream = full_test("core_dump.brs").get_output_stream()
+        self.assertEqual(len(stream), 0)
+        stream = full_test("core_dump.brs", core_dump=True).get_output_stream()
+        self.assertNotEqual(len(stream), 0)
+        stream = "".join(stream)
+        self.assertIn("Stacks\nWorking\tFunction\n", stream)
+        self.assertIn("46", stream)
+        self.assertIn("'R1': None", stream)
+        self.assertIn("StackFrame", stream)
+        self.assertIn("StackBottom", stream)
+
     def test_duplicate(self):
         stream = full_test("duplicate.brs").get_output_stream()
         self.assertEqual(len(stream), 8)

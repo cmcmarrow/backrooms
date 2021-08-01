@@ -44,7 +44,7 @@ class Stack:
             return StackBottom
         return self._stack.pop()
 
-    def peak(self) -> object:   # TODO test
+    def peak(self) -> object:
         """
         info: Peak at item on top of stack.
         :return: object
@@ -74,10 +74,10 @@ class Stack:
             if self.pop() is StackFrame:
                 return
 
-    def clear(self) -> None:    # TODO test
+    def clear(self) -> None:
         """
         info: Clear data off stack.
-        :return:
+        :return: None
         """
         self._stack.clear()
         self._stack.append(StackBottom)

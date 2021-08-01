@@ -26,7 +26,7 @@ class BackRoomsError(backrooms_error.BackroomsError):
     pass
 
 
-def backrooms() -> None:    # TODO write tests
+def backrooms() -> None:
     """
     info: Console Interface
     :return: None
