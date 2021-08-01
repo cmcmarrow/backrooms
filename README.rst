@@ -2,13 +2,6 @@
 backrooms - v1.0.0
 ##################
 
-********
-Warning!
-********
-Backrooms is still in Development Status Beta!
-This means rules "intrusions" have been finalized!
-Expect to see some sharp edges still.
-
 *****
 About
 *****
