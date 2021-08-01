@@ -47,6 +47,7 @@ Data can be stored across multiple rooms and could be read as instructions durin
  /l
  /d
  /!
+ /+
  /e
  /~
  /h
