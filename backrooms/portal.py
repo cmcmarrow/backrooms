@@ -137,7 +137,11 @@ class Portal:
                     if whisper.WHISPER_RUNNING:
                         whisper.debug(f"Rule found: {rule.__class__.__name__}")
                     # run operation "rule"
-                    for step, _ in enumerate(rule(self, self._rooms, conscious, self._rule_step_visuals)):
+                    for step, _ in enumerate(rule(self,
+                                                  self._rooms,
+                                                  conscious,
+                                                  conscious.at(),
+                                                  self._rule_step_visuals)):
                         step += 1
                         if step == self._lost_rule_count:
                             raise PortalError.lost_rule_count()

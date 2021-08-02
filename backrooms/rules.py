@@ -152,12 +152,14 @@ class Rule:
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -187,12 +189,14 @@ class RuleModule(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -201,7 +205,7 @@ class RuleModule(Rule):
         yield
         rule = rooms.read(*conscious.at())
         if rule in self._rules:
-            for _ in self._rules[rule](portal, rooms, conscious, rule_step_visuals):
+            for _ in self._rules[rule](portal, rooms, conscious, start, rule_step_visuals):
                 yield
 
 
@@ -214,12 +218,14 @@ class BackMirror(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -254,12 +260,14 @@ class Branch(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -331,12 +339,14 @@ class Cite(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -354,12 +364,14 @@ class ClearStack(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -377,12 +389,14 @@ class CoordinateX(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -400,12 +414,14 @@ class CoordinateY(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -423,12 +439,14 @@ class CoordinateFloor(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -446,12 +464,14 @@ class CoreDump(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -481,12 +501,14 @@ class Duplicate(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -505,12 +527,14 @@ class Echo(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -533,12 +557,14 @@ class ForwardMirror(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -599,12 +625,14 @@ class HallwayCall(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -643,12 +671,14 @@ class HallwayLevelCall(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -699,12 +729,14 @@ class HallwayReturn(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -755,12 +787,14 @@ class HallwayGetName(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -780,12 +814,14 @@ class HallwayGetLocation(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -809,12 +845,14 @@ class HallwaySet(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -841,12 +879,14 @@ class HallwayRemove(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -868,12 +908,14 @@ class HallwayPast(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -897,12 +939,14 @@ class HallwayNext(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -942,12 +986,14 @@ class Halt(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -976,12 +1022,14 @@ class Hope(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1054,12 +1102,14 @@ class Keep(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1080,12 +1130,14 @@ class IntegerCast(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1107,12 +1159,14 @@ class IntegerOperation(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1173,12 +1227,14 @@ class IntegerByte(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1200,12 +1256,14 @@ class IntegerAbsolute(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1240,12 +1298,14 @@ class LevelGetFloorName(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1264,12 +1324,14 @@ class LevelGetFloorLevel(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1288,12 +1350,14 @@ class LevelSetFloorName(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1329,12 +1393,14 @@ class Pop(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1352,12 +1418,14 @@ class PopFrame(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1375,12 +1443,14 @@ class Read(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1407,12 +1477,14 @@ class Shifter(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1494,12 +1566,14 @@ class Store(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1520,12 +1594,14 @@ class StringLength(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1544,12 +1620,14 @@ class StringCast(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1568,12 +1646,14 @@ class StringAt(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1596,12 +1676,14 @@ class StringByte(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1623,12 +1705,14 @@ class StringSplit(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1651,12 +1735,14 @@ class StringJoin(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1676,12 +1762,14 @@ class StringEqual(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1701,12 +1789,14 @@ class StringIn(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1726,12 +1816,14 @@ class StringUpper(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1750,12 +1842,14 @@ class StringLower(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1791,12 +1885,14 @@ class Switch(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1817,12 +1913,14 @@ class ThreadThread(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1857,12 +1955,14 @@ class ThreadJoin(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1885,12 +1985,14 @@ class ThreadID(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1910,12 +2012,14 @@ class ThreadLock(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1926,10 +2030,8 @@ class ThreadLock(Rule):
         elif self.get_work_space()[KEY_HOLDER] == conscious[c.ID]:
             self.get_work_space()[LOCK_COUNT] += 1
             conscious.step()
-        else:   # TODO fix hack
-            conscious[c.PC_X] += conscious[c.PC_V_X] * -1
-            conscious[c.PC_Y] += conscious[c.PC_V_Y] * -1
-            conscious[c.PC_FLOOR] += conscious[c.PC_V_FLOOR] * -1
+        else:
+            conscious[c.PC_X], conscious[c.PC_Y], conscious[c.PC_FLOOR] = start
         yield
 
 
@@ -1942,12 +2044,14 @@ class ThreadUnLock(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -1983,12 +2087,14 @@ class UncommonReadFlip(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -2022,12 +2128,14 @@ class UncommonWriteFlip(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -2064,12 +2172,14 @@ class UncommonHotPatch(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -2099,12 +2209,14 @@ class UncommonSimpleDump(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -2134,12 +2246,14 @@ class UncommonDynamicDump(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -2169,12 +2283,14 @@ class UncommonDoubleDuplicate(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
@@ -2209,12 +2325,14 @@ class Write(Rule):
                  portal: 'backrooms.portal.Portal',
                  rooms: Rooms,
                  conscious: c.Conscious,
+                 start: Tuple[int, int, int],
                  rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
         """
         info: Runs a rule.
         :param portal: Portal
         :param rooms: Rooms
         :param conscious: Conscious
+        :param start: Tuple[int, int, int],
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
