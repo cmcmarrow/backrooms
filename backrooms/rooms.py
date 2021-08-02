@@ -12,6 +12,8 @@ from typing import Optional, Dict, Tuple, List, Set, Union
 
 # backrooms
 from .backrooms_error import BackroomsError
+from . import whisper
+
 
 CHARACTER_SET = set([chr(character) for character in range(256)])
 NAME_SET = set(ascii_letters + digits + "_")
@@ -103,6 +105,8 @@ class Rooms:
         """
 
         if not is_character(character):
+            if whisper.WHISPER_RUNNING:
+                whisper.critical(f"{repr(character)} was attempted to be written at {(x, y, floor_level)}!")
             raise RoomsError.bad_character(character)
 
         if character == " ":
@@ -168,6 +172,8 @@ class Rooms:
             self._floors_names_to_levels[floor_name] = floor_level
         else:
             # bad name
+            if whisper.WHISPER_RUNNING:
+                whisper.error(f"{repr(floor_name)} bad floor name attempted to be written at {floor_level}!")
             raise RoomsError.bad_name(floor_name)
 
     def get_floor_name(self,
@@ -218,6 +224,8 @@ class Rooms:
                 self._hallway_names_to_locations.setdefault(floor_level, {})[hallway_name] = y
         else:
             # bad name
+            if whisper.WHISPER_RUNNING:
+                whisper.error(f"{repr(hallway_name)} bad hallway name attempted to be written at {(y, floor_level)}!")
             raise RoomsError.bad_name(hallway_name)
 
     def remove_hallway(self,
