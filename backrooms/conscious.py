@@ -13,6 +13,7 @@ A conscious holds it own state.
 
 # built-in
 from typing import Dict, Tuple, Union, Type
+from functools import lru_cache
 
 # backrooms
 from . import stack
@@ -52,6 +53,7 @@ ALIVE = "ALIVE"
 HALT = "HALT"
 
 
+@lru_cache(2048)
 def _to_int(obj: Union[int, str, Type[stack.StackFrame], Type[stack.StackBottom], None]) -> int:
     if isinstance(obj, str):
         return len(obj)

@@ -3,7 +3,7 @@ v1.0.0
 ******
 * Development Status :: 6 - Mature
 * Added builtin libraries
-* Added enable and disable Rule yields methods to Portal
+* Added enable_yields argument to Portal
 * Added more tests
 * Added more examples
 * Added start argument to Rule

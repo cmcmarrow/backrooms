@@ -190,6 +190,7 @@ API
    :param br_builtins: bool
        Only adds builtins if code is str or Handler.
    :param core_dump: bool
-   :param rules: Optional[Tuple[Type[Rule]]]
+   :param yields: bool
+   :param rules: Optional[Tuple]
    :param whisper_level: str
    :return: Portal

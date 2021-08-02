@@ -7,6 +7,7 @@ from typing import Generator, Tuple, List, Dict, Union, Optional, Callable
 from copy import deepcopy
 import string
 from pprint import pformat
+from functools import lru_cache
 
 # backrooms
 import backrooms    # import backrooms to avoid circular imports
@@ -34,6 +35,7 @@ class RuleError(BackroomsError):
         return cls(f"Hope start character most be a single digit not: {repr(name)}!")
 
 
+@lru_cache(2048)
 def _cast_to_int(obj: Union[int, str, StackFrame, StackBottom, None]) -> Optional[int]:
     if isinstance(obj, str):
         try:
@@ -49,6 +51,7 @@ def _cast_to_int(obj: Union[int, str, StackFrame, StackBottom, None]) -> Optiona
     return obj
 
 
+@lru_cache(2048)
 def _cast_string(obj: Union[int, str, StackFrame, StackBottom, None]) -> str:
     if isinstance(obj, int):
         return str(obj)
@@ -63,22 +66,26 @@ def _cast_string(obj: Union[int, str, StackFrame, StackBottom, None]) -> str:
 
 def _read(rooms: Rooms,
           conscious: c.Conscious,
+          yields: bool,
           rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
     type_item = rooms.read(*conscious.at())
     if type_item == "i":
         rule_step_visuals.append(conscious.at())
         conscious.step()
-        yield
+        if yields:
+            yield
         if rooms.read(*conscious.at()) in string.digits + "+-":
             new_integer = rooms.read(*conscious.at())
             rule_step_visuals.append(conscious.at())
             conscious.step()
-            yield
+            if yields:
+                yield
             while rooms.read(*conscious.at()).isdigit():
                 new_integer += rooms.read(*conscious.at())
                 rule_step_visuals.append(conscious.at())
                 conscious.step()
-                yield
+                if yields:
+                    yield
             try:
                 conscious[c.WORK_STACK].push(int(new_integer))
             except ValueError:
@@ -86,12 +93,14 @@ def _read(rooms: Rooms,
     elif type_item == "s":
         rule_step_visuals.append(conscious.at())
         conscious.step()
-        yield
+        if yields:
+            yield
         start_character = rooms.read(*conscious.at())
         new_string = ""
         rule_step_visuals.append(conscious.at())
         conscious.step()
-        yield
+        if yields:
+            yield
         while rooms.read(*conscious.at()) != start_character:
             new_string += rooms.read(*conscious.at())
             rule_step_visuals.append(conscious.at())
@@ -134,19 +143,24 @@ LOCK_COUNT = "LOCK_COUNT"
 
 
 class WorkSpace(dict):
-    def __init__(self):
-        work_space = {SHIFTER: set()}
+    def __init__(self, **kwargs):
+        work_space = {SHIFTER: set(),
+                      KEY_HOLDER: None,
+                      LOCK_COUNT: 0}
+        work_space.update(kwargs)
         super(WorkSpace, self).__init__(work_space)
 
 
 class Rule:
     def __init__(self,
                  start_character: str,
-                 work_space: WorkSpace):
+                 work_space: WorkSpace,
+                 yields: bool):
         if len(start_character) != 1:
             raise RuleError.bad_hope_start_character(start_character)
         self._start_character: str = start_character
         self._work_space: WorkSpace = work_space
+        self._yields: bool = yields
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -168,17 +182,16 @@ class Rule:
     def get_start_character(self) -> str:
         return self._start_character
 
-    def get_work_space(self) -> WorkSpace:
-        return self._work_space
-
 
 class RuleModule(Rule):
     def __init__(self,
                  start_character: str,
                  work_space: WorkSpace,
+                 yields: bool,
                  rules: Tuple):
-        super(RuleModule, self).__init__(start_character, work_space)
-        rules_obj = [rule(work_space) for rule in rules]
+        super(RuleModule, self).__init__(start_character, work_space, yields)
+        rules_obj = [rule(work_space, yields) for rule in rules]
+        self._yields = yields
         self._rules: Dict[str, Rule] = {}
         for rule in rules_obj:
             if rule.get_start_character() in self._rules:
@@ -202,17 +215,20 @@ class RuleModule(Rule):
         """
         conscious.step()
         rule_step_visuals.append(conscious.at())
-        yield
+        if self._yields:
+            yield
         rule = rooms.read(*conscious.at())
         if rule in self._rules:
             for _ in self._rules[rule](portal, rooms, conscious, start, rule_step_visuals):
-                yield
+                if self._yields:
+                    yield
 
 
 class BackMirror(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BackMirror, self).__init__("\\", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BackMirror, self).__init__("\\", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -245,15 +261,17 @@ class BackMirror(Rule):
                     conscious[c.PC_V_X] = 1
                     conscious[c.PC_V_Y] = 0
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class Branch(Rule):
     def __init__(self,
                  branch_function: Callable,
                  start_character: str,
-                 work_space: WorkSpace):
-        super(Branch, self).__init__(start_character, work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Branch, self).__init__(start_character, work_space, yields)
         self._branch_function = branch_function
 
     def __call__(self,
@@ -273,67 +291,78 @@ class Branch(Rule):
         """
         conscious[c.BRANCH] = self._branch_function
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class BranchLessThanZero(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchLessThanZero, self).__init__(c.BRANCH_LESS_THAN_ZERO, "L", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchLessThanZero, self).__init__(c.BRANCH_LESS_THAN_ZERO, "L", work_space, yields)
 
 
 class BranchGreaterThanZero(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchGreaterThanZero, self).__init__(c.BRANCH_GREATER_THAN_ZERO, "G", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchGreaterThanZero, self).__init__(c.BRANCH_GREATER_THAN_ZERO, "G", work_space, yields)
 
 
 class BranchZero(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchZero, self).__init__(c.BRANCH_ZERO, "Z", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchZero, self).__init__(c.BRANCH_ZERO, "Z", work_space, yields)
 
 
 class BranchNotZero(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchNotZero, self).__init__(c.BRANCH_NOT_ZERO, "N", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchNotZero, self).__init__(c.BRANCH_NOT_ZERO, "N", work_space, yields)
 
 
 class BranchIsInteger(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchIsInteger, self).__init__(c.BRANCH_IS_INTEGER, "I", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchIsInteger, self).__init__(c.BRANCH_IS_INTEGER, "I", work_space, yields)
 
 
 class BranchIsString(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchIsString, self).__init__(c.BRANCH_IS_STRING, "S", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchIsString, self).__init__(c.BRANCH_IS_STRING, "S", work_space, yields)
 
 
 class BranchIsNone(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchIsNone, self).__init__(c.BRANCH_IS_NONE, "O", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchIsNone, self).__init__(c.BRANCH_IS_NONE, "O", work_space, yields)
 
 
 class BranchIsStackFrame(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchIsStackFrame, self).__init__(c.BRANCH_IS_STACK_FRAME, "F", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchIsStackFrame, self).__init__(c.BRANCH_IS_STACK_FRAME, "F", work_space, yields)
 
 
 class BranchIsStackBottom(Branch):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(BranchIsStackBottom, self).__init__(c.BRANCH_IS_STACK_BOTTOM, "B", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(BranchIsStackBottom, self).__init__(c.BRANCH_IS_STACK_BOTTOM, "B", work_space, yields)
 
 
 class Cite(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Cite, self).__init__("c", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Cite, self).__init__("c", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -352,13 +381,15 @@ class Cite(Rule):
         """
         conscious.step()
         conscious[c.WORK_STACK].push(portal.read_input())
-        yield
+        if self._yields:
+            yield
 
 
 class ClearStack(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ClearStack, self).__init__("n", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ClearStack, self).__init__("n", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -377,13 +408,15 @@ class ClearStack(Rule):
         """
         conscious.step()
         conscious[c.WORK_STACK].clear()
-        yield
+        if self._yields:
+            yield
 
 
 class CoordinateX(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(CoordinateX, self).__init__("x", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(CoordinateX, self).__init__("x", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -402,13 +435,15 @@ class CoordinateX(Rule):
         """
         conscious[c.WORK_STACK].push(conscious[c.PC_X])
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class CoordinateY(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(CoordinateY, self).__init__("y", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(CoordinateY, self).__init__("y", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -427,13 +462,15 @@ class CoordinateY(Rule):
         """
         conscious[c.WORK_STACK].push(conscious[c.PC_Y])
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class CoordinateFloor(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(CoordinateFloor, self).__init__("f", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(CoordinateFloor, self).__init__("f", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -452,13 +489,15 @@ class CoordinateFloor(Rule):
         """
         conscious[c.WORK_STACK].push(conscious[c.PC_FLOOR])
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class CoreDump(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(CoreDump, self).__init__("?", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(CoreDump, self).__init__("?", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -489,13 +528,15 @@ class CoreDump(Rule):
         portal.read_input()
         portal.write_output("#" * 5 + "\n")
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class Duplicate(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Duplicate, self).__init__("d", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Duplicate, self).__init__("d", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -515,13 +556,15 @@ class Duplicate(Rule):
         work_space = conscious[c.WORK_STACK]
         work_space.push(work_space.peak())
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class Echo(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Echo, self).__init__("e", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Echo, self).__init__("e", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -545,13 +588,15 @@ class Echo(Rule):
         elif output is StackBottom:
             output = "StackBottom"
         portal.write_output(output)
-        yield
+        if self._yields:
+            yield
 
 
 class ForwardMirror(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ForwardMirror, self).__init__("/", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ForwardMirror, self).__init__("/", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -584,7 +629,8 @@ class ForwardMirror(Rule):
                     conscious[c.PC_V_X] = -1
                     conscious[c.PC_V_Y] = 0
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 def _process_hallway_arg(hallway: Union[int, str, StackFrame, StackBottom, None],
@@ -618,8 +664,9 @@ def _process_floor_arg(floor: Union[int, str, StackFrame, StackBottom, None],
 
 class HallwayCall(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwayCall, self).__init__("c", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwayCall, self).__init__("c", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -659,13 +706,15 @@ class HallwayCall(Rule):
             conscious[c.PC_Y] = hallway
         else:
             conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwayLevelCall(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwayLevelCall, self).__init__("l", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwayLevelCall, self).__init__("l", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -717,13 +766,15 @@ class HallwayLevelCall(Rule):
                 conscious[c.PC_FLOOR] = floor
             else:
                 conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwayReturn(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwayReturn, self).__init__("r", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwayReturn, self).__init__("r", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -775,13 +826,15 @@ class HallwayReturn(Rule):
                 conscious[c.PC_V_Y] = v_y
                 conscious[c.PC_V_FLOOR] = v_floor
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwayGetName(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwayGetName, self).__init__("n", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwayGetName, self).__init__("n", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -802,13 +855,15 @@ class HallwayGetName(Rule):
         floor = _process_floor_arg(conscious[c.WORK_STACK].pop(), rooms)
         conscious[c.WORK_STACK].push(rooms.get_hallway_name(hallway, floor))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwayGetLocation(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwayGetLocation, self).__init__("g", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwayGetLocation, self).__init__("g", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -833,13 +888,15 @@ class HallwayGetLocation(Rule):
             hallway = _to_int(hallway)
             conscious[c.WORK_STACK].push(rooms.find_hallway_location(hallway, floor))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwaySet(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwaySet, self).__init__("s", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwaySet, self).__init__("s", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -867,13 +924,15 @@ class HallwaySet(Rule):
             # hallway name is in valid make it None
             rooms.set_hallway_name(hallway, floor, None)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwayRemove(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwayRemove, self).__init__("d", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwayRemove, self).__init__("d", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -896,13 +955,15 @@ class HallwayRemove(Rule):
         if isinstance(hallway, int):
             rooms.remove_hallway(hallway, floor)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwayPast(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwayPast, self).__init__("p", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwayPast, self).__init__("p", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -927,13 +988,15 @@ class HallwayPast(Rule):
         else:
             conscious[c.WORK_STACK].push(None)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwayNext(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HallwayNext, self).__init__("e", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HallwayNext, self).__init__("e", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -958,14 +1021,17 @@ class HallwayNext(Rule):
         else:
             conscious[c.WORK_STACK].push(None)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class HallwayModule(RuleModule):
     def __init__(self,
-                 work_space: WorkSpace):
+                 work_space: WorkSpace,
+                 yields: bool):
         super(HallwayModule, self).__init__("h",
                                             work_space,
+                                            yields,
                                             (HallwayCall,
                                              HallwayLevelCall,
                                              HallwayReturn,
@@ -979,8 +1045,9 @@ class HallwayModule(RuleModule):
 
 class Halt(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Halt, self).__init__("~", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Halt, self).__init__("~", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -998,11 +1065,13 @@ class Halt(Rule):
         :return: Generator[None, None, None]
         """
         conscious.step()
-        yield
+        if self._yields:
+            yield
         if rooms.read(*conscious.at()) == "h":
             conscious.step()
             rule_step_visuals.append(conscious.at())
-            yield
+            if self._yields:
+                yield
             if rooms.read(*conscious.at()) == "a":
                 conscious.step()
                 conscious[c.HALT] = True
@@ -1011,11 +1080,12 @@ class Halt(Rule):
 class Hope(Rule):
     def __init__(self,
                  start_character: str,
-                 work_space: WorkSpace):
+                 work_space: WorkSpace,
+                 yields: bool):
         if start_character not in string.digits:
             raise RuleError.bad_hope_start_character(start_character)
 
-        super(Hope, self).__init__(start_character, work_space)
+        super(Hope, self).__init__(start_character, work_space, yields)
         self._jump_count = int(start_character)
 
     def __call__(self,
@@ -1034,69 +1104,80 @@ class Hope(Rule):
         :return: Generator[None, None, None]
         """
         conscious.step()
-        yield
+        if self._yields:
+            yield
         for _ in range(self._jump_count):
             conscious.step()
 
 
 class HopeOne(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeOne, self).__init__("1", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeOne, self).__init__("1", work_space, yields)
 
 
 class HopeTwo(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeTwo, self).__init__("2", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeTwo, self).__init__("2", work_space, yields)
 
 
 class HopeThree(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeThree, self).__init__("3", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeThree, self).__init__("3", work_space, yields)
 
 
 class HopeFour(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeFour, self).__init__("4", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeFour, self).__init__("4", work_space, yields)
 
 
 class HopeFive(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeFive, self).__init__("5", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeFive, self).__init__("5", work_space, yields)
 
 
 class HopeSix(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeSix, self).__init__("6", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeSix, self).__init__("6", work_space, yields)
 
 
 class HopeSeven(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeSeven, self).__init__("7", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeSeven, self).__init__("7", work_space, yields)
 
 
 class HopeEighth(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeEighth, self).__init__("8", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeEighth, self).__init__("8", work_space, yields)
 
 
 class HopeNine(Hope):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(HopeNine, self).__init__("9", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(HopeNine, self).__init__("9", work_space, yields)
 
 
 class Keep(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Keep, self).__init__("k", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Keep, self).__init__("k", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1114,17 +1195,20 @@ class Keep(Rule):
         :return: Generator[None, None, None]
         """
         conscious.step()
-        yield
+        if self._yields:
+            yield
         if rooms.read(*conscious.at()).isdigit():
             conscious[f"R{rooms.read(*conscious.at())}"] = conscious[c.WORK_STACK].peak()
             conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class IntegerCast(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerCast, self).__init__("c", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerCast, self).__init__("c", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1144,15 +1228,17 @@ class IntegerCast(Rule):
         item = conscious[c.WORK_STACK].pop()
         conscious[c.WORK_STACK].push(_cast_to_int(item))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class IntegerOperation(Rule):
     def __init__(self,
                  operation: Callable,
                  start_character: str,
-                 work_space: WorkSpace):
-        super(IntegerOperation, self).__init__(start_character, work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerOperation, self).__init__(start_character, work_space, yields)
         self._operation: Callable = operation
 
     def __call__(self,
@@ -1179,49 +1265,57 @@ class IntegerOperation(Rule):
             if whisper.WHISPER_RUNNING:
                 whisper.warning("ZeroDivisionError")
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class IntegerAdd(IntegerOperation):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerAdd, self).__init__(int.__add__, "a", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerAdd, self).__init__(int.__add__, "a", work_space, yields)
 
 
 class IntegerSubtract(IntegerOperation):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerSubtract, self).__init__(int.__sub__, "s", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerSubtract, self).__init__(int.__sub__, "s", work_space, yields)
 
 
 class IntegerMultiply(IntegerOperation):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerMultiply, self).__init__(int.__mul__, "m", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerMultiply, self).__init__(int.__mul__, "m", work_space, yields)
 
 
 class IntegerDivide(IntegerOperation):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerDivide, self).__init__(int.__floordiv__, "d", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerDivide, self).__init__(int.__floordiv__, "d", work_space, yields)
 
 
 class IntegerModular(IntegerOperation):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerModular, self).__init__(int.__mod__, "o", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerModular, self).__init__(int.__mod__, "o", work_space, yields)
 
 
 class IntegerPower(IntegerOperation):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerPower, self).__init__(int.__pow__, "p", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerPower, self).__init__(int.__pow__, "p", work_space, yields)
 
 
 class IntegerByte(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerByte, self).__init__("b", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerByte, self).__init__("b", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1244,13 +1338,15 @@ class IntegerByte(Rule):
         else:
             conscious[c.WORK_STACK].push(None)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class IntegerAbsolute(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(IntegerAbsolute, self).__init__("l", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(IntegerAbsolute, self).__init__("l", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1270,14 +1366,17 @@ class IntegerAbsolute(Rule):
         item = _to_int(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(abs(item))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class IntegerModule(RuleModule):
     def __init__(self,
-                 work_space: WorkSpace):
+                 work_space: WorkSpace,
+                 yields: bool):
         super(IntegerModule, self).__init__("i",
                                             work_space,
+                                            yields,
                                             (IntegerCast,
                                              IntegerAdd,
                                              IntegerSubtract,
@@ -1291,8 +1390,9 @@ class IntegerModule(RuleModule):
 
 class LevelGetFloorName(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(LevelGetFloorName, self).__init__("n", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(LevelGetFloorName, self).__init__("n", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1312,13 +1412,15 @@ class LevelGetFloorName(Rule):
         floor = _to_int(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(rooms.get_floor_name(floor))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class LevelGetFloorLevel(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(LevelGetFloorLevel, self).__init__("l", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(LevelGetFloorLevel, self).__init__("l", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1338,13 +1440,15 @@ class LevelGetFloorLevel(Rule):
         floor_name = _cast_string(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(rooms.get_floor_level(floor_name))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class LevelSetFloorName(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(LevelSetFloorName, self).__init__("s", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(LevelSetFloorName, self).__init__("s", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1371,14 +1475,17 @@ class LevelSetFloorName(Rule):
             except RoomsError:
                 pass
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class LevelModule(RuleModule):
     def __init__(self,
-                 work_space: WorkSpace):
+                 work_space: WorkSpace,
+                 yields: bool):
         super(LevelModule, self).__init__("l",
                                           work_space,
+                                          yields,
                                           (LevelGetFloorName,
                                            LevelGetFloorLevel,
                                            LevelSetFloorName))
@@ -1386,8 +1493,9 @@ class LevelModule(RuleModule):
 
 class Pop(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Pop, self).__init__("p", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Pop, self).__init__("p", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1406,13 +1514,15 @@ class Pop(Rule):
         """
         conscious[c.WORK_STACK].pop()
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class PopFrame(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(PopFrame, self).__init__("a", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(PopFrame, self).__init__("a", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1431,13 +1541,15 @@ class PopFrame(Rule):
         """
         conscious[c.WORK_STACK].pop_frame()
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class Read(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Read, self).__init__("r", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Read, self).__init__("r", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1455,8 +1567,9 @@ class Read(Rule):
         :return: Generator[None, None, None]
         """
         conscious.step()
-        yield
-        for _ in _read(rooms, conscious, rule_step_visuals):
+        if self._yields:
+            yield
+        for _ in _read(rooms, conscious, self._yields, rule_step_visuals):
             yield
 
 
@@ -1466,9 +1579,10 @@ class Shifter(Rule):
                  vector_y: int,
                  vector_floor_level: int,
                  start_character: str,
-                 work_space: WorkSpace):
-        super(Shifter, self).__init__(start_character, work_space)
-        self.get_work_space()[SHIFTER].add(self.get_start_character())
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Shifter, self).__init__(start_character, work_space, yields)
+        self._work_space[SHIFTER].add(self.get_start_character())
         self._vector_x: int = vector_x
         self._vector_y: int = vector_y
         self._vector_floor_level: int = vector_floor_level
@@ -1493,17 +1607,19 @@ class Shifter(Rule):
             conscious[c.PC_V_Y] = self._vector_y
             conscious[c.PC_V_FLOOR] = self._vector_floor_level
             conscious.step()
-            yield
+            if self._yields:
+                yield
             if rooms.read(*conscious.at()) == self.get_start_character():
                 rule_step_visuals.append(conscious.at())
                 conscious.step()
-                yield
+                if self._yields:
+                    yield
                 skip_count = 0
                 while True:
                     rule_step_visuals.append(conscious.at())
                     if rooms.read(*conscious.at()) == "!":
                         skip_count += 1
-                    elif rooms.read(*conscious.at()) in self.get_work_space()[SHIFTER]:
+                    elif rooms.read(*conscious.at()) in self._work_space[SHIFTER]:
                         if not skip_count:
                             break
                         skip_count += -1
@@ -1511,56 +1627,65 @@ class Shifter(Rule):
                     yield
         else:
             conscious.step()
-            yield
+            if self._yields:
+                yield
         conscious[c.BRANCH] = c.BRANCH_CLEAR
 
 
 class ShifterRight(Shifter):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ShifterRight, self).__init__(1, 0, 0, ">", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ShifterRight, self).__init__(1, 0, 0, ">", work_space, yields)
 
 
 class ShifterLeft(Shifter):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ShifterLeft, self).__init__(-1, 0, 0, "<", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ShifterLeft, self).__init__(-1, 0, 0, "<", work_space, yields)
 
 
 class ShifterUp(Shifter):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ShifterUp, self).__init__(0, 1, 0, "^", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ShifterUp, self).__init__(0, 1, 0, "^", work_space, yields)
 
 
 class ShifterDown(Shifter):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ShifterDown, self).__init__(0, -1, 0, "v", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ShifterDown, self).__init__(0, -1, 0, "v", work_space, yields)
 
 
 class ShifterDownUpper(Shifter):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ShifterDownUpper, self).__init__(0, -1, 0, "V", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ShifterDownUpper, self).__init__(0, -1, 0, "V", work_space, yields)
 
 
 class ShifterUpper(Shifter):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ShifterUpper, self).__init__(0, 0, 1, "{", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ShifterUpper, self).__init__(0, 0, 1, "{", work_space, yields)
 
 
 class ShifterLower(Shifter):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ShifterLower, self).__init__(0, 0, -1, "}", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ShifterLower, self).__init__(0, 0, -1, "}", work_space, yields)
 
 
 class Store(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Store, self).__init__("s", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Store, self).__init__("s", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1578,17 +1703,20 @@ class Store(Rule):
         :return: Generator[None, None, None]
         """
         conscious.step()
-        yield
+        if self._yields:
+            yield
         if rooms.read(*conscious.at()).isdigit():
             conscious[c.WORK_STACK].push(conscious[f"R{rooms.read(*conscious.at())}"])
             conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringLength(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringLength, self).__init__("l", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringLength, self).__init__("l", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1608,13 +1736,15 @@ class StringLength(Rule):
         item = _cast_string(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(len(item))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringCast(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringCast, self).__init__("c", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringCast, self).__init__("c", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1634,13 +1764,15 @@ class StringCast(Rule):
         item = conscious[c.WORK_STACK].pop()
         conscious[c.WORK_STACK].push(_cast_string(item))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringAt(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringAt, self).__init__("a", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringAt, self).__init__("a", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1664,13 +1796,15 @@ class StringAt(Rule):
         except IndexError:
             conscious[c.WORK_STACK].push(None)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringByte(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringByte, self).__init__("b", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringByte, self).__init__("b", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1693,13 +1827,15 @@ class StringByte(Rule):
         else:
             conscious[c.WORK_STACK].push(None)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringSplit(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringSplit, self).__init__("s", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringSplit, self).__init__("s", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1723,13 +1859,15 @@ class StringSplit(Rule):
         conscious[c.WORK_STACK].push(back)
         conscious[c.WORK_STACK].push(front)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringJoin(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringJoin, self).__init__("j", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringJoin, self).__init__("j", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1750,13 +1888,15 @@ class StringJoin(Rule):
         front = _cast_string(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(front + back)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringEqual(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringEqual, self).__init__("e", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringEqual, self).__init__("e", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1777,13 +1917,15 @@ class StringEqual(Rule):
         string_1 = _cast_string(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(int(string_1 == string_2))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringIn(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringIn, self).__init__("i", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringIn, self).__init__("i", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1804,13 +1946,15 @@ class StringIn(Rule):
         string_1 = _cast_string(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(int(string_1 in string_2))
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringUpper(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringUpper, self).__init__("u", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringUpper, self).__init__("u", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1830,13 +1974,15 @@ class StringUpper(Rule):
         item = _cast_string(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(item.upper())
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringLower(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(StringLower, self).__init__("o", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringLower, self).__init__("o", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1856,14 +2002,17 @@ class StringLower(Rule):
         item = _cast_string(conscious[c.WORK_STACK].pop())
         conscious[c.WORK_STACK].push(item.lower())
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class StringModule(RuleModule):
     def __init__(self,
-                 work_space: WorkSpace):
+                 work_space: WorkSpace,
+                 yields: bool):
         super(StringModule, self).__init__("b",
                                            work_space,
+                                           yields,
                                            (StringLength,
                                             StringCast,
                                             StringAt,
@@ -1878,8 +2027,9 @@ class StringModule(RuleModule):
 
 class Switch(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Switch, self).__init__("z", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Switch, self).__init__("z", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1901,13 +2051,15 @@ class Switch(Rule):
         conscious[c.WORK_STACK].push(item_2)
         conscious[c.WORK_STACK].push(item_1)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class ThreadThread(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ThreadThread, self).__init__("t", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ThreadThread, self).__init__("t", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1943,13 +2095,15 @@ class ThreadThread(Rule):
         new_conscious[c.R7] = conscious[c.R7]
         new_conscious[c.R8] = conscious[c.R8]
         new_conscious[c.R9] = conscious[c.R9]
-        yield
+        if self._yields:
+            yield
 
 
 class ThreadJoin(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ThreadJoin, self).__init__("j", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ThreadJoin, self).__init__("j", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1969,17 +2123,19 @@ class ThreadJoin(Rule):
         if conscious[c.ID] != 0:
             conscious[c.ALIVE] = False
             # free thread lock
-            if self.get_work_space()[KEY_HOLDER] == conscious[c.ID]:
-                self.get_work_space()[KEY_HOLDER] = None
+            if self._work_space[KEY_HOLDER] == conscious[c.ID]:
+                self._work_space[KEY_HOLDER] = None
         else:
             conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class ThreadID(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ThreadID, self).__init__("i", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ThreadID, self).__init__("i", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1998,15 +2154,15 @@ class ThreadID(Rule):
         """
         conscious[c.WORK_STACK].push(conscious[c.ID])
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class ThreadLock(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ThreadLock, self).__init__("l", work_space)
-        self.get_work_space()[KEY_HOLDER] = None
-        self.get_work_space()[LOCK_COUNT] = 0
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ThreadLock, self).__init__("l", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2023,22 +2179,24 @@ class ThreadLock(Rule):
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
-        if self.get_work_space()[KEY_HOLDER] is None:
-            self.get_work_space()[KEY_HOLDER] = conscious[c.ID]
-            self.get_work_space()[LOCK_COUNT] = 1
+        if self._work_space[KEY_HOLDER] is None:
+            self._work_space[KEY_HOLDER] = conscious[c.ID]
+            self._work_space[LOCK_COUNT] = 1
             conscious.step()
-        elif self.get_work_space()[KEY_HOLDER] == conscious[c.ID]:
-            self.get_work_space()[LOCK_COUNT] += 1
+        elif self._work_space[KEY_HOLDER] == conscious[c.ID]:
+            self._work_space[LOCK_COUNT] += 1
             conscious.step()
         else:
             conscious[c.PC_X], conscious[c.PC_Y], conscious[c.PC_FLOOR] = start
-        yield
+        if self._yields:
+            yield
 
 
 class ThreadUnLock(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(ThreadUnLock, self).__init__("u", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(ThreadUnLock, self).__init__("u", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2056,21 +2214,24 @@ class ThreadUnLock(Rule):
         :return: Generator[None, None, None]
         """
         # check if conscious is the key holder
-        if self.get_work_space()[KEY_HOLDER] == conscious[c.ID]:
-            self.get_work_space()[LOCK_COUNT] += -1
+        if self._work_space[KEY_HOLDER] == conscious[c.ID]:
+            self._work_space[LOCK_COUNT] += -1
             # check if lock count is 0
-            if not self.get_work_space()[LOCK_COUNT]:
+            if not self._work_space[LOCK_COUNT]:
                 # remove conscious as key holder
-                self.get_work_space()[KEY_HOLDER] = None
+                self._work_space[KEY_HOLDER] = None
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class ThreadModule(RuleModule):
     def __init__(self,
-                 work_space: WorkSpace):
+                 work_space: WorkSpace,
+                 yields: bool):
         super(ThreadModule, self).__init__("t",
                                            work_space,
+                                           yields,
                                            (ThreadThread,
                                             ThreadJoin,
                                             ThreadID,
@@ -2080,8 +2241,9 @@ class ThreadModule(RuleModule):
 
 class UncommonReadFlip(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(UncommonReadFlip, self).__init__("r", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(UncommonReadFlip, self).__init__("r", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2105,8 +2267,9 @@ class UncommonReadFlip(Rule):
         v_y = conscious[c.PC_V_Y] * -1
         v_floor = conscious[c.PC_V_FLOOR] * -1
         conscious.step()
-        yield
-        for _ in _read(rooms, conscious, rule_step_visuals):
+        if self._yields:
+            yield
+        for _ in _read(rooms, conscious, self._yields, rule_step_visuals):
             yield
         conscious[c.PC_X] = x
         conscious[c.PC_Y] = y
@@ -2116,13 +2279,15 @@ class UncommonReadFlip(Rule):
         conscious[c.PC_V_FLOOR] = v_floor
         conscious.step()
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class UncommonWriteFlip(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(UncommonWriteFlip, self).__init__("w", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(UncommonWriteFlip, self).__init__("w", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2146,12 +2311,14 @@ class UncommonWriteFlip(Rule):
         v_y = conscious[c.PC_V_Y] * -1
         v_floor = conscious[c.PC_V_FLOOR] * -1
         conscious.step()
-        yield
+        if self._yields:
+            yield
         for character in ">1vur" + _write(rooms, conscious, rule_step_visuals):
             rooms.write(*conscious.at(), character=character)
             rule_step_visuals.append(conscious.at())
             conscious.step()
-            yield
+            if self._yields:
+                yield
         conscious[c.PC_X] = x
         conscious[c.PC_Y] = y
         conscious[c.PC_FLOOR] = floor
@@ -2160,13 +2327,15 @@ class UncommonWriteFlip(Rule):
         conscious[c.PC_V_FLOOR] = v_floor
         conscious.step()
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class UncommonHotPatch(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(UncommonHotPatch, self).__init__("h", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(UncommonHotPatch, self).__init__("h", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2195,15 +2364,18 @@ class UncommonHotPatch(Rule):
             y += v_y
             floor += v_floor
             rooms.write(x, y, floor, character)
-            yield
+            if self._yields:
+                yield
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class UncommonSimpleDump(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(UncommonSimpleDump, self).__init__("s", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(UncommonSimpleDump, self).__init__("s", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2232,15 +2404,18 @@ class UncommonSimpleDump(Rule):
             x += v_x
             y += v_y
             floor += v_floor
-            yield
+            if self._yields:
+                yield
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class UncommonDynamicDump(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(UncommonDynamicDump, self).__init__("d", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(UncommonDynamicDump, self).__init__("d", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2269,15 +2444,18 @@ class UncommonDynamicDump(Rule):
             x += v_x
             y += v_y
             floor += v_floor
-            yield
+            if self._yields:
+                yield
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class UncommonDoubleDuplicate(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(UncommonDoubleDuplicate, self).__init__("o", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(UncommonDoubleDuplicate, self).__init__("o", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2300,14 +2478,17 @@ class UncommonDoubleDuplicate(Rule):
             conscious[c.WORK_STACK].push(item_1)
             conscious[c.WORK_STACK].push(item_2)
         conscious.step()
-        yield
+        if self._yields:
+            yield
 
 
 class UncommonModule(RuleModule):
     def __init__(self,
-                 work_space: WorkSpace):
+                 work_space: WorkSpace,
+                 yields: bool):
         super(UncommonModule, self).__init__("u",
                                              work_space,
+                                             yields,
                                              (UncommonHotPatch,
                                               UncommonReadFlip,
                                               UncommonWriteFlip,
@@ -2318,8 +2499,9 @@ class UncommonModule(RuleModule):
 
 class Write(Rule):
     def __init__(self,
-                 work_space: WorkSpace):
-        super(Write, self).__init__("w", work_space)
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Write, self).__init__("w", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -2337,14 +2519,17 @@ class Write(Rule):
         :return: Generator[None, None, None]
         """
         conscious.step()
-        yield
+        if self._yields:
+            yield
         raw_data = "r" + _write(rooms, conscious, rule_step_visuals)
-        yield
+        if self._yields:
+            yield
         for character in raw_data:
             rooms.write(*conscious.at(), character=character)
             rule_step_visuals.append(conscious.at())
             conscious.step()
-            yield
+            if self._yields:
+                yield
 
 
 RULES = (BackMirror,
