@@ -20,7 +20,7 @@ from . import stack
 
 # Stacks
 WORK_STACK = "WORK_STACK"
-FUNCTION_STACK = "FUNCTION_RET_STACK"
+FUNCTION_STACK = "FUNCTION_STACK"
 
 # Normal Registers
 R0 = "R0"

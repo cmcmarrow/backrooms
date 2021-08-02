@@ -15,6 +15,7 @@ from . import conscious as c
 from .conscious import _to_int
 from .rooms import Rooms, RoomsError
 from .stack import StackFrame, StackBottom
+from . import whisper
 
 
 class RuleError(BackroomsError):
@@ -1121,6 +1122,8 @@ class IntegerOperation(Rule):
             conscious[c.WORK_STACK].push(int(self._operation(front, back)))
         except ZeroDivisionError:
             conscious[c.WORK_STACK].push(None)
+            if whisper.WHISPER_RUNNING:
+                whisper.warning("ZeroDivisionError")
         conscious.step()
         yield
 

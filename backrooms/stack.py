@@ -26,6 +26,9 @@ class Stack:
     def __bool__(self):
         return not self.is_empty()
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__}: {self.peak()}>"
+
     def push(self, item: object) -> None:
         """
         info: Push item to stack unless item is stack bottom.

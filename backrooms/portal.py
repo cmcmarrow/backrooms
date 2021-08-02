@@ -9,11 +9,11 @@ This script holds a simple portal "CPU".
 from collections import deque
 from string import ascii_letters, digits
 from typing import Tuple, Optional, Dict, List, Type
+from pprint import pformat
 
 # backrooms
 from . import backrooms_error
 from .conscious import Conscious, ALIVE, ID, HALT
-from . import conscious as c
 from .rooms import Rooms
 from .rules import Rule, RULES, WorkSpace, CoreDump
 from . import whisper
@@ -106,7 +106,8 @@ class Portal:
     def __call__(self):
         for operation_generator in self:
             for step in operation_generator:
-                whisper.debug(f"Step: {step}")
+                if whisper.WHISPER_RUNNING:
+                    whisper.debug(f"Step: {step}")
 
     def __iter__(self):
         return self
@@ -119,23 +120,22 @@ class Portal:
             # check if any consciouses remain
             if not len(self._consciouses):
                 self._done = True
-                whisper.debug("HALT")
+                if whisper.WHISPER_RUNNING:
+                    whisper.debug("HALT")
             else:
                 # get next conscious
                 conscious = self._consciouses.popleft()
-                # whisper conscious location
-                whisper.info(f"{conscious[ID]} {conscious.at()}: {repr(self._rooms.read(*conscious.at()))}")
-                whisper.debug(f"{conscious[c.R0]} {conscious[c.R1]} "
-                              f"{conscious[c.R2]} {conscious[c.R3]} {conscious[c.R4]} {conscious[c.R5]} "
-                              f"{conscious[c.R6]} {conscious[c.R7]} {conscious[c.R8]} {conscious[c.R9]}")
-                whisper.debug(f"{conscious[c.BRANCH]} {repr(conscious[c.WORK_STACK].peak())} "
-                              f"{conscious[c.FUNCTION_STACK].peak()}")
+                if whisper.WHISPER_RUNNING:
+                    # whisper conscious location
+                    whisper.info(f"{conscious[ID]} {conscious.at()}: {repr(self._rooms.read(*conscious.at()))}")
+                    whisper.debug("Conscious:\n" + pformat(conscious))
                 # get rule
                 rule = self._rules.get(self._rooms.read(*conscious.at()))
                 self._rule_step_visuals.clear()
                 self._rule_step_visuals.append(conscious.at())
                 if rule is not None:
-                    whisper.debug(f"Rule found: {rule.__class__.__name__}")
+                    if whisper.WHISPER_RUNNING:
+                        whisper.debug(f"Rule found: {rule.__class__.__name__}")
                     # run operation "rule"
                     for step, _ in enumerate(rule(self, self._rooms, conscious, self._rule_step_visuals)):
                         step += 1
@@ -144,7 +144,8 @@ class Portal:
                         yield step
                 else:
                     # whisper that no rule was found for charter
-                    whisper.debug(f"No rule found!")
+                    if whisper.WHISPER_RUNNING:
+                        whisper.debug("No rule found!")
                     if self._error_on_space and self._rooms.read(*conscious.at()) == " ":
                         raise PortalError.error_on_space(*conscious.at())
                     conscious.step()
@@ -153,7 +154,8 @@ class Portal:
                     # add conscious back to thread queue
                     self._consciouses.append(conscious)
                 else:
-                    whisper.debug("not ALIVE")
+                    if whisper.WHISPER_RUNNING:
+                        whisper.debug("not ALIVE")
                     # free conscious id
                     self._free_ids.add(conscious[ID])
                     while self._next_free_id - 1 in self._free_ids:
@@ -163,15 +165,18 @@ class Portal:
                     if not len(self._consciouses):
                         # program is done running
                         self._done = True
-                        whisper.debug("HALT")
+                        if whisper.WHISPER_RUNNING:
+                            whisper.debug("HALT")
 
-                whisper.debug(f"Step visuals: {self._rule_step_visuals}")
+                if whisper.WHISPER_RUNNING:
+                    whisper.debug(f"Step visuals: {self._rule_step_visuals}")
 
                 # check if conscious raised HALT
                 if conscious[HALT] and not self.is_done():
                     # program is done running
                     self._done = True
-                    whisper.debug("HALT")
+                    if whisper.WHISPER_RUNNING:
+                        whisper.debug("HALT")
 
                 # check if lost count has been hit
                 if self._lost_count > 0:
