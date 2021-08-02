@@ -2030,10 +2030,8 @@ class ThreadLock(Rule):
         elif self.get_work_space()[KEY_HOLDER] == conscious[c.ID]:
             self.get_work_space()[LOCK_COUNT] += 1
             conscious.step()
-        else:   # TODO fix hack
-            conscious[c.PC_X] += conscious[c.PC_V_X] * -1
-            conscious[c.PC_Y] += conscious[c.PC_V_Y] * -1
-            conscious[c.PC_FLOOR] += conscious[c.PC_V_FLOOR] * -1
+        else:
+            conscious[c.PC_X], conscious[c.PC_Y], conscious[c.PC_FLOOR] = start
         yield
 
 
