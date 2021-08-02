@@ -19,7 +19,8 @@ def full_test(file: str,
               lost_rule_count: int = 10000,
               error_on_space: bool = True,
               br_builtins: bool = True,
-              core_dump: bool = False) -> backrooms.portal.Portal:
+              core_dump: bool = False,
+              yields: bool = False,) -> backrooms.portal.Portal:
     """
     info: Load file and run backrooms silently.
     :param file: str
@@ -29,6 +30,7 @@ def full_test(file: str,
     :param error_on_space: bool
     :param br_builtins: bool
     :param core_dump: bool
+    :param yields: bool
     :return: Portal
     """
 
@@ -43,6 +45,7 @@ def full_test(file: str,
                                            lost_rule_count=lost_rule_count,
                                            error_on_space=error_on_space,
                                            br_builtins=br_builtins,
-                                           core_dump=core_dump)
+                                           core_dump=core_dump,
+                                           yields=yields)
     br()
     return br
