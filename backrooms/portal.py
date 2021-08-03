@@ -76,7 +76,7 @@ class Portal:
             inputs = list(inputs[::-1])
         self._inputs: Optional[List[str]] = inputs
         self._catch_output: bool = catch_output
-        self._catch_output_steam: List[str] = []
+        self._catch_output_steam: List[object] = []
         self._error_on_space: bool = error_on_space
 
         work_space = WorkSpace()
@@ -116,7 +116,7 @@ class Portal:
     def __next__(self):
         if self._done:
             raise StopIteration()
-
+        self._rule_step_visuals.clear()
         return self._run_rule()
 
     def _run_rule(self) -> Generator[int, None, None]:
@@ -134,7 +134,6 @@ class Portal:
                 whisper.debug("Conscious:\n" + pformat(conscious))
             # get rule
             rule = self._rules.get(self._rooms.read(*conscious.at()))
-            self._rule_step_visuals.clear()
             self._rule_step_visuals.append(conscious.at())
             if rule is not None:
                 if whisper.WHISPER_RUNNING:
@@ -212,7 +211,7 @@ class Portal:
         self._consciouses.append(new_conscious)
         return new_conscious
 
-    def read_input(self) -> str:    # TODO write test
+    def read_input(self) -> str:
         """
         info: Gets input from portal
         :return: str
@@ -229,10 +228,10 @@ class Portal:
                 valid_data += character
         return valid_data
 
-    def write_output(self, output: str) -> None:    # TODO write test for
+    def write_output(self, output: object) -> None:
         """
         info: Writes out to Portal.
-        :param output: str
+        :param output: object
         :return: None
         """
         if self._sys_output:
@@ -241,15 +240,15 @@ class Portal:
         if self._catch_output:
             self._catch_output_steam.append(output)
 
-    def get_output_stream(self) -> List[str]:   # TODO write test for
+    def get_output_stream(self) -> List[object]:
         """
         info: Gets the output stream.
             Note anything can be done to the list returned.
-        :return: List[str]
+        :return: List[object]
         """
         return self._catch_output_steam
 
-    def get_step_visuals(self) -> List[Tuple[int, int, int]]:   # TODO write test for
+    def get_step_visuals(self) -> List[Tuple[int, int, int]]:
         """
         info: Gets step visuals for current rule that is executing.
             Note the list should only be read and the list will change when portal takes another step.

@@ -101,7 +101,19 @@ class TestRules(unittest.TestCase):
         self.assertEqual(stream[9], "StackBottom")
 
     def test_hallway_get_set(self):
-        stream = full_test("hallway_get_set.brs").get_output_stream()      # TODO!!! write test
+        stream = full_test("hallway_get_set.brs").get_output_stream()
+        self.assertEqual(len(stream), 11)
+        self.assertEqual(stream[0], "H1")
+        self.assertIs(stream[1], None)
+        self.assertEqual(stream[2], "H2")
+        self.assertIs(stream[3], None)
+        self.assertEqual(stream[4], -5)
+        self.assertEqual(stream[5], 0)
+        self.assertEqual(stream[6], "hello")
+        self.assertEqual(stream[7], "h2")
+        self.assertIs(stream[8], None)
+        self.assertEqual(stream[9], "h1")
+        self.assertEqual(stream[10], "StackBottom")
 
     def test_hallway_next_pass(self):
         stream = full_test("hallway_next_pass.brs").get_output_stream()
