@@ -16,6 +16,7 @@ from . import conscious_tests
 from . import test_files
 from . import rules_tests
 from . import backrooms_tests
+from . import portal_tests
 
 # add all tests to namespace
 for module_name, module in vars().copy().items():

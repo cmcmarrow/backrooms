@@ -61,6 +61,17 @@ def is_name(name: str) -> bool:
     return bool(name)
 
 
+def _find_a_hallway_key(key: int) -> Union[int, float]:
+    """
+    info: Makes sorted works out from 0. EX: 0, 1, -1, 2, -2, 3, ...
+    :param key: str
+    :return: Union[int, float]
+    """
+    if key < 0:
+        return abs(key) - 0.5
+    return key
+
+
 class Rooms:
     def __init__(self):
         """
@@ -222,6 +233,11 @@ class Rooms:
             if hallway_name is not None:
                 self._hallway_locations_to_names.setdefault(floor_level, {})[y] = hallway_name
                 self._hallway_names_to_locations.setdefault(floor_level, {})[hallway_name] = y
+            # remove old hallway name if replaced by a None hallway
+            elif y in self._hallway_locations_to_names.setdefault(floor_level, {}):
+                old_hallway_name = self._hallway_locations_to_names[floor_level][y]
+                del self._hallway_locations_to_names[floor_level][y]
+                del self._hallway_names_to_locations[floor_level][old_hallway_name]
         else:
             # bad name
             if whisper.WHISPER_RUNNING:
@@ -427,16 +443,6 @@ class Rooms:
         :param hallway_name: str
         :return: Optional[Tuple[int, int]]
         """
-        def _key(key: int) -> Union[int, float]:
-            """
-            info: Makes sorted works out from 0. EX: 0, 1, -1, 2, -2, 3, ...
-            :param key: str
-            :return: Union[int,float]
-            """
-            if key < 0:
-                return abs(key) - 0.5
-            return key
-
-        for floor in sorted(self._hallway_names_to_locations, key=_key):
+        for floor in sorted(self._hallway_names_to_locations, key=_find_a_hallway_key):
             if hallway_name in self._hallway_names_to_locations[floor]:
                 return self._hallway_names_to_locations[floor][hallway_name], floor

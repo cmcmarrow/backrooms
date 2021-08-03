@@ -1068,13 +1068,16 @@ class Halt(Rule):
         if self._yields:
             yield
         if rooms.read(*conscious.at()) == "h":
-            conscious.step()
             rule_step_visuals.append(conscious.at())
+            conscious.step()
             if self._yields:
                 yield
             if rooms.read(*conscious.at()) == "a":
+                rule_step_visuals.append(conscious.at())
                 conscious.step()
                 conscious[c.HALT] = True
+                if self._yields:
+                    yield
 
 
 class Hope(Rule):

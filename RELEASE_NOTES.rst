@@ -10,5 +10,6 @@ v1.0.0
 * Cleaned up code
 * Cleaned up logging
 * Fixed Typing
+* Fixed set_hallway_name None replacement bug
 * Made ThreadJoin to give up ThreadLock
 * Wrote more documentation
