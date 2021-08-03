@@ -1,7 +1,7 @@
-%a
-%add_l
+!echo
+%math
 
 ~GATE
-/rs"a"rs"A"hlri45ri-3rs"add_l"rs"ADD"hlV
-/}                ah~<                 .
-/^.....................................<
+/rs"hello!"rs"echo"rs"ECHO"hlri45ri-3rs"math"rs"ADD"hlV
+/}                ah~<                                .
+/^....................................................<
