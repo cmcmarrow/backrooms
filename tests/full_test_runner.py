@@ -11,7 +11,7 @@ from tests import test_files
 
 
 def full_test(file: str,
-              inputs:  Optional[Union[Tuple[str, ...], List[str]]] = None,
+              inputs: Optional[Union[Tuple[str, ...], List[str]]] = None,
               lost_count: int = 10000,
               lost_rule_count: int = 10000,
               error_on_space: bool = True,
