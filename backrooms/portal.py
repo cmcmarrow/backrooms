@@ -8,7 +8,7 @@ This script holds a simple portal "CPU".
 # built-in
 from collections import deque
 from string import ascii_letters, digits
-from typing import Tuple, Optional, Dict, List
+from typing import Tuple, Optional, Dict, List, Union, Generator, Type
 from pprint import pformat
 
 # backrooms
@@ -49,7 +49,7 @@ class Portal:
     def __init__(self,
                  rooms: Rooms,
                  consciouses: Optional[Tuple[Conscious, ...]] = None,
-                 inputs: Optional[Tuple[str, ...]] = None,
+                 inputs: Optional[Union[Tuple[str, ...], List[str]]] = None,
                  sys_output: bool = True,
                  catch_output: bool = False,
                  lost_count: int = 0,
@@ -57,7 +57,7 @@ class Portal:
                  error_on_space: bool = False,
                  core_dump: bool = False,
                  yields: bool = False,
-                 rules: Optional[Tuple] = None):
+                 rules: Optional[Union[Tuple[Type[Rule], ...], List[Type[Rule]]]] = None):
         self._done: bool = False
         self._rooms: Rooms = rooms
 
@@ -85,7 +85,7 @@ class Portal:
             rules = RULES
 
         if core_dump:
-            rules = tuple(list(rules) + [CoreDump])
+            rules = list(rules) + [CoreDump]
         rules_obj = [rule(work_space=work_space, yields=yields) for rule in rules]
         self._rules: Dict[str: Rule] = {}
 
@@ -119,7 +119,7 @@ class Portal:
 
         return self._run_rule()
 
-    def _run_rule(self):
+    def _run_rule(self) -> Generator[int, None, None]:
         # check if any consciouses remain
         if not len(self._consciouses):
             self._done = True

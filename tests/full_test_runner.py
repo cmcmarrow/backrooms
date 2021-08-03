@@ -3,10 +3,7 @@ Copyright 2021 Charles McMarrow
 """
 
 # built-in
-import inspect
-import sys
-import unittest
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List, Union
 
 # backrooms
 import backrooms
@@ -14,7 +11,7 @@ from tests import test_files
 
 
 def full_test(file: str,
-              inputs: Optional[Tuple[str, ...]] = None,
+              inputs: Optional[Union[Tuple[str, ...], List[str]]] = None,
               lost_count: int = 10000,
               lost_rule_count: int = 10000,
               error_on_space: bool = True,
@@ -24,7 +21,7 @@ def full_test(file: str,
     """
     info: Load file and run backrooms silently.
     :param file: str
-    :param inputs: Optional[Tuple[str, ...]]
+    :param inputs: Optional[Union[Tuple[str, ...], List[str]]]
     :param lost_count: int
     :param lost_rule_count: int
     :param error_on_space: bool
