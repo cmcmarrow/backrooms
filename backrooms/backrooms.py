@@ -10,7 +10,7 @@ import cProfile
 from copy import deepcopy
 import pstats
 from pstats import SortKey
-from typing import Optional, Tuple, Union, Type
+from typing import Optional, Tuple, Union, Type, List
 
 # backrooms
 import backrooms as brs
@@ -149,7 +149,7 @@ def backrooms() -> None:
 
 
 def backrooms_api(code: Union[str, Handler, Handlers],
-                  inputs: Optional[Tuple[str, ...]] = None,
+                  inputs: Optional[Union[Tuple[str, ...], List[str]]] = None,
                   sys_output: bool = True,
                   catch_output: bool = False,
                   lost_count: int = 0,
@@ -158,7 +158,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
                   br_builtins: bool = True,
                   core_dump: bool = False,
                   yields: bool = False,
-                  rules: Optional[Tuple] = None,
+                  rules: Optional[Union[Tuple[Type[Rule], ...], List[Type[Rule]]]] = None,
                   whisper_level: str = NOTSET) -> Portal:
     """
     info: An API to backrooms.
@@ -166,7 +166,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
         str: Will treat str as main file and load its dir.
         Handler: Will load just the single Handler.
         Handlers: Will load the Handlers.
-    :param inputs: Optional[Tuple[str, ...]]
+    :param inputs: Optional[Union[Tuple[str, ...], List[str]]]
     :param sys_output: bool
     :param catch_output: bool
     :param lost_count: int
@@ -176,7 +176,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
         Only adds builtins if code is str or Handler.
     :param core_dump: bool
     :param yields: bool
-    :param rules: Optional[Tuple]
+    :param rules: Optional[Union[Tuple[Type[Rule], ...], List[Type[Rule]]]]
     :param whisper_level: str
     :return: Portal
     """

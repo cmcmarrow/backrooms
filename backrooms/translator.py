@@ -11,7 +11,7 @@ import io
 import os
 import string
 from collections import deque
-from typing import Iterator, Optional, Tuple, Dict, List
+from typing import Iterator, Optional, Tuple, Dict, List, Union
 
 # backrooms
 from .backrooms_error import BackroomsError
@@ -128,6 +128,10 @@ class FileHandler(Handler):
         super(FileHandler, self).__init__(file_name)
 
     def close(self):
+        """
+        info: Closes the handler.
+        :return: None
+        """
         if self.is_open() and self._file_handler is not None:
             self._file_handler.close()
         super(FileHandler, self).close()
@@ -156,18 +160,18 @@ class StringHandler(Handler):
 
     def __next__(self) -> str:
         return next(self._parts)
-        
+
 
 class Handlers:
     def __init__(self,
                  main: Handler,
-                 name_spaces: Tuple[Tuple[Handler, ...], ...] = ()):
+                 name_spaces: Union[List[List[Handler]], Tuple[Tuple[Handler, ...], ...]] = ()):
         """
         info: Holder all the Handles need it for a program.
             Builds the name_spaces so includes can be prioritized.
             Makes sure a handler is not included more than once.
         :param main: Handler
-        :param name_spaces: Tuple[Tuple[Handler]])
+        :param name_spaces: Union[List[List[Handler]], Tuple[Tuple[Handler], ...]])
         """
         self._handlers: deque[Handler] = deque((main,))
         self._name_spaces: Optional[Tuple[Dict[str, Handler]]] = None

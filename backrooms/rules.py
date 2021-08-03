@@ -3,7 +3,7 @@ Copyright 2021 Charles McMarrow
 """
 
 # built-in
-from typing import Generator, Tuple, List, Dict, Union, Optional, Callable
+from typing import Generator, Tuple, List, Dict, Union, Optional, Callable, Type
 from copy import deepcopy
 import string
 from pprint import pformat
@@ -188,7 +188,7 @@ class RuleModule(Rule):
                  start_character: str,
                  work_space: WorkSpace,
                  yields: bool,
-                 rules: Tuple):
+                 rules: Union[Tuple[Type[Rule], ...], List[Type[Rule]]]):
         super(RuleModule, self).__init__(start_character, work_space, yields)
         rules_obj = [rule(work_space, yields) for rule in rules]
         self._yields = yields
