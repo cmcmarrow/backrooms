@@ -1,25 +1,25 @@
 """
 Copyright 2021 Charles McMarrow
 
-This script holds a the backrooms API and console interface.
+This script holds the API and console interface to backrooms.
 """
 
 # built-in
 import argparse
 import cProfile
-from copy import deepcopy
 import pstats
+from copy import deepcopy
 from pstats import SortKey
-from typing import Optional, Tuple, Union, Type, List
+from typing import List, Optional, Tuple, Type, Union
 
 # backrooms
 import backrooms as brs
 from . import backrooms_error
 from .backrooms_builtins import get_builtins
 from .portal import Portal
-from .translator import translator, Handlers, Handler, load_dir, StringHandler, FileHandler
-from .whisper import NOTSET, enable_whisper
 from .rules import Rule
+from .translator import FileHandler, Handler, Handlers, StringHandler, load_dir, translator
+from .whisper import enable_whisper, NOTSET
 
 
 class BackRoomsError(backrooms_error.BackroomsError):
@@ -28,7 +28,7 @@ class BackRoomsError(backrooms_error.BackroomsError):
 
 def backrooms() -> None:
     """
-    info: Console Interface
+    info: Console Interface to backrooms.
     :return: None
     """
     try:

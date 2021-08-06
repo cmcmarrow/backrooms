@@ -1,5 +1,7 @@
 """
 Copyright 2021 Charles McMarrow
+
+Main into Backrooms console interface.
 """
 
 # backrooms

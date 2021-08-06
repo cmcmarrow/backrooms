@@ -88,7 +88,7 @@ class TestRules(unittest.TestCase):
 
     def test_hallway_calls(self):
         stream = full_test("hallway_calls.brs").get_output_stream()
-        self.assertEqual(len(stream), 10)
+        self.assertEqual(len(stream), 12)
         self.assertEqual(stream[0], "cats")
         self.assertEqual(stream[1], "cats_echo")
         self.assertEqual(stream[2], "MAIN")
@@ -97,23 +97,27 @@ class TestRules(unittest.TestCase):
         self.assertEqual(stream[5], "MAIN")
         self.assertEqual(stream[6], "cats_echo")
         self.assertEqual(stream[7], "MAIN")
-        self.assertEqual(stream[8], "lol")
-        self.assertEqual(stream[9], "StackBottom")
+        self.assertIs(stream[8], None)
+        self.assertEqual(stream[9], 5)
+        self.assertEqual(stream[10], "lol")
+        self.assertEqual(stream[11], "StackBottom")
 
     def test_hallway_get_set(self):
         stream = full_test("hallway_get_set.brs").get_output_stream()
-        self.assertEqual(len(stream), 11)
-        self.assertEqual(stream[0], "H1")
+        self.assertEqual(len(stream), 13)
+        self.assertEqual(stream[0], 0)
         self.assertIs(stream[1], None)
-        self.assertEqual(stream[2], "H2")
+        self.assertEqual(stream[2], "H1")
         self.assertIs(stream[3], None)
-        self.assertEqual(stream[4], -5)
-        self.assertEqual(stream[5], 0)
-        self.assertEqual(stream[6], "hello")
-        self.assertEqual(stream[7], "h2")
-        self.assertIs(stream[8], None)
-        self.assertEqual(stream[9], "h1")
-        self.assertEqual(stream[10], "StackBottom")
+        self.assertEqual(stream[4], "H2")
+        self.assertIs(stream[5], None)
+        self.assertEqual(stream[6], -5)
+        self.assertEqual(stream[7], 0)
+        self.assertEqual(stream[8], "hello")
+        self.assertEqual(stream[9], "h2")
+        self.assertIs(stream[10], None)
+        self.assertEqual(stream[11], "h1")
+        self.assertEqual(stream[12], "StackBottom")
 
     def test_hallway_next_pass(self):
         stream = full_test("hallway_next_pass.brs").get_output_stream()
@@ -463,6 +467,13 @@ class TestRules(unittest.TestCase):
         self.assertEqual(len(stream), 3)
         self.assertEqual(stream[0], "cats")
         self.assertEqual(stream[1], "1234!@#$qwerqwer")
+        self.assertEqual(stream[2], "StackBottom")
+
+    def test_string_reverse(self):
+        stream = full_test("string_reverse.brs").get_output_stream()
+        self.assertEqual(len(stream), 3)
+        self.assertEqual(stream[0], "mottoBkcatS")
+        self.assertEqual(stream[1], "stac")
         self.assertEqual(stream[2], "StackBottom")
 
     def test_thread(self):

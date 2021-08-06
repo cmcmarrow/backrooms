@@ -3,7 +3,7 @@ Copyright 2021 Charles McMarrow
 """
 
 # built-in
-from typing import Optional, Tuple, List, Union
+from typing import List, Optional, Tuple, Union
 
 # backrooms
 import backrooms

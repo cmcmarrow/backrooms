@@ -1,5 +1,7 @@
 """
 Copyright 2021 Charles McMarrow
+
+Build Backrooms into an executable.
 """
 
 # built-in

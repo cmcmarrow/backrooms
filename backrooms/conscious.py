@@ -4,20 +4,18 @@ Copyright 2021 Charles McMarrow
 This script holds a simple conscious "thread" data structure.
 A conscious holds it own state.
     * work stack
-    * function ret stack
+    * function stack
     * 10 work registers
-    * an error register
     * PC registers
+    * ect.
 """
 
-
 # built-in
-from typing import Dict, Tuple, Union, Type
 from functools import lru_cache
+from typing import Dict, Tuple, Type, Union
 
 # backrooms
 from . import stack
-
 
 # Stacks
 WORK_STACK = "WORK_STACK"
@@ -55,6 +53,11 @@ HALT = "HALT"
 
 @lru_cache(2048)
 def _to_int(obj: Union[int, str, Type[stack.StackFrame], Type[stack.StackBottom], None]) -> int:
+    """
+    info: Will make obj into an int.
+    :param obj: Union[int, str, Type[stack.StackFrame], Type[stack.StackBottom], None]
+    :return: int
+    """
     if isinstance(obj, str):
         return len(obj)
     elif obj is None:
@@ -67,42 +70,92 @@ def _to_int(obj: Union[int, str, Type[stack.StackFrame], Type[stack.StackBottom]
 
 
 def _clear(conscious: 'Conscious') -> bool:
+    """
+    info: NOP will always be turn.
+    :param conscious: Conscious
+    :return: bool
+    """
     return True
 
 
 def _less_than_zero(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is less than zero.
+    :param conscious: Conscious
+    :return: bool
+    """
     return _to_int(conscious[WORK_STACK].peak()) < 0
 
 
 def _greater_than_zero(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is greater than zero.
+    :param conscious: Conscious
+    :return: bool
+    """
     return _to_int(conscious[WORK_STACK].peak()) > 0
 
 
 def _zero(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is zero.
+    :param conscious: Conscious
+    :return: bool
+    """
     return _to_int(conscious[WORK_STACK].peak()) == 0
 
 
 def _not_zero(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is not zero.
+    :param conscious: Conscious
+    :return: bool
+    """
     return _to_int(conscious[WORK_STACK].peak()) != 0
 
 
 def _is_integer(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is a Integer.
+    :param conscious: Conscious
+    :return: bool
+    """
     return isinstance(conscious[WORK_STACK].peak(), int)
 
 
 def _is_string(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is a String.
+    :param conscious: Conscious
+    :return: bool
+    """
     return isinstance(conscious[WORK_STACK].peak(), str)
 
 
 def _is_none(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is None.
+    :param conscious: Conscious
+    :return: bool
+    """
     return conscious[WORK_STACK].peak() is None
 
 
 def _is_stack_frame(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is StackFrame.
+    :param conscious: Conscious
+    :return: bool
+    """
     return conscious[WORK_STACK].peak() is stack.StackFrame
 
 
 def _is_stack_bottom(conscious: 'Conscious') -> bool:
+    """
+    info: Checks if item on top of Stack is StackBottom.
+    :param conscious: Conscious
+    :return: bool
+    """
     return conscious[WORK_STACK].peak() is stack.StackBottom
 
 
@@ -123,7 +176,7 @@ BRANCH_IS_STACK_BOTTOM = _is_stack_bottom
 class Conscious(Dict):
     def __init__(self, **kwargs):
         """
-        info: Makes a conscious "Thread".
+        info: Makes a Conscious "Thread".
         :param kwargs: Dict[str, object]
         :return: Dict[str, object]
         """
@@ -155,7 +208,7 @@ class Conscious(Dict):
     def step(self) -> None:
         """
         info: Shift the PC Registers based off the PC Vector Registers.
-        :return:
+        :return: None
         """
         self[PC_X] += self[PC_V_X]
         self[PC_Y] += self[PC_V_Y]
@@ -163,14 +216,14 @@ class Conscious(Dict):
 
     def next_step(self) -> Tuple[int, int, int]:
         """
-        info: Get the next location for conscious.
+        info: Get the next location for Conscious.
         :return: Tuple[int, int, int]
         """
         return self[PC_X] + self[PC_V_X], self[PC_Y] + self[PC_V_Y], self[PC_FLOOR] + self[PC_V_FLOOR]
 
     def at(self) -> Tuple[int, int, int]:
         """
-        info: Get the current location of conscious.
+        info: Get the current location of Conscious.
         :return: Tuple[int, int, int]
         """
         return self[PC_X], self[PC_Y], self[PC_FLOOR]
