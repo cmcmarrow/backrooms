@@ -1,6 +1,6 @@
 ~GATE
-/frs"BAD_CALL"hdrs"BAD_CALL"hc.fri-5hnep.fri3hnep.ri-1ri0hnep.frs"cats"hgep.frs"H1"hgep.rs"f2"rs"H2"hgepV
-/V......................................................................................................<
+/frs"BAD_CALL"hdfrs"GATE"hgeprs"BAD_CALL"hc.fri-5hnep.fri3hnep.ri-1ri0hnep.frs"cats"hgep.frs"H1"hgep.rs"f2"rs"H2"hgepV
+/V...................................................................................................................<
 />rs"hot"fri-4hs.rs"hot"hc.rs"f2"ri0hl.rs"f2"ri0hd.rs"f2"ri0hl.rnfri-5hs.fri-5hnep.ri-5hc.e~ha
 ~BAD_CALL
 />{

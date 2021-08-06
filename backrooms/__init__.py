@@ -15,17 +15,18 @@ backrooms was designed to be:
     * capable to rewrite all of a program at run-time.
 """
 
+
 # backrooms
-from . import backrooms_error
 from . import backrooms
-from . import rooms
-from . import rules
-from . import translator
-from . import stack
+from . import backrooms_builtins
+from . import backrooms_error
 from . import conscious
 from . import portal
+from . import rooms
+from . import rules
+from . import stack
+from . import translator
 from . import whisper
-from . import backrooms_builtins
 
 AUTHOR = "Charles McMarrow"
 

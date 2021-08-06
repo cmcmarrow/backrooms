@@ -1,5 +1,7 @@
 """
 Copyright 2021 Charles McMarrow
+
+This module holds Backrooms built-in scripts.
 """
 
 # built-in
@@ -20,7 +22,7 @@ from . import brs_vector
 
 def get_builtins() -> Tuple[StringHandler, ...]:
     """
-    info: Gets Backrooms builtins modules.
+    info: Gets Backrooms builtins scripts.
     :return: Tuple[StringHandler, ...]
     """
     return (brs_heap.get_handler(),

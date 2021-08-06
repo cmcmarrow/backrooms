@@ -7,17 +7,16 @@ This script holds a simple portal "CPU".
 
 # built-in
 from collections import deque
-from string import ascii_letters, digits
-from typing import Tuple, Optional, Dict, List, Union, Generator, Type
 from pprint import pformat
+from string import ascii_letters, digits
+from typing import Dict, Generator, List, Optional, Tuple, Type, Union
 
 # backrooms
 from . import backrooms_error
-from .conscious import Conscious, ALIVE, ID, HALT
-from .rooms import Rooms
-from .rules import Rule, RULES, WorkSpace, CoreDump
 from . import whisper
-
+from .conscious import ALIVE, Conscious, HALT, ID
+from .rooms import Rooms
+from .rules import CoreDump, RULES, Rule, WorkSpace
 
 VALID_INPUT_CHARACTERS = set(ascii_letters + digits + ",<.>/?;:'\"[{]}\\|`!@#$%^&*()-_=+ ")
 
@@ -25,23 +24,43 @@ VALID_INPUT_CHARACTERS = set(ascii_letters + digits + ",<.>/?;:'\"[{]}\\|`!@#$%^
 class PortalError(backrooms_error.BackroomsError):
     @classmethod
     def missing_gate(cls):
+        """
+        info: Used to indicate no gate could be found.
+        :return: PortalError
+        """
         return cls("Missing entry point 'GATE'!")
 
     @classmethod
     def lost_count(cls):
+        """
+        info: Used to indicate to many Rules where ran.
+        :return: PortalError
+        """
         return cls("Lost count hit! Got lost in the backrooms!")
 
     @classmethod
     def lost_rule_count(cls):
+        """
+        info: Used to indicate a Rule ran for to long.
+        :return: PortalError
+        """
         return cls("Lost rule count hit! Got lost in the backrooms!")
 
     @classmethod
     def error_on_space(cls, x: int, y: int, floor: int):
+        """
+        info: Used to indicate space was read as a Rule.
+        :return: PortalError
+        """
         return cls(f"Error on space at: ({x}, {y}, {floor})")
 
     @classmethod
     def start_character_collection(cls,
                                    start_character: str):
+        """
+        info: Used to indicate two or more Rules had a start charter conflict.
+        :return: PortalError
+        """
         return cls(f"{repr(start_character)} is used more then once in a work space!")
 
 
@@ -58,6 +77,23 @@ class Portal:
                  core_dump: bool = False,
                  yields: bool = False,
                  rules: Optional[Union[Tuple[Type[Rule], ...], List[Type[Rule]]]] = None):
+        """
+        info: Makes a Portal which executes Rules in Rooms.
+        :param rooms: Rooms
+        :param consciouses: Optional[Tuple[Conscious, ...]]
+        :param inputs: Optional[Union[Tuple[str, ...], List[str]]]
+        :param sys_output: bool
+        :param catch_output: bool
+        :param lost_count: int
+        :param lost_rule_count: int
+        :param error_on_space: bool
+        :param core_dump: bool
+        :param yields: bool
+        :param rules: Optional[Union[Tuple[Type[Rule], ...], List[Type[Rule]]]]
+        :exception PortalError
+            raises PortalError if no gate could be found.
+            raises PortalError if two or more Rules had a start charter conflict.
+        """
         self._done: bool = False
         self._rooms: Rooms = rooms
 
@@ -104,22 +140,42 @@ class Portal:
 
         self._rule_step_visuals: List[Tuple[int, int, int]] = []
 
-    def __call__(self):
+    def __call__(self) -> None:
+        """
+        info: Will execute the program.
+        :return: None
+        """
         for operation_generator in self:
             for step in operation_generator:
                 if whisper.WHISPER_RUNNING:
                     whisper.debug(f"Step: {step}")
 
-    def __iter__(self):
+    def __iter__(self) -> 'Portal':
+        """
+        info: Gives the iter that gives the next Rule to be executed.
+        :return: 'Portal'
+        """
         return self
 
-    def __next__(self):
+    def __next__(self) -> Generator[int, None, None]:
+        """
+        info: Gives the Rule to be executed.
+        :return: Generator[int, None, None]
+        """
         if self._done:
             raise StopIteration()
         self._rule_step_visuals.clear()
         return self._run_rule()
 
     def _run_rule(self) -> Generator[int, None, None]:
+        """
+        info: Will execute a Rule.
+        :exception PortalError
+            PortalError if to many Rules where ran.
+            PortalError if a Rule ran for to long.
+            PortalError if space was read as a Rule.
+        :return: Generator[int, None, None]
+        """
         # check if any consciouses remain
         if not len(self._consciouses):
             self._done = True
@@ -191,15 +247,31 @@ class Portal:
                     raise PortalError.lost_count()
 
     def is_done(self) -> bool:
+        """
+        info: Checks if program is done running.
+        :return: bool
+        """
         return self._done
 
     def get_rooms(self) -> Rooms:
+        """
+        info: Gets Rooms used by program.
+        :return: Rooms
+        """
         return self._rooms
 
     def get_consciouses(self) -> Tuple[Conscious, ...]:
+        """
+        info: Gets all running consciouses.
+        :return: Tuple[Conscious, ...]
+        """
         return tuple(self._consciouses)
 
     def new_conscious(self) -> Conscious:
+        """
+        info: Makes a new Conscious and put it into the update loop.
+        :return: Conscious
+        """
         new_conscious = Conscious()
         if self._free_ids:
             free_id = min(self._free_ids)
@@ -213,7 +285,7 @@ class Portal:
 
     def read_input(self) -> str:
         """
-        info: Gets input from portal
+        info: Gets input from Portal.
         :return: str
         """
         data = ""

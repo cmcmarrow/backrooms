@@ -103,12 +103,24 @@ class Handler:
         self._is_open = False
 
     def __del__(self) -> None:
+        """
+        info: Makes sure Handler is closed.
+        :return: None
+        """
         self.close()
     
     def __iter__(self) -> 'Handler':
+        """
+        info: Gets Handler iter.
+        :return:
+        """
         return self
     
     def __next__(self) -> str:
+        """
+        info: Gets next line in Handler.
+        :return: str
+        """
         raise NotImplementedError()
 
 
@@ -137,6 +149,10 @@ class FileHandler(Handler):
         super(FileHandler, self).close()
 
     def __next__(self) -> str:
+        """
+        info: Gets next line in Handler.
+        :return: str
+        """
         if self._file_iter is None:
             try:
                 self._file_handler = open(self._path)
@@ -159,6 +175,10 @@ class StringHandler(Handler):
         super(StringHandler, self).__init__(name)
 
     def __next__(self) -> str:
+        """
+        info: Gets next line in Handler.
+        :return: str
+        """
         return next(self._parts)
 
 
@@ -190,6 +210,10 @@ class Handlers:
         self._used_names = {main.get_name()}
     
     def __iter__(self) -> 'Handlers':
+        """
+        info: Gets Handlers iter.
+        :return: Handlers
+        """
         return self
     
     def __next__(self) -> str:
@@ -202,11 +226,15 @@ class Handlers:
                     # return a single bank line from the handler with no data
                     self._line_number = 0
                     return ""
-                self._handlers.popleft()
+                self._handlers.popleft().close()
                 self._line_number = -1
         raise StopIteration()
 
     def __bool__(self):
+        """
+        info: Checks if Handlers still has a Handler to read.
+        :return: bool
+        """
         return bool(self._handlers)
 
     def get_name(self) -> Optional[str]:

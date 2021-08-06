@@ -7,7 +7,7 @@ import unittest
 
 # backrooms
 from tests import test_files
-from backrooms.translator import Handler, translator, StringHandler, FileHandler, Handlers, TranslatorError, load_dir
+from backrooms.translator import FileHandler, Handler, Handlers, StringHandler, TranslatorError, load_dir, translator
 
 # test
 from . import test_files

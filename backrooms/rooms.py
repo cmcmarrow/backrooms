@@ -105,7 +105,7 @@ class Rooms:
               floor_level: int,
               character: str) -> None:
         """
-        info: _Write a character to a memory cell.
+        info: Write a character to a memory cell.
         :param x: int
         :param y: int
         :param floor_level: int
@@ -214,6 +214,8 @@ class Rooms:
         :param y: int
         :param floor_level: int
         :param hallway_name: Optional[str]
+        :exception RoomsError
+            raises RoomsError if a bad name was given..
         :return: None
         """
         # add hallway

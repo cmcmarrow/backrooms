@@ -35,7 +35,7 @@ WHISPER_LEVEL_STR_TO_INT = {NOTSET: logging.NOTSET,
 
 def enable_whisper(level: str = DEBUG) -> None:
     """
-    info: Sets the whisper_level leve.
+    info: Turns on logging an sets log level.
     :param level: str
     :return: None
     """

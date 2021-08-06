@@ -19,19 +19,27 @@ class StackFrame:
 class Stack:
     def __init__(self):
         """
-        info: Simple stack with some stack frames.
+        info: Simple Stack with StackFrames.
         """
         self._stack: List[object] = [StackBottom]
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
+        """
+        info: check if Stack is empty.
+        :return: bool
+        """
         return not self.is_empty()
 
     def __repr__(self):
+        """
+        info: Shows top item on stack.
+        :return: str
+        """
         return f"<{self.__class__.__name__}: {self.peak()}>"
 
     def push(self, item: object) -> None:
         """
-        info: Push item to stack unless item is stack bottom.
+        info: Push item to Stack unless item is StackBottom.
         :param item: object
         :return: object
         """
@@ -40,7 +48,7 @@ class Stack:
 
     def pop(self) -> object:
         """
-        info: Pop item from stack unless item is stack bottom.
+        info: Pop item from Stack unless item is StackBottom.
         :return: object
         """
         if self._stack[-1] is StackBottom:
@@ -49,28 +57,28 @@ class Stack:
 
     def peak(self) -> object:
         """
-        info: Peak at item on top of stack.
+        info: Peak at item on top of Stack.
         :return: object
         """
         return self._stack[-1]
 
     def is_empty(self) -> bool:
         """
-        info: Checks if stack is empty.
+        info: Checks if Stack is empty.
         :return: bool
         """
         return self._stack[-1] is StackBottom
 
     def push_frame(self) -> None:
         """
-        info: Push stack frame to stack.
+        info: Push StackFrame to stack.
         :return: None
         """
         self.push(StackFrame)
 
     def pop_frame(self) -> None:
         """
-        info: Pop till end of stack or till a frame is found.
+        info: Pop till end of Stack or till a StackFrame is found.
         :return: None
         """
         while not self.is_empty():
@@ -79,7 +87,7 @@ class Stack:
 
     def clear(self) -> None:
         """
-        info: Clear data off stack.
+        info: Clear data off Stack.
         :return: None
         """
         self._stack.clear()

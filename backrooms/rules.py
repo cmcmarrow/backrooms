@@ -137,6 +137,16 @@ def _write(rooms: Rooms,
     return f"s{start_character}{item}{start_character}"
 
 
+def _bottom_to_none(item: Union[str,
+                                int,
+                                None,
+                                Type[StackFrame],
+                                Type[StackBottom]]) -> Union[str, int, None, Type[StackFrame]]:
+    if item is StackBottom:
+        return
+    return item
+
+
 SHIFTER = "SHIFTER"
 KEY_HOLDER = "KEY_HOLDER"
 LOCK_COUNT = "LOCK_COUNT"
@@ -692,16 +702,16 @@ class HallwayCall(Rule):
             conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_X])
             conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_Y])
             conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_FLOOR])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R0])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R1])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R2])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R3])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R4])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R5])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R6])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R7])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R8])
-            conscious[c.FUNCTION_STACK].push(conscious[c.R9])
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R0]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R1]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R2]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R3]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R4]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R5]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R6]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R7]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R8]))
+            conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R9]))
             conscious[c.PC_X] = 0
             conscious[c.PC_Y] = hallway
         else:
@@ -751,16 +761,16 @@ class HallwayLevelCall(Rule):
                 conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_X])
                 conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_Y])
                 conscious[c.FUNCTION_STACK].push(conscious[c.PC_V_FLOOR])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R0])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R1])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R2])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R3])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R4])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R5])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R6])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R7])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R8])
-                conscious[c.FUNCTION_STACK].push(conscious[c.R9])
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R0]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R1]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R2]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R3]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R4]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R5]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R6]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R7]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R8]))
+                conscious[c.FUNCTION_STACK].push(_bottom_to_none(conscious[c.R9]))
                 conscious[c.PC_X] = 0
                 conscious[c.PC_Y] = hallway
                 conscious[c.PC_FLOOR] = floor
@@ -825,6 +835,8 @@ class HallwayReturn(Rule):
                 conscious[c.PC_V_X] = v_x
                 conscious[c.PC_V_Y] = v_y
                 conscious[c.PC_V_FLOOR] = v_floor
+            elif whisper.WHISPER_RUNNING:
+                whisper.error("Hallway Return Failed!")
         conscious.step()
         if self._yields:
             yield
@@ -2009,6 +2021,34 @@ class StringLower(Rule):
             yield
 
 
+class StringReverse(Rule):
+    def __init__(self,
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(StringReverse, self).__init__("r", work_space, yields)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 start: Tuple[int, int, int],
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param start: Tuple[int, int, int],
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        item = _cast_string(conscious[c.WORK_STACK].pop())
+        conscious[c.WORK_STACK].push(item[::-1])
+        conscious.step()
+        if self._yields:
+            yield
+
+
 class StringModule(RuleModule):
     def __init__(self,
                  work_space: WorkSpace,
@@ -2025,7 +2065,8 @@ class StringModule(RuleModule):
                                             StringEqual,
                                             StringIn,
                                             StringUpper,
-                                            StringLower))
+                                            StringLower,
+                                            StringReverse))
 
 
 class Switch(Rule):

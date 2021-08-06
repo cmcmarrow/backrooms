@@ -6,11 +6,11 @@ Copyright 2021 Charles McMarrow
 import unittest
 
 # backrooms
+from backrooms.conscious import WORK_STACK, ID
 from backrooms.portal import Portal
-from backrooms.translator import StringHandler, Handlers, translator
 from backrooms.rooms import Rooms
 from backrooms.stack import StackBottom
-from backrooms.conscious import WORK_STACK, ID
+from backrooms.translator import StringHandler, Handlers, translator
 
 
 class PortalTest(unittest.TestCase):

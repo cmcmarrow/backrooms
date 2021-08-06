@@ -6,8 +6,8 @@ Copyright 2021 Charles McMarrow
 import unittest
 
 # backrooms
-from backrooms.stack import StackFrame, StackBottom
 from backrooms import conscious
+from backrooms.stack import StackFrame, StackBottom
 
 
 class ToIntTest(unittest.TestCase):
