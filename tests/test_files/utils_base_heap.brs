@@ -1,0 +1,9 @@
+%utils
+~GATE
+/rs"1"fri11rs"utils"rs"NEW"hlrs"2"fri12rs"utils"rs"NEW"hlrs"3"fri13rs"utils"rs"NEW"hlrs"4"fri14rs"utils"rs"NEW"hlV
+/V...............................................................................................................<
+/>ri66232353frs"2"rs"utils"rs"KEEP"hlri66fri12rs"utils"rs"KEEP"hlrs"cats"frs"3"rs"utils"rs"KEEP"hlV
+/V................................................................................................<
+/>rffrs"4"rs"utils"rs"KEEP"hl.frs"1"rs"utils"rs"STORE"hlepfrs"2"rs"utils"rs"STORE"hlepfri13rs"utils"rs"STORE"hlepV
+/V...............................................................................................................<
+/>frs"4"rs"utils"rs"STORE"hlep.fri13rs"utils"rs"REMOVE"hl.frs"4"rs"utils"rs"REMOVE"hl.e~ha
