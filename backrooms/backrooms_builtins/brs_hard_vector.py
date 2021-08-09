@@ -37,15 +37,20 @@ SCRIPT = """
 
 # WS[spot, ...] -> WS[...]
 ~REMOVE
-/
+/V                        >ppprs"POP"hcphr
+/>icri1iars"SIZE"hcz>uoisZ^pddrs"READ"hcz.V
+/                   ^ai1irch"ETIRW"srsi1ir<
 
 # WS[spot, item, ...] -> WS[...]
 ~INSERT
-/rnrs"APPEND"hczdick0p
+/V                                               >pprs"WRITE"hchr
+/>icdri1isk0prs"SIZE"hcri1isrnrs"APPEND"hc>ds0isZ^pddrs"READ"hczV
+/                                         ^si1irch"ETIRW"srai1ir<
 
 # WS[item, ...] -> WS[...]
 ~FIND_INSERT
-/
+/>k0pri0k1prs"SIZE"hck2ZVps0ri0rs"READ"hcis.LVZV>ps0s2ri1isrs"READ"hcisGVZVp>s2s1isri2ids1iadrs"READ"hcs0?is
+/      rhch"DNEPPA"sr0sp<rhch"TRESNI"sr0ir0sp<.<       rhch"DNEPPA"sr0sp<.<
 
 ~START
 /

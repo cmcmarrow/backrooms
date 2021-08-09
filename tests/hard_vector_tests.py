@@ -10,6 +10,26 @@ from tests.full_test_runner import full_test
 
 
 class TestHardVector(unittest.TestCase):
+    def test_insert_remove(self):
+        stream = full_test("hard_vector_insert_remove.brs", lost_count=220000).get_output_stream()
+        self.assertEqual(len(stream), 204)
+        stream.reverse()
+        items = []
+        for item in range(102, 2, -1):
+            items.append(item)
+        items.insert(0, 666666)
+        items.insert(6, "StackFrame")
+        items.append("cats")
+
+        for item in items:
+            self.assertEqual(stream.pop(), item)
+
+        for item in range(102, 2, -1):
+            self.assertEqual(stream.pop(), item)
+
+        self.assertEqual(stream.pop(), "StackBottom")
+        self.assertFalse(len(stream))
+
     def test_rwap(self):
         stream = full_test("hard_vector_rwap.brs", lost_count=140000).get_output_stream()
         self.assertEqual(len(stream), 253)
@@ -29,3 +49,6 @@ class TestHardVector(unittest.TestCase):
             self.assertIsNone(stream.pop())
         self.assertEqual("StackBottom", stream.pop())
         self.assertFalse(len(stream))
+
+    def test_find_insert(self):
+        stream = full_test("hard_vector_find_insert.brs", lost_count=140000).get_output_stream()
