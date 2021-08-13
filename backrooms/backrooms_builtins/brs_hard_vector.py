@@ -23,18 +23,18 @@ SCRIPT = """
 
 # WS[item, ...] -> WS[...]
 ~APPEND
-/>rs"SIZE"hck0dfrs"_START"hgri1iszisk1fzrs"utils"rs"NEW"hlfs1rs"utils"rs"KEEP"hls0ri1iafrs"_SIZE"rs"utils"rs"KEEP"hlhr
+/>rs"SIZE"hck0dfrs"_START"hg-zisk1fzrs"utils"rs"NEW"hlfs1rs"utils"rs"KEEP"hls0+frs"_SIZE"rs"utils"rs"KEEP"hlhr
 
 
 # WS[...] -> WS[item, ...]
 ~POP
-/>rs"SIZE"hcZVri1isk0rs"READ"hcfs0bcrs"utils"rs"REMOVE"hls0frs"_SIZE"rs"utils"rs"KEEP"hlhr
+/>rs"SIZE"hcZV-k0rs"READ"hcfs0bcrs"utils"rs"REMOVE"hls0frs"_SIZE"rs"utils"rs"KEEP"hlhr
 /            >prnhr
 
 
 # WS[...] -> WS[item, ...]
 ~PEAK
-/>rs"SIZE"hcZVri1isrs"READ"hchr
+/>rs"SIZE"hcZV-rs"READ"hchr
 /            >prnhr
 
 
@@ -50,23 +50,23 @@ SCRIPT = """
 
 # WS[spot, ...] -> WS[...]
 ~REMOVE
-/V                        >ppprs"POP"hcphr
-/>icri1iars"SIZE"hcz>uoisZ^pddrs"READ"hcz.V
-/                   ^ai1irch"ETIRW"srsi1ir<
+/V                    >ppprs"POP"hcphr
+/>ic+rs"SIZE"hcz>uoisZ^pddrs"READ"V
+/               ^+ch"ETIRW"sr-zch.<
 
 
 # WS[spot, item, ...] -> WS[...]
 ~INSERT
-/V                                               >pprs"WRITE"hchr
-/>icdri1isk0prs"SIZE"hcri1isrnrs"APPEND"hc>ds0isZ^pddrs"READ"hczV
-/                                         ^si1irch"ETIRW"srai1ir<
+/V                                       >pprs"WRITE"hchr
+/>icd-k0prs"SIZE"hc-rnrs"APPEND"hc>ds0isZ^pddrs"READ"V
+/                                 ^-ch"ETIRW"sr+zch..<
 
 
 # WS[item, ...] -> WS[...]
 ~FIND_INSERT
-/V                                                                          V..............................p2kp<
-/>k0pri0k1prs"SIZE"hck2ZVps0ri0rs"READ"hcis.GVZV>ps0s2ri1isrs"READ"hcisLVZVp>s2s1isri2ids1iadrs"READ"hcs0isGVZV^
-/      rhch"DNEPPA"sr0sp<rhch"TRESNI"sr0ir0sp<.<       rhch"DNEPPA"sr0sp<.< ^p1kppVZVLsi0sch"DAER"srdai1irdp<.<
+/V                                                                      V..............................p2kp<
+/>k0pri0k1prs"SIZE"hck2ZVps0ri0rs"READ"hcis.GVZV>ps0s2-rs"READ"hcisLVZVp>s2s1isri2ids1iadrs"READ"hcs0isGVZV^
+/      rhch"DNEPPA"sr0sp<rhch"TRESNI"sr0ir0sp<.<   rhch"DNEPPA"sr0sp<.< ^....p1kppVZVLsi0sch"DAER"srd+dp<.<
 /                                                                                 >.>ps0zrs"INSERT"hcphr
 
 

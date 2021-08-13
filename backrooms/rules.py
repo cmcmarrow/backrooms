@@ -542,6 +542,34 @@ class CoreDump(Rule):
             yield
 
 
+class Decrement(Rule):
+    def __init__(self,
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Decrement, self).__init__("-", work_space, yields)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 start: Tuple[int, int, int],
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param start: Tuple[int, int, int],
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        item = _to_int(conscious[c.WORK_STACK].pop()) - 1
+        conscious[c.WORK_STACK].push(item)
+        conscious.step()
+        if self._yields:
+            yield
+
+
 class Duplicate(Rule):
     def __init__(self,
                  work_space: WorkSpace,
@@ -1188,11 +1216,11 @@ class HopeNine(Hope):
         super(HopeNine, self).__init__("9", work_space, yields)
 
 
-class Keep(Rule):
+class Increment(Rule):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(Keep, self).__init__("k", work_space, yields)
+        super(Increment, self).__init__("+", work_space, yields)
 
     def __call__(self,
                  portal: 'backrooms.portal.Portal',
@@ -1209,12 +1237,9 @@ class Keep(Rule):
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
+        item = _to_int(conscious[c.WORK_STACK].pop()) + 1
+        conscious[c.WORK_STACK].push(item)
         conscious.step()
-        if self._yields:
-            yield
-        if rooms.read(*conscious.at()).isdigit():
-            conscious[f"R{rooms.read(*conscious.at())}"] = conscious[c.WORK_STACK].peak()
-            conscious.step()
         if self._yields:
             yield
 
@@ -1504,6 +1529,37 @@ class LevelModule(RuleModule):
                                           (LevelGetFloorName,
                                            LevelGetFloorLevel,
                                            LevelSetFloorName))
+
+
+class Keep(Rule):
+    def __init__(self,
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(Keep, self).__init__("k", work_space, yields)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 start: Tuple[int, int, int],
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param start: Tuple[int, int, int],
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious.step()
+        if self._yields:
+            yield
+        if rooms.read(*conscious.at()).isdigit():
+            conscious[f"R{rooms.read(*conscious.at())}"] = conscious[c.WORK_STACK].peak()
+            conscious.step()
+        if self._yields:
+            yield
 
 
 class Pop(Rule):
@@ -2595,6 +2651,7 @@ RULES = (BackMirror,
          CoordinateX,
          CoordinateY,
          CoordinateFloor,
+         Decrement,
          Duplicate,
          Echo,
          ForwardMirror,
@@ -2609,6 +2666,7 @@ RULES = (BackMirror,
          HopeSeven,
          HopeEighth,
          HopeNine,
+         Increment,
          IntegerModule,
          LevelModule,
          Keep,
