@@ -9,7 +9,7 @@ import unittest
 from backrooms.stack import Stack, StackFrame, StackBottom
 
 
-class TestStack(unittest.TestCase):
+class StackTests(unittest.TestCase):
     def test_init(self):
         self.assertIsInstance(Stack(), Stack)
 

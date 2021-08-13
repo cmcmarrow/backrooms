@@ -9,7 +9,7 @@ import unittest
 from tests.full_test_runner import full_test
 
 
-class TestUtils(unittest.TestCase):
+class UtilsTests(unittest.TestCase):
     def test_base_heap(self):
         portal = full_test("utils_base_heap.brs")
         stream = portal.get_output_stream()

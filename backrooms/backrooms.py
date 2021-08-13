@@ -16,7 +16,7 @@ from typing import List, Optional, Tuple, Type, Union
 import backrooms as brs
 from . import backrooms_error
 from .backrooms_builtins import get_builtins
-from .portal import Portal
+from .portal import Feeder, Portal
 from .rules import Rule
 from .translator import FileHandler, Handler, Handlers, StringHandler, load_dir, translator
 from .whisper import enable_whisper, NOTSET
@@ -150,6 +150,7 @@ def backrooms() -> None:
 
 def backrooms_api(code: Union[str, Handler, Handlers],
                   inputs: Optional[Union[Tuple[str, ...], List[str]]] = None,
+                  feeder: bool = False,
                   sys_output: bool = True,
                   catch_output: bool = False,
                   lost_count: int = 0,
@@ -167,6 +168,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
         Handler: Will load just the single Handler.
         Handlers: Will load the Handlers.
     :param inputs: Optional[Union[Tuple[str, ...], List[str]]]
+    :param feeder: bool
     :param sys_output: bool
     :param catch_output: bool
     :param lost_count: int
@@ -199,6 +201,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
 
         return Portal(rooms,
                       inputs=inputs,
+                      feeder=feeder,
                       sys_output=sys_output,
                       catch_output=catch_output,
                       lost_count=lost_count,

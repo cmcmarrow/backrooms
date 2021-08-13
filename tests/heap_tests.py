@@ -9,7 +9,7 @@ import unittest
 from tests.full_test_runner import full_test
 
 
-class TestHeap(unittest.TestCase):
+class TestHeaps(unittest.TestCase):
     def test_heap_array(self):
         portal = full_test("heap_array.brs", lost_count=450000)
         stream = portal.get_output_stream()

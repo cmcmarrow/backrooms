@@ -9,7 +9,7 @@ import unittest
 from tests.full_test_runner import full_test
 
 
-class TestHardVector(unittest.TestCase):
+class TestHardVectors(unittest.TestCase):
     def test_insert_remove(self):
         stream = full_test("hard_vector_insert_remove.brs", lost_count=220000).get_output_stream()
         self.assertEqual(len(stream), 204)

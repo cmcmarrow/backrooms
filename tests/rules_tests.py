@@ -9,7 +9,7 @@ import unittest
 from tests.full_test_runner import full_test
 
 
-class TestRules(unittest.TestCase):
+class RulesTests(unittest.TestCase):
     def test_branch(self):
         full_test("branch.brs")
 
