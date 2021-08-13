@@ -2439,8 +2439,10 @@ class UncommonSimpleDump(Rule):
         v_floor = conscious[c.PC_V_FLOOR]
         v_y = conscious[c.PC_V_Y]
         v_x = conscious[c.PC_V_X]
-        floor = _to_int(conscious[c.WORK_STACK].pop())
-        y = _to_int(conscious[c.WORK_STACK].pop())
+        floor = _process_floor_arg(conscious[c.WORK_STACK].pop(), rooms)
+        y = conscious[c.WORK_STACK].pop()
+        if not isinstance(y, int):
+            y = _to_int(_process_hallway_arg(y, floor, rooms))
         x = _to_int(conscious[c.WORK_STACK].pop())
         item = _cast_string(conscious[c.WORK_STACK].pop())
         for character in item:
@@ -2479,8 +2481,10 @@ class UncommonDynamicDump(Rule):
         v_floor = _to_int(conscious[c.WORK_STACK].pop())
         v_y = _to_int(conscious[c.WORK_STACK].pop())
         v_x = _to_int(conscious[c.WORK_STACK].pop())
-        floor = _to_int(conscious[c.WORK_STACK].pop())
-        y = _to_int(conscious[c.WORK_STACK].pop())
+        floor = _process_floor_arg(conscious[c.WORK_STACK].pop(), rooms)
+        y = conscious[c.WORK_STACK].pop()
+        if not isinstance(y, int):
+            y = _process_hallway_arg(y, floor, rooms)
         x = _to_int(conscious[c.WORK_STACK].pop())
         item = _cast_string(conscious[c.WORK_STACK].pop())
         for character in item:

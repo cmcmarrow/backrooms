@@ -353,6 +353,7 @@ def translator(handlers: Handlers) -> Rooms:
     """
     rooms = Rooms()
     x, y, floor = 0, 0, 1
+    slider = 0
     for line in handlers:
         full_line = line
         # throw away lead white space
@@ -367,7 +368,8 @@ def translator(handlers: Handlers) -> Rooms:
                 x = 0
                 y = 0
                 # go down a floor
-                floor += -1
+                floor += -1 + slider
+                slider = 0
                 # set the floor name to the handlers name
                 rooms.set_floor_name(floor, handlers.get_name())
 
@@ -486,8 +488,8 @@ def translator(handlers: Handlers) -> Rooms:
 
                 if to_spot is None:
                     # duplicate onto the floor above
-                    to_spot = floor - 1
-                    floor += -1
+                    to_spot = (floor - 1) + slider
+                    slider += -1
 
                 # duplicate floor
                 rooms.duplicate_floor(from_spot, to_spot)
