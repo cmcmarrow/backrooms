@@ -51,4 +51,11 @@ class TestHardVector(unittest.TestCase):
         self.assertFalse(len(stream))
 
     def test_find_insert(self):
-        stream = full_test("hard_vector_find_insert.brs", lost_count=140000).get_output_stream()
+        stream = full_test("hard_vector_find_insert.brs", lost_count=120000).get_output_stream()
+        self.assertEqual(len(stream), 31)
+        self.assertEqual(stream.pop(), "StackBottom")
+        last_item = stream.pop()
+        stream.reverse()
+        for item in stream:
+            self.assertLessEqual(last_item, item)
+            last_item = item

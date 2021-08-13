@@ -14,6 +14,7 @@ from . import backrooms_tests
 from . import conscious_tests
 from . import full_test_runner
 from . import hard_vector_tests
+from . import heap_tests
 from . import portal_tests
 from . import rooms_tests
 from . import rules_tests
@@ -21,6 +22,7 @@ from . import stack_tests
 from . import test_files
 from . import translator_tests
 from . import utils_tests
+from . import variables_tests
 
 # add all tests to namespace
 for module_name, module in vars().copy().items():

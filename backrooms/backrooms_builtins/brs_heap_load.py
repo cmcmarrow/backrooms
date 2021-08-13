@@ -9,6 +9,8 @@ from backrooms.translator import StringHandler
 NAME = "heap_load"
 
 SCRIPT = """
+%h_vector
+!heap
 """
 
 

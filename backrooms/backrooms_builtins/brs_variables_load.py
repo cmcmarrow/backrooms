@@ -6,9 +6,11 @@ Copyright 2021 Charles McMarrow
 # backrooms
 from backrooms.translator import StringHandler
 
-NAME = "variables_load"
+NAME = "vars_load"
 
 SCRIPT = """
+%h_vector
+!vars
 """
 
 

@@ -2442,7 +2442,7 @@ class UncommonSimpleDump(Rule):
         floor = _process_floor_arg(conscious[c.WORK_STACK].pop(), rooms)
         y = conscious[c.WORK_STACK].pop()
         if not isinstance(y, int):
-            y = _process_hallway_arg(y, floor, rooms)
+            y = _to_int(_process_hallway_arg(y, floor, rooms))
         x = _to_int(conscious[c.WORK_STACK].pop())
         item = _cast_string(conscious[c.WORK_STACK].pop())
         for character in item:
