@@ -22,7 +22,7 @@ class TestStack(unittest.TestCase):
         stack.push(1)
         stack.push(None)
 
-        self.assertEqual(stack.pop(), None)
+        self.assertIsNone(stack.pop())
         self.assertEqual(stack.pop(), 1)
         self.assertEqual(stack.pop(), 1)
 
