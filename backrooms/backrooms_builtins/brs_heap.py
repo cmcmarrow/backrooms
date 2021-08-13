@@ -34,7 +34,7 @@ SCRIPT = """
 # WS[...] -> WS[PT, ...]
 ~_NEW
 />rs"heap_vector"rs"POP"hlOVhr
-/                          >prs"_HEAD"hcri1isdfrs"__HEAD"rs"utils"rs"KEEP"hlfrs"_START"hgiarihr
+/                          >prs"_HEAD"hc-dfrs"__HEAD"rs"utils"rs"KEEP"hlfrs"_START"hgiarihr
 
 
 # WS[...] -> WS[ID, ...]
@@ -46,7 +46,7 @@ SCRIPT = """
 ~NEW_A
 /V                         >pps1hr
 />k0prs"NEW"hck1pri1>ds0isZ^pdrs"_"zbjs1zbjrs"_NEW"V
-/                   ^ai1irlh"WEN"sr"slitu"srzfch...<                       
+/                   ^+lh"WEN"sr"slitu"srzfch.......<                       
 
 
 # WS[ID, ...] -> WS[item, ...]
@@ -71,17 +71,17 @@ SCRIPT = """
 
 # WS[ID, ...] -> WS[...]
 ~FREE
-/>ri0>uors"AT"hcdfzhg.IVpppphr
-/    ^ai1irch"EERF_"srp<
+/>ri0>uors"AT"hcdfzhgIVpppphr
+/    ^+ch"EERF_"srp...<
 
 
 # WS[ID, ...] -> WS[...]
 ~_FREE
 />dfzhgOVzfzrs"utils"rs"REMOVE"hldfrs"_START"hgrs"_HEAD"hciaisZVprs"heap_vector"rs"FIND_INSERT"hlhr
-/   rhpp<                                                      >pk0p>s0ri1iadrs"heap_vector"rs"PEAK"hlOVisNVV
-/                                                     rhlh"PEEK"sr"slitu"sr"DAEH__"srfsigh"TRATS_"srfpp<2..<p
-/                                                                   1                                       .
-/                                                                   ^...........plh"POP"sr"rotcev_paeh"srp0k<
+/   rhpp<                                                      >pk0p>s0+drs"heap_vector"rs"PEAK"hlOVisNVV
+/                                                 rhlh"PEEK"sr"slitu"sr"DAEH__"srfsigh"TRATS_"srfpp<2..<p
+/                                                                   1                                   .
+/                                                                   ^.......plh"POP"sr"rotcev_paeh"srp0k<
 
 
 ~0

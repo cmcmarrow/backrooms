@@ -1,7 +1,7 @@
 ~GATE
-/ri0>dri16isZVpri1zdV
-/   .     ah~<      >....V
-/   ^aipe" "srpech"BIF"sr<
+/V         ah~<
+/>ri0>dri18isZ^pdrs"FIB"V
+/    ^+pe" "srpech......<
 ~FIB
-/>ZVdri3isLVpdri1isrs"FIB"hczri2isrs"FIB"hciahr
+/>ZVdri3isLVpd-rs"FIB"hcz--rs"FIB"hciahr
 /rh<rh1irpp<

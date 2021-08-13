@@ -1,7 +1,7 @@
 ~GATE
 /V       >p~ha
-/>ri512>Z^rs"READ"hcrs"INC"hcjbjbjbV
-/      ^si1irpebi01irpejbjbjbjbjb..<
+/>ri512>Z^rs"READ"hcrs"INC"hcjbjbV
+/      ^-pebi01irpejbjbjbjbjbjb..<
 ~READ
 />V
 ~INC
@@ -11,9 +11,9 @@
 /.               rhp<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<.                                                                                            r
 />rs"READ"hcri1k0rs"FLIP"hc..............................................................................^
 ~FLIP
-/>iaZVri1isZVri0hr
-/    d      r
-/    h      i
-/    r      1
-/           h
-/           r
+/>iaZV-ZVri0hr
+/    d  r
+/    h  i
+/    r  1
+/       h
+/       r
