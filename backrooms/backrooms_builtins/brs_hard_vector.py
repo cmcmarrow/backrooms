@@ -23,18 +23,18 @@ SCRIPT = """
 
 # WS[item, ...] -> WS[...]
 ~APPEND
-/>rs"SIZE"hck0dfrs"_START"hgri1iszisk1fzrs"utils"rs"NEW"hlfs1rs"utils"rs"KEEP"hls0ri1iafrs"_SIZE"rs"utils"rs"KEEP"hlhr
+/>rs"SIZE"hck0dfrs"_START"hg-zisk1fzrs"utils"rs"NEW"hlfs1rs"utils"rs"KEEP"hls0+frs"_SIZE"rs"utils"rs"KEEP"hlhr
 
 
 # WS[...] -> WS[item, ...]
 ~POP
-/>rs"SIZE"hcZVri1isk0rs"READ"hcfs0bcrs"utils"rs"REMOVE"hls0frs"_SIZE"rs"utils"rs"KEEP"hlhr
+/>rs"SIZE"hcZV-k0rs"READ"hcfs0bcrs"utils"rs"REMOVE"hls0frs"_SIZE"rs"utils"rs"KEEP"hlhr
 /            >prnhr
 
 
 # WS[...] -> WS[item, ...]
 ~PEAK
-/>rs"SIZE"hcZVri1isrs"READ"hchr
+/>rs"SIZE"hcZV-rs"READ"hchr
 /            >prnhr
 
 

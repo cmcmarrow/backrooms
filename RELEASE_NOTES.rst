@@ -7,7 +7,9 @@ v1.0.0
 * Added more tests
 * Added more examples
 * Added start argument to Rule
-* Added StringReverse
+* Added StringReverse Rule
+* Added Increment Rule
+* Added Decrement Rule
 * Cleaned up code
 * Cleaned up logging
 * Fixed Typing

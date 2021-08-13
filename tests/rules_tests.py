@@ -64,6 +64,17 @@ class TestRules(unittest.TestCase):
         self.assertIn("StackFrame", stream)
         self.assertIn("StackBottom", stream)
 
+    def test_decrement(self):
+        stream = full_test("decrement.brs").get_output_stream()
+        self.assertEqual(len(stream), 7)
+        self.assertEqual(stream[0], -1)
+        self.assertEqual(stream[1], -1)
+        self.assertEqual(stream[2], -1)
+        self.assertEqual(stream[3], 3)
+        self.assertEqual(stream[4], 1)
+        self.assertEqual(stream[5], -3)
+        self.assertEqual(stream[6], "StackBottom")
+
     def test_duplicate(self):
         stream = full_test("duplicate.brs").get_output_stream()
         self.assertEqual(len(stream), 8)
@@ -170,6 +181,17 @@ class TestRules(unittest.TestCase):
 
     def test_hope_nine(self):
         full_test("hope_nine.brs")
+
+    def test_increment(self):
+        stream = full_test("increment.brs").get_output_stream()
+        self.assertEqual(len(stream), 7)
+        self.assertEqual(stream[0], 1)
+        self.assertEqual(stream[1], 1)
+        self.assertEqual(stream[2], 1)
+        self.assertEqual(stream[3], 5)
+        self.assertEqual(stream[4], -1)
+        self.assertEqual(stream[5], 3)
+        self.assertEqual(stream[6], "StackBottom")
 
     def test_integer_cast(self):
         stream = full_test("integer_cast.brs").get_output_stream()
@@ -578,4 +600,4 @@ class TestRules(unittest.TestCase):
         self.assertEqual(len(stream), 3)
         self.assertEqual(stream[0], "StackFrame")
         self.assertEqual(stream[1], 44)
-        self.assertIs(stream[2], "StackBottom")
+        self.assertEqual(stream[2], "StackBottom")
