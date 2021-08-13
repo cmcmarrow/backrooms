@@ -9,7 +9,7 @@ import unittest
 from tests.full_test_runner import full_test
 
 
-class TestVariables(unittest.TestCase):
+class VariablesTests(unittest.TestCase):
     def test_variables(self):
         portal = full_test("variables.brs")
         stream = portal.get_output_stream()

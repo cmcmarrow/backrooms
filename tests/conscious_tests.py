@@ -10,7 +10,7 @@ from backrooms import conscious
 from backrooms.stack import StackFrame, StackBottom
 
 
-class ToIntTest(unittest.TestCase):
+class ToIntTests(unittest.TestCase):
     def test_string(self):
         self.assertEqual(conscious._to_int(""), 0)
         self.assertEqual(conscious._to_int("cat"), 3)
@@ -30,7 +30,7 @@ class ToIntTest(unittest.TestCase):
         self.assertEqual(conscious._to_int(StackBottom), 0)
 
 
-class ConsciousTest(unittest.TestCase):
+class ConsciousTests(unittest.TestCase):
     def test_default(self):
         this_conscious = conscious.Conscious()
         self.assertIsInstance(this_conscious, dict)

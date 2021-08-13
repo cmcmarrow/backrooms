@@ -118,7 +118,7 @@ class Portal:
                  rooms: Rooms,
                  consciouses: Optional[Tuple[Conscious, ...]] = None,
                  inputs: Optional[Union[Tuple[str, ...], List[str]]] = None,
-                 feeder: Optional[Feeder] = None,
+                 feeder: bool = False,
                  sys_output: bool = True,
                  catch_output: bool = False,
                  lost_count: int = 0,
@@ -132,7 +132,7 @@ class Portal:
         :param rooms: Rooms
         :param consciouses: Optional[Tuple[Conscious, ...]]
         :param inputs: Optional[Union[Tuple[str, ...], List[str]]]
-        :param feeder: Optional[Feeder]
+        :param feeder: bool
         :param sys_output: bool
         :param catch_output: bool
         :param lost_count: int
@@ -162,11 +162,13 @@ class Portal:
         if inputs is not None:
             inputs = list(inputs[::-1])
         self._inputs: Optional[List[str]] = inputs
+        if feeder:
+            feeder = Feeder()
+        else:
+            feeder = None
         self._feeder: Optional[Feeder] = feeder
-
         if inputs is not None and feeder is not None:
             raise PortalError.multiple_inputs_methods()
-
         self._catch_output: bool = catch_output
         self._catch_output_steam: List[object] = []
         self._error_on_space: bool = error_on_space
@@ -389,3 +391,10 @@ class Portal:
         :return: List[Tuple[int, int, int]]
         """
         return self._rule_step_visuals
+
+    def get_feeder(self) -> Optional[Feeder]:
+        """
+        info: Gets feeder.
+        :return: Optional[Feeder]
+        """
+        return self._feeder

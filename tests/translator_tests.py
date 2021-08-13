@@ -13,7 +13,7 @@ from backrooms.translator import FileHandler, Handler, Handlers, StringHandler, 
 from . import test_files
 
 
-class TestHandler(unittest.TestCase):
+class HandlerTests(unittest.TestCase):
     def test_is_open_and_close(self):
         handler = Handler("test")
         self.assertTrue(handler.is_open())
@@ -24,7 +24,7 @@ class TestHandler(unittest.TestCase):
             self.assertFalse(handler.is_open())
 
 
-class TestFileHandler(unittest.TestCase):
+class FileHandlerTests(unittest.TestCase):
     def test_file_handler(self):
         handler = FileHandler(test_files.get_path("test_file_handler.brs"))
         self.assertEqual(handler.get_name(), "test_file_handler")

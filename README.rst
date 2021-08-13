@@ -182,7 +182,7 @@ API
        Handler: Will load just the single Handler.
        Handlers: Will load the Handlers.
    :param inputs: Optional[Union[Tuple[str, ...], List[str]]]
-   :param feeder: Optional[Feeder]
+   :param feeder: bool
    :param sys_output: bool
    :param catch_output: bool
    :param lost_count: int

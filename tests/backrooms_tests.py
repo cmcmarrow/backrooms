@@ -10,7 +10,7 @@ from tests import test_files
 from backrooms import backrooms
 
 
-class BackroomsAPITest(unittest.TestCase):
+class BackroomsAPITests(unittest.TestCase):
     def test_string(self):
         portal = backrooms.backrooms_api(test_files.get_path("hello.brs"),
                                          sys_output=False,

@@ -9,7 +9,7 @@ import unittest
 from backrooms.rooms import Rooms, RoomsError, is_character, is_name
 
 
-class IsCharacterTest(unittest.TestCase):
+class IsCharacterTests(unittest.TestCase):
     def test_is_character(self):
         for character in range(256):
             self.assertTrue(is_character(chr(character)))
@@ -19,7 +19,7 @@ class IsCharacterTest(unittest.TestCase):
             self.assertFalse(is_character(chr(character)))
 
 
-class IsNameTest(unittest.TestCase):
+class IsNameTests(unittest.TestCase):
     def test_is_name_1(self):
         self.assertTrue(is_name("cats"))
 
