@@ -389,8 +389,12 @@ class Cite(Rule):
         :param rule_step_visuals: List[Tuple[int, int, int]]
         :return: Generator[None, None, None]
         """
+        data = None
+        while data is None:
+            data = portal.read_input()
+            yield
         conscious.step()
-        conscious[c.WORK_STACK].push(portal.read_input())
+        conscious[c.WORK_STACK].push(data)
         if self._yields:
             yield
 

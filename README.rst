@@ -28,9 +28,9 @@ Hello World
    ~GATE
    /rs"Hello World!"e~ha
 
-************
-Installation
-************
+*******************
+Python Installation
+*******************
 .. code-block:: bash
 
    pip install backrooms
@@ -79,12 +79,12 @@ Bottles
 .. code-block:: text
 
    ~GATE
-   /ri10ibri99>ers" bottles of beer on the wall, "epers" bottles of beer."epzezri-1iaV
-   /Vzeezpe".llaw eht no reeb fo selttob "srepe" ,dnuora ti ssap dna nwod eno ekaT"sr<
-   /.>e~ha    1 >rs"1 bottle of beer on the wall, 1 bottle of beer."epers"Take one"epV
-   /.p        p pVe".llaw eht no reeb fo selttob erom on ,dnuora ti ssap dna nwod "sr<
-   /.e        . p>peers"No more bottles of beer on the wall, no more bottles of beer"V
-   />.dri-1iaN^.^                                                                    e
+   /ri10ibri99>ers" bottles of beer on the wall, "epers" bottles of beer."epzez-V
+   /V".llaw eht no reeb fo selttob "srepe" ,dnuora ti ssap dna nwod eno ekaT"sr.<
+   /e>e~ha    1 >rs"1 bottle of beer on the wall, 1 bottle of beer."epers"Take one"epV
+   /pp        p pVe".llaw eht no reeb fo selttob erom on ,dnuora ti ssap dna nwod "sr<
+   /ze        . p>peers"No more bottles of beer on the wall, no more bottles of beer"V
+   />...eezd-N^.^                                                                    e
    / ^".llaw eht no reeb fo selttob 99 ,erom emos yub dna erots eht ot oG"srepe"."srp<
 
 ******
@@ -107,11 +107,11 @@ Fibonacci
 .. code-block:: text
 
    ~GATE
-   /ri0>dri16isZVpri1zdV
-   /   .     ah~<      >....V
-   /   ^aipe" "srpech"BIF"sr<
+   /V         ah~<
+   />ri0>dri18isZ^pdrs"FIB"V
+   /    ^+pe" "srpech......<
    ~FIB
-   />ZVdri3isLVpdri1isrs"FIB"hczri2isrs"FIB"hciahr
+   />ZVdri3isLVpd-rs"FIB"hcz--rs"FIB"hciahr
    /rh<rh1irpp<
 
 ***********
@@ -122,11 +122,11 @@ Tic Tac Toe
 .. code-block:: text
 
    ~GATE
-   />ri0>.ri1iadri10isNVpprs"x"k0pri10ibrs"Tic Tac Toe!"epepri0V
-   /.   ^..hujbz"k"srdp<           a                    >pri1ia>dri9isNVpprs"E_BOARD"hcrs"Cats!"ep...V
-   /.                              h   >..rs"C_BOARD"hcZ^rs"E_BOARD"hceprs" won!"epri10ibeppVpebi01ir<
-   /.                              ~   ^................huch"DRAOB_U"sr<                    .
-   /^.............................p^Zeb"a"srcpe+ >>+srpebi01irpe+!niaga yalp ot "a" retnE+sr<
+   />ri0>...+dri10isNVpprs"x"k0pri10ibrs"Tic Tac Toe!"epepri0V
+   /.   .            p           a                    >p+....>dri9isNVpprs"E_BOARD"hcrs"Cats!"ep...V
+   /.   .            d           h   >..rs"C_BOARD"hcZ^rs"E_BOARD"hceprs" won!"epri10ibeppVpebi01ir<
+   /.   ^..hujbz"k"sr<           ~   ^................huch"DRAOB_U"sr<                    .
+   /^...........................p^Zeb"a"srcpe+ >>+srpebi01irpe+!niaga yalp ot "a" retnE+sr<
    # Echo board
    ~E_BOARD
    />ri10ibrs"#"s1epes2epes3epzezeeeeezezs4epes5epes6epzezeeeeezezs7epes8epes9eppephr
@@ -142,10 +142,10 @@ Tic Tac Toe
    />s5ds1beNVpd.....V    >beN^ppp..V                  >ppzphr
    /         >pds9beZVphr ^oupp<    3            V..ppp^Neb<
    /                 >pds3beNVpd.....V           .    >ppuo^
-   /                         >pds7beZVphr  Vai1ir<pppp^Nebou..hujbz"s"srai3ir<
+   /                         >pds7beZVphr  V+....<pppp^Nebou..hujbz"s"srai3ir<
    /                           2     >ppri0>dri3isNVpprs""hr                 z
-   /   >zri1iars"s"zbjuh..uobeN^pppp>dri1iadrs"s"z1pbjuh..zri3iadrs"s"zbjuh..^
-   /   ^..hujbz"s"srdai1irz..hujbz"s"srdai1irmi3ird<
+   /         >rs"s"zbjuh..uobeN^pppp>d+....drs"s"z1pbjuh..zri3iadrs"s"zbjuh..^
+   /         ^+z..hujbz"s"srd+z..hujbz"s"srd+mi3ird<
 
 ****************
 Build Executable
@@ -182,6 +182,7 @@ API
        Handler: Will load just the single Handler.
        Handlers: Will load the Handlers.
    :param inputs: Optional[Union[Tuple[str, ...], List[str]]]
+   :param feeder: Optional[Feeder]
    :param sys_output: bool
    :param catch_output: bool
    :param lost_count: int
