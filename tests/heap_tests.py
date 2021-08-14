@@ -89,7 +89,7 @@ class HeapTests(unittest.TestCase):
                          rooms.get_hallway_location(floor, "_START") - 4)
 
     def test_heap_del(self):
-        portal = full_test("heap_del.brs", lost_count=0)
+        portal = full_test("heap_del.brs", lost_count=200000)
         stream = portal.get_output_stream()
         rooms = portal.get_rooms()
 
@@ -142,7 +142,7 @@ class HeapTests(unittest.TestCase):
                          rooms.get_hallway_location(floor, "_START") - 68)
 
     def test_heap_del_2(self):
-        portal = full_test("heap_del_2.brs", lost_count=0)
+        portal = full_test("heap_del_2.brs", lost_count=250000)
         stream = portal.get_output_stream()
         rooms = portal.get_rooms()
 
