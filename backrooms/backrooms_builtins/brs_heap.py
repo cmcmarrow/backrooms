@@ -61,7 +61,8 @@ SCRIPT = """
 
 # WS[ID, item, ...] -> WS[...]
 ~WRITE
-/>fzrs"utils"rs"KEEP"hlhr
+/>drs"0"beNVpfzrs"utils"rs"KEEP"hlhr
+/     rhppp<
 
 
 # WS[AT, ID, item, ...] -> WS[...]
@@ -71,8 +72,8 @@ SCRIPT = """
 
 # WS[ID, ...] -> WS[...]
 ~FREE
-/>ri0>uors"AT"hcdfzhgIVpppphr
-/    ^+ch"EERF_"srp...<
+/>drs"0"beNVpri0>uors"AT"hcdfzhgIVpppphr
+/      rhpp<    ^+ch"EERF_"srp...<
 
 
 # WS[ID, ...] -> WS[...]
