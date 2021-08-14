@@ -2,31 +2,15 @@
 
 
 ~GATE
-/~ha
-
-
-~N
-/>rs"heap"rs"NEW"hlhr
+/ri10rs"A"hck0pri5rs"A"hcepri40rs"A"hck2pri7rs"A"hck3pV
+/V....................................................<
+/>s0rs"F"hcs2rs"F"hcs3rs"F"hcV
+/V...........................<
+/>ri31rs"A"hcepri10rs"A"hcepri230rs"A"hcepe~ha
 
 
 ~A
 />rs"heap"rs"NEW_A"hlhr
-
-
-~R
-/>rs"heap"rs"READ"hlhr
-
-
-~RA
-/>rs"heap"rs"READ_A"hlhr
-
-
-~W
-/>rs"heap"rs"WRITE"hlhr
-
-
-~WA
-/>rs"heap"rs"WRITE_A"hlhr
 
 
 ~F
