@@ -55,6 +55,14 @@ class PortalError(backrooms_error.BackroomsError):
         return cls(f"Error on space at: ({x}, {y}, {floor})")
 
     @classmethod
+    def error_on_no_rule(cls, x: int, y: int, floor: int):
+        """
+        info: Used to indicate no Rule found for character.
+        :return: PortalError
+        """
+        return cls(f"Error no rule found at: ({x}, {y}, {floor})")
+
+    @classmethod
     def start_character_collection(cls,
                                    start_character: str):
         """
@@ -124,6 +132,7 @@ class Portal:
                  lost_count: int = 0,
                  lost_rule_count: int = 0,
                  error_on_space: bool = False,
+                 error_on_no_rule: bool = False,
                  core_dump: bool = False,
                  yields: bool = False,
                  rules: Optional[Union[Tuple[Type[Rule], ...], List[Type[Rule]]]] = None):
@@ -138,6 +147,7 @@ class Portal:
         :param lost_count: int
         :param lost_rule_count: int
         :param error_on_space: bool
+        :param error_on_no_rule: bool
         :param core_dump: bool
         :param yields: bool
         :param rules: Optional[Union[Tuple[Type[Rule], ...], List[Type[Rule]]]]
@@ -172,6 +182,7 @@ class Portal:
         self._catch_output: bool = catch_output
         self._catch_output_steam: List[object] = []
         self._error_on_space: bool = error_on_space
+        self._error_on_no_rule: bool = error_on_no_rule
 
         work_space = WorkSpace()
 
@@ -268,6 +279,9 @@ class Portal:
                     whisper.debug("No rule found!")
                 if self._error_on_space and self._rooms.read(*conscious.at()) == " ":
                     raise PortalError.error_on_space(*conscious.at())
+
+                if self._error_on_no_rule:
+                    raise PortalError.error_on_no_rule(*conscious.at())
                 conscious.step()
             # check if conscious is still alive
             if conscious[ALIVE]:

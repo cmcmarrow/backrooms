@@ -4,6 +4,7 @@ v1.0.0
 * Development Status :: 6 - Mature
 * Added builtin libraries
 * Added feeder argument to Portal
+* Added error on no rule argument to Portal
 * Added yields argument to Portal
 * Added more tests
 * Added more examples
