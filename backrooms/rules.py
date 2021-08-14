@@ -1536,6 +1536,32 @@ class LevelModule(RuleModule):
                                            LevelSetFloorName))
 
 
+class NOP(Rule):
+    def __init__(self,
+                 work_space: WorkSpace,
+                 yields: bool):
+        super(NOP, self).__init__(".", work_space, yields)
+
+    def __call__(self,
+                 portal: 'backrooms.portal.Portal',
+                 rooms: Rooms,
+                 conscious: c.Conscious,
+                 start: Tuple[int, int, int],
+                 rule_step_visuals: List[Tuple[int, int, int]]) -> Generator[None, None, None]:
+        """
+        info: Runs a rule.
+        :param portal: Portal
+        :param rooms: Rooms
+        :param conscious: Conscious
+        :param start: Tuple[int, int, int],
+        :param rule_step_visuals: List[Tuple[int, int, int]]
+        :return: Generator[None, None, None]
+        """
+        conscious.step()
+        if self._yields:
+            yield
+
+
 class Keep(Rule):
     def __init__(self,
                  work_space: WorkSpace,
@@ -2674,6 +2700,7 @@ RULES = (BackMirror,
          Increment,
          IntegerModule,
          LevelModule,
+         NOP,
          Keep,
          Pop,
          PopFrame,

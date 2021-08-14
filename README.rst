@@ -188,6 +188,7 @@ API
    :param lost_count: int
    :param lost_rule_count: int
    :param error_on_space: bool
+   :param error_on_no_rule: bool
    :param br_builtins: bool
        Only adds builtins if code is str or Handler.
    :param core_dump: bool

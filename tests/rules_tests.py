@@ -53,7 +53,7 @@ class RulesTests(unittest.TestCase):
         self.assertEqual(stream[11], -1)
 
     def test_core_dump(self):
-        stream = full_test("core_dump.brs").get_output_stream()
+        stream = full_test("core_dump.brs", error_on_no_rule=False).get_output_stream()
         self.assertEqual(len(stream), 0)
         stream = full_test("core_dump.brs", core_dump=True).get_output_stream()
         self.assertNotEqual(len(stream), 0)

@@ -1,7 +1,7 @@
 ~GATE
 /V       >p~ha
-/>ri512>Z^rs"READ"hcrs"INC"hcjbjbV
-/      ^-pebi01irpejbjbjbjbjbjb..<
+/>ri512>Z^rs"READ"hcrs"INC"hcbjV
+/      ^-pebi01irpejbjbjbjbjbjb<
 ~READ
 />V
 ~INC

@@ -62,6 +62,11 @@ def backrooms() -> None:
                             default=False,
                             action="store_true",
                             help="profiles backrooms")
+        parser.add_argument("-r",
+                            "--error_on_no_rule",
+                            default=False,
+                            action="store_true",
+                            help="errors if portal is given an invalid rule")
         parser.add_argument("-s",
                             "--system-out",
                             default=True,
@@ -109,6 +114,7 @@ def backrooms() -> None:
                                            lost_count=args.lost_count,
                                            lost_rule_count=args.lost_rule_count,
                                            error_on_space=args.error_on_space,
+                                           error_on_no_rule=args.error_on_no_rule,
                                            br_builtins=args.builtins,
                                            core_dump=args.core_dump,
                                            whisper_level=args.whisper)
@@ -138,6 +144,7 @@ def backrooms() -> None:
                                lost_count=args.lost_count,
                                lost_rule_count=args.lost_rule_count,
                                error_on_space=args.error_on_space,
+                               error_on_no_rule=args.error_on_no_rule,
                                br_builtins=args.builtins,
                                core_dump=args.core_dump,
                                whisper_level=args.whisper)
@@ -156,6 +163,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
                   lost_count: int = 0,
                   lost_rule_count: int = 0,
                   error_on_space: bool = False,
+                  error_on_no_rule: bool = False,
                   br_builtins: bool = True,
                   core_dump: bool = False,
                   yields: bool = False,
@@ -174,6 +182,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
     :param lost_count: int
     :param lost_rule_count: int
     :param error_on_space: bool
+    :param error_on_no_rule: bool
     :param br_builtins: bool
         Only adds builtins if code is str or Handler.
     :param core_dump: bool
@@ -207,6 +216,7 @@ def backrooms_api(code: Union[str, Handler, Handlers],
                       lost_count=lost_count,
                       lost_rule_count=lost_rule_count,
                       error_on_space=error_on_space,
+                      error_on_no_rule=error_on_no_rule,
                       core_dump=core_dump,
                       yields=yields,
                       rules=rules)
