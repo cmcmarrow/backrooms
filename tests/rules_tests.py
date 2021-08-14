@@ -605,4 +605,5 @@ class RulesTests(unittest.TestCase):
 
     def test_nop(self):
         stream = full_test("nop.brs").get_output_stream()
+        self.assertEqual(len(stream), 1)
         self.assertEqual(stream[0], "StackBottom")
