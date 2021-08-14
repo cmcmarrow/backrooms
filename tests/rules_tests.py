@@ -602,3 +602,7 @@ class RulesTests(unittest.TestCase):
         self.assertEqual(stream[0], "StackFrame")
         self.assertEqual(stream[1], 44)
         self.assertEqual(stream[2], "StackBottom")
+
+    def test_nop(self):
+        stream = full_test("nop.brs").get_output_stream()
+        self.assertEqual(stream[0], "StackBottom")
