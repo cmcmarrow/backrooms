@@ -1,8 +1,7 @@
-{{WIP}}
-'''backrooms''' uses a 3D memory spaces that holds a single Extended ASCII character per room “cell”.
+'''backrooms''' uses a 3D memory space that holds a single Extended ASCII character per room “cell”.
 It has 10 registers and 2 built in stacks per conscious "thread". Rules “instructions” can be more than one character long.
 It also has 5 data types that can be used with the registers and stacks.
-Data can be stored across multiple rooms and could be read as instructions during run-time or be re-read into data.
+Data can be stored across multiple rooms and can be read as instructions during run-time or be re-read into data.
 
 == About ==
 {| class="wikitable"
@@ -18,7 +17,7 @@ Data can be stored across multiple rooms and could be read as instructions durin
 | 5/22/2021
 |-
 | Birthday
-| SOON!
+| 8/16/21
 |}
 
 {| class="wikitable"
@@ -32,23 +31,23 @@ Data can be stored across multiple rooms and could be read as instructions durin
 {| class="wikitable"
 !Inspiration
 |-
-| backrooms Creepypasta/MEME
+| Backrooms Creepypasta/MEME
 |-
-| ASCIIDOTS Esolang
+| [[AsciiDots]]
 |-
 | CISC Architecture
 |}
 
 {| class="wikitable"
-!Backrooms was designed to be:
+!Backrooms is designed to be:
 |-
-| hackable VIA memory overflow attacks and poor error handling.
+| Hackable VIA memory overflow attacks and poor error handling.
 |-
-| visually pleasing.
+| Visually pleasing.
 |-
-| enjoyable to write small/medium programs.
+| Enjoyable to write small/medium programs.
 |-
-| capable to rewrite all of a program at run-time.
+| Capable of rewriting all of a program at run-time.
 |}
 
 == Hello World ==
@@ -282,6 +281,8 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
 |
  ~GATE
  /ri44rs"cats"ne~ha
+Output
+ StackBottom
 |-
 | style="vertical-align: top"| <code><nowiki>CoordinateX</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>x</nowiki></span></code>
@@ -302,10 +303,12 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>-</nowiki></span></code>
 | style="vertical-align: top"| WS[item, ...] -> WS[results, ..]
 * results = to_integer(item) - 1
-* Subtract one from the item on top of the stack.
+* Subtract one to the item on top of the stack.
 |
  ~GATE
  /ri40-e~ha
+Output
+ 39
 |-
 | style="vertical-align: top"| <code><nowiki>Duplicate</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>d</nowiki></span></code>
@@ -313,7 +316,9 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
 * Copy the top item on the stack and place the copy onto the stack.
 |
  ~GATE
- /ri10depep~ha
+ /ri10depe~ha
+Output
+ 1010
 |-
 | style="vertical-align: top"| <code><nowiki>Echo</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>e</nowiki></span></code>
@@ -353,6 +358,8 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
  /ri3ri4rs"ADD"hc~ha
  ~ADD
  /iaephr
+Output
+ 7
 |-
 | style="vertical-align: top"| <code><nowiki>HallwayLevelCall</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>hl</nowiki></span></code>
@@ -368,6 +375,8 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
  +math
  ~ADD
  /iaephr
+Output
+ 7
 |-
 | style="vertical-align: top"| <code><nowiki>HallwayReturn</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>hr</nowiki></span></code>
@@ -385,20 +394,650 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
 |
  ~GATE
  /fyhne~ha
+Output
+ GATE
 |-
 | style="vertical-align: top"| <code><nowiki>HallwayGetLocation</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>hg</nowiki></span></code>
-| style="vertical-align: top"| WS[hallway, floor, ...] -> WS[name, ...]
+| style="vertical-align: top"| WS[hallway, floor, ...] -> WS[y_location, ...]
 * to_floor(floor)
+* If hallway is not a String then it will to_integer.
 * If no name exist None will be given back.
-* As long as the y coordinates is with in the hallway the hallway location will be found.
+* As long as the y coordinate is with in the hallway the hallway location will be found.
 * If coordinates are not in a hallway then None will be given back.
-|-
-| TODO write out all rules
 |
  ~GATE
- /fyhne~ha
- |}
+ /frirs"Hallway"hge~ha
+ ~Hallway
+ /
+Output
+ -1
+|-
+| style="vertical-align: top"| <code><nowiki>HallwaySet</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hs</nowiki></span></code>
+| style="vertical-align: top"| WS[hallway, floor, name, ...] -> WS[...]
+* to_integer(hallway), to_floor(floor)
+* If name is not None then it will to_string.
+* Name must fit <NAME>.
+* Will make a hallway and remove the hallway with the same name on the same floor if it exists.
+|-
+| style="vertical-align: top"| <code><nowiki>HallwayRemove</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hr</nowiki></span></code>
+| style="vertical-align: top"| WS[hallway, floor, ...] -> WS[...]
+* to_hallway(hallway), to_floor(floor)
+* Will remove the specified hallway.
+|-
+| style="vertical-align: top"| <code><nowiki>HallwayPast</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hp</nowiki></span></code>
+| style="vertical-align: top"| WS[hallway, floor, ...] -> WS[y_location, ...]
+* to_hallway(hallway), to_floor(floor)
+* Will get the past hallway.
+* If no past hallway exist then None will be given.
+|
+ ~GATE
+ /fyhpe~ha
+ ~Hallway
+ /
+Output
+ -1
+|-
+| style="vertical-align: top"| <code><nowiki>HallwayNext</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>he</nowiki></span></code>
+| style="vertical-align: top"| WS[hallway, floor, ...] -> WS[y_location, ...]
+* to_hallway(hallway), to_floor(floor)
+* Will get the next hallway.
+* If no next hallway exist then None will be given.
+|
+ ~Hallway
+ /
+ ~GATE
+ /fyhee~ha
+Output
+ 0
+|-
+| style="vertical-align: top"| <code><nowiki>Halt</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>~ha</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will stop the program.
+|
+ ~GATE
+ /~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeOne</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>1</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over one room.
+|
+ ~GATE
+ /1^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeTwo</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>2</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over two rooms.
+|
+ ~GATE
+ /2^^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeThree</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>3</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over three rooms.
+|
+ ~GATE
+ /3^w^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeFour</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>4</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over four rooms.
+|
+ ~GATE
+ /4^^^^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeFive</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>5</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over five rooms.
+|
+ ~GATE
+ /5^OwO^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeSix</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>6</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over six rooms.
+|
+ ~GATE
+ /6^^^^^^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeSeven</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>7</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over seven rooms.
+|
+ ~GATE
+ /7^^^^^^^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeEighth</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>8</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over eighth rooms.
+|
+ ~GATE
+ /8^^^^^^^^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HopeNine</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>9</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will hope over nine rooms.
+|
+ ~GATE
+ /9^^^^^^^^^~ha
+|-
+| style="vertical-align: top"| <code><nowiki>Increment</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>+</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* results = to_integer(item) + 1
+* Add one to the item on top of the stack.
+|
+ ~GATE
+ /ri40+e~ha
+Output
+ 41
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerCast</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ic</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* Intgerer -> Integer
+* String -> Integer | None
+* None -> None
+* StackFrame -> None
+* StackBottom -> None
+|
+ ~GATE
+ /rs"+12"ice~ha
+Output
+ 12
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerAdd</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ia</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[results, ...]
+* results = item + item2
+|
+ ~GATE
+ /ri3ri4iae~ha
+Output
+ 7
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerSubtract</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>is</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[results, ...]
+* results = item - item2
+|
+ ~GATE
+ /ri3ri4ise~ha
+Output
+ -1
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerMultiply</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>im</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[results, ...]
+* results = item * item2
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerDivide</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>id</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[results, ...]
+* results = ⌊item / item2⌋
+* results = None if operation causes a divide by zero.
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerModular</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>io</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[results, ...]
+* results = item % item2
+* results = None if operation causes a divide by zero.
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerPower</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ip</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[results, ...]
+* results = ⌊item ** item2⌋
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerByte</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ib</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* if to_integer(item) can be made into an Extended ASCII then that Extended ASCII character will be the results as a String.
+* if to_integer(item) can't be made into an Extended ASCII then the results will be a None.
+|
+ ~GATE
+ /ri67ibe~ha
+Output
+ c
+|-
+| style="vertical-align: top"| <code><nowiki>IntegerAbsolute</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>il</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* results = |to_integer(item)|
+|
+ ~GATE
+ /ri-44ile~ha
+Output
+ 44
+|-
+| style="vertical-align: top"| <code><nowiki>LevelGetFloorName</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ln</nowiki></span></code>
+| style="vertical-align: top"| WS[floor_location, ...] -> WS[name, ...]
+* to_integer(floor_loaction)
+|-
+| style="vertical-align: top"| <code><nowiki>LevelGetFloorLevel</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ll</nowiki></span></code>
+| style="vertical-align: top"| WS[floor_name, ...] -> WS[f_location, ...]
+* to_string(floor_name)
+* If floor can't be found the f_location will be None.
+|-
+| style="vertical-align: top"| <code><nowiki>LevelSetFloorName</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ls</nowiki></span></code>
+| style="vertical-align: top"| WS[floor_name, floor_location, ...] -> WS[...]
+* to_string(floor_name) must fit <NAME>.
+* to_integer(floor_loaction)
+|-
+| style="vertical-align: top"| <code><nowiki>NOP</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>.</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* No operation.
+* Any time Backrooms cant find a rule Backrooms falls back to NOP.
+|-
+| style="vertical-align: top"| <code><nowiki>Keep</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>k</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[item, ...], R<DIGIT>: item
+* Copy's the top item on the stack into the specific register.
+|
+ ~GATE
+ /ri4k3ps3e~ha
+Output
+ 4
+|-
+| style="vertical-align: top"| <code><nowiki>Pop</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>p</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[...]
+* Pops the top item on top of the stack.
+|-
+| style="vertical-align: top"| <code><nowiki>PopFrame</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>a</nowiki></span></code>
+| style="vertical-align: top"| WS[..., ...] -> WS[...]
+* Pops items from the stack till a StackFrame or StackBottom is popped.
+|
+ ~GATE
+ /ri4rfrs"cats"ri1ri-9ae~ha
+Output
+ 4
+|-
+| style="vertical-align: top"| <code><nowiki>Read</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>r</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[item, ...]
+* "ri" will try to read in an integer. If an invalid integer is found nothing will be placed onto the stack.
+* "rs" will try to read in an String. If the String is never close then Backrooms will never stop running the rule.
+* "rn" will load None onto the stack.
+* "rf" will load StackFrame onto the stack.
+|
+ ~GATE
+ /ri-44e~ha
+Output
+ -44
+
+ ~GATE
+ /rs@STRING@e~ha
+Output
+ STRING
+
+ ~GATE
+ /rne~ha
+Output
+ None
+
+ ~GATE
+ /rfe~ha
+Output
+ StackFrame
+|-
+| style="vertical-align: top"| <code><nowiki>ShifterRight</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>></nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will set the current consciences vector to <1, 0, 0>
+* If the Signature is repeated Immediately. The rule when enter fast mode.
+* If the rule is in fast mode it will keep take steps till it hits another shifter.
+* If the rule is in fast mode and sees "!" it will skip the next shift.
+* If the rule is in fast mode "!" can stack.
+* Shifter will only shift if the branch condition is meet.
+* Shifters will always set the branch condition to Clear after checking it.
+|
+ ~GATE
+ /V
+ />......V
+ /       >......~ha
+
+ ~GATE
+ /ri0.N.V.Z.V
+ /          >~ha
+
+ ~GATE
+ /....>>...!.!..V....^...V
+ /                       >~ha
+|-
+| style="vertical-align: top"| <code><nowiki>ShifterLeft</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki><</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will set the current consciences vector to <-1, 0, 0>
+* If the Signature is repeated Immediately. The rule when enter fast mode.
+* If the rule is in fast mode it will keep take steps till it hits another shifter.
+* If the rule is in fast mode and sees "!" it will skip the next shift.
+* If the rule is in fast mode "!" can stack.
+* Shifter will only shift if the branch condition is meet.
+* Shifters will always set the branch condition to Clear after checking it.
+|-
+| style="vertical-align: top"| <code><nowiki>ShifterUp</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>^</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will set the current consciences vector to <0, 1, 0>
+* If the Signature is repeated Immediately. The rule when enter fast mode.
+* If the rule is in fast mode it will keep take steps till it hits another shifter.
+* If the rule is in fast mode and sees "!" it will skip the next shift.
+* If the rule is in fast mode "!" can stack.
+* Shifter will only shift if the branch condition is meet.
+* Shifters will always set the branch condition to Clear after checking it.
+|-
+| style="vertical-align: top"| <code><nowiki>ShifterDown</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>v</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will set the current consciences vector to <0, -1, 0>
+* If the Signature is repeated Immediately. The rule when enter fast mode.
+* If the rule is in fast mode it will keep take steps till it hits another shifter.
+* If the rule is in fast mode and sees "!" it will skip the next shift.
+* If the rule is in fast mode "!" can stack.
+* Shifter will only shift if the branch condition is meet.
+* Shifters will always set the branch condition to Clear after checking it.
+|-
+| style="vertical-align: top"| <code><nowiki>ShifterDownUpper</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>V</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will set the current consciences vector to <0, -1, 0>
+* If the Signature is repeated Immediately. The rule when enter fast mode.
+* If the rule is in fast mode it will keep take steps till it hits another shifter.
+* If the rule is in fast mode and sees "!" it will skip the next shift.
+* If the rule is in fast mode "!" can stack.
+* Shifter will only shift if the branch condition is meet.
+* Shifters will always set the branch condition to Clear after checking it.
+|-
+| style="vertical-align: top"| <code><nowiki>ShifterUpper</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>{</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will set the current consciences vector to <0, 0, 1>
+* If the Signature is repeated Immediately. The rule when enter fast mode.
+* If the rule is in fast mode it will keep take steps till it hits another shifter.
+* If the rule is in fast mode and sees "!" it will skip the next shift.
+* If the rule is in fast mode "!" can stack.
+* Shifter will only shift if the branch condition is meet.
+* Shifters will always set the branch condition to Clear after checking it.
+|-
+| style="vertical-align: top"| <code><nowiki>ShifterLower</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>}</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will set the current consciences vector to <0, 0, -1>
+* If the Signature is repeated Immediately. The rule when enter fast mode.
+* If the rule is in fast mode it will keep take steps till it hits another shifter.
+* If the rule is in fast mode and sees "!" it will skip the next shift.
+* If the rule is in fast mode "!" can stack.
+* Shifter will only shift if the branch condition is meet.
+* Shifters will always set the branch condition to Clear after checking it.
+|-
+| style="vertical-align: top"| <code><nowiki>Store</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>s</nowiki></span></code>
+| style="vertical-align: top"| R<DIGIT>: item, WS[...] -> WS[item, ...], R<DIGIT>: item
+* Copy's the item in specific register and put it on the Working Stack.
+|-
+| style="vertical-align: top"| <code><nowiki>StringLength</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>bl</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* results = len(to_string(item))
+|
+ ~GATE
+ /rs"cats"ble~ha
+Output
+ 4
+|-
+| style="vertical-align: top"| <code><nowiki>StringCast</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>bc</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* results = to_string(item)
+|
+ ~GATE
+ /rnbce~ha
+Output
+ None
+|-
+| style="vertical-align: top"| <code><nowiki>StringAt</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ba</nowiki></span></code>
+| style="vertical-align: top"| WS[at, item, ...] -> WS[results, ...]
+* results = to_string(item)[to_integer(at)]
+* If at is out of index results will be None.
+* at can be negative and read the string backwards.
+|
+ ~GATE
+ /rs"cats"ri1bae~ha
+Output
+ a
+|-
+| style="vertical-align: top"| <code><nowiki>StringByte</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>bb</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* to_string(item)
+* Gets the Extended ASCII Integer for the first characters from the String.
+* If the String is empty then results will be None.
+|
+ ~GATE
+ /rs"c"bbe~ha
+Output
+ 67
+|-
+| style="vertical-align: top"| <code><nowiki>StringSplit</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>bs</nowiki></span></code>
+| style="vertical-align: top"| WS[at, item, ...] -> WS[front, back, ...]
+* to_integer(at) to_string(item)
+* If at is out of index the front or back will just be empty.
+* at can be negative and split the string backwards.
+|
+ ~GATE
+ /rs"12345"ri2bseprs" "epe~ha
+Output
+ 12 345
+|-
+| style="vertical-align: top"| <code><nowiki>StringJoin</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>bj</nowiki></span></code>
+| style="vertical-align: top"| WS[back, front, ...] -> WS[results, ...]
+* results = to_string(front) + to_string(back)
+|
+ ~GATE
+ /rs"cats"rs" 0w0"bje~ha
+Output
+ cats 0w0
+|-
+| style="vertical-align: top"| <code><nowiki>StringEqual</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>be</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[results, ...]
+* to_string(item) == to_string(item2)
+* results is 1 if Strings are equal.
+* results is 0 if Strings are not equal.
+|
+ ~GATE
+ /rs"cats"rs"cats"bee~ha
+Output
+ 1
+|-
+| style="vertical-align: top"| <code><nowiki>StringEqual</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>bi</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[results, ...]
+* to_string(item) in to_string(item2)
+* results is 1 if item is in item2.
+* results is 0 if item is not in item2.
+|
+ ~GATE
+ /rs"cats"rs"%^*&cats$"bie~ha
+Output
+ 1
+|-
+| style="vertical-align: top"| <code><nowiki>StringUpper</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>bu</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* to_string(item).upper()
+* Will put the String into upper form.
+|-
+| style="vertical-align: top"| <code><nowiki>StringLower</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>bo</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* to_string(item).lower()
+* Will put the String into lower form.
+|-
+| style="vertical-align: top"| <code><nowiki>StringReverse</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>br</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ...]
+* to_string(item).reverse()
+* Will reverse the string.
+|-
+| style="vertical-align: top"| <code><nowiki>Switch</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>z</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[item, item2, ...]
+* Will switch the top two items on the Working Stack.
+|-
+| style="vertical-align: top"| <code><nowiki>ThreadThread</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>tt</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will make a new conscious and copy registers, Working Stack, location and vector.
+* The new conscious will get a ID that it not in use.
+|
+ ~GATE
+ /ttrs"cats"e.~ha
+Output
+ catscats
+|-
+| style="vertical-align: top"| <code><nowiki>ThreadJoin</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>tj</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will terminate the conscious but not the program.
+* The main conscious thread 0 wont terminate if it encounters this rule.
+* If the conscious holds the ThreadLock it will be release.
+|
+ ~GATE
+ /ttrs"cats"etje.~ha
+Output
+ catscatscats
+|-
+| style="vertical-align: top"| <code><nowiki>ThreadID</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ti</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[ID, ...]
+* Will put the conscious ID on to the Working Stack.
+|-
+| style="vertical-align: top"| <code><nowiki>ThreadLock</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>tl</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will claim the ThreadLock if available if not the conscious will wait.
+* A conscious can claim the ThreadLock multiple times which will stack.
+|
+ ~GATE
+ /tttlrs"cats"eprs"0w0"etutj~ha
+Output
+ cats0w0cats0w0
+|-
+| style="vertical-align: top"| <code><nowiki>UncommonReadFlip</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ur</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[item, ...]
+* Works just like the rule Read but after the read the rule will go back to the start and inverse the conscious vector.
+* "uri" will try to read in an integer. If an invalid integer is found nothing will be placed onto the stack.
+* "urs" will try to read in an String. If the String is never close then Backrooms will never stop running the rule.
+* "urn" will load None onto the stack.
+* "urf" will load StackFrame onto the stack.
+|
+ ~GATE
+ /1Vuri44
+ / >e~ha
+Output
+ 44
+|-
+| style="vertical-align: top"| <code><nowiki>UncommonWriteFlip</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>uw</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[...]
+* Works just like the rule Write but after the write the rule will go back to the start and inverse the conscious vector.
+|
+ ~GATE
+ /ri44.1Vuw
+ /      >e~ha
+
+Memory
+ ri44.1Vuw>1vuri44
+       >e~ha
+
+ ~GATE
+ /rs"cats".1Vuw$
+ /          >e~ha
+
+Memory
+ rs"cats".1Vuw$>1vurs$cats$
+           >e~ha
+|-
+| style="vertical-align: top"| <code><nowiki>UncommonHotPatch</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>uh</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[...]
+* to_string(item)
+* Will write the data into the room cells after the rule.
+|
+ ~GATE
+ /rs"rs+cats+e"uh.............~ha
+Memory
+ rs"rs+cats+e"uhrs+cats+e....~ha
+|-
+| style="vertical-align: top"| <code><nowiki>UncommonSimpleDump</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>us</nowiki></span></code>
+| style="vertical-align: top"| WS[floor, y, x, item ,...] -> WS[...]
+* to_floor(floor) to_integer(x) to_string(item)
+* Will to_hallway(y) if y is not an Integer.
+* Will write the data starting out the location <x, y, floor> given. The write vector is the current conscious vector.
+|-
+| style="vertical-align: top"| <code><nowiki>UncommonDynamicDump</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>ud</nowiki></span></code>
+| style="vertical-align: top"| WS[v_floor, v_y, v_x, floor, y, x, item, ...] -> WS[...]
+* to_integer(v_floor) to_integer(v_y) to_integer(v_x) to_floor(floor) to_integer(x) to_string(item)
+* Will to_hallway(y) if y is not an Integer.
+* Will write the data starting out the location <x, y, floor> given using the given vector <x_v, y_v, floor_v>.
+|-
+| style="vertical-align: top"| <code><nowiki>UncommonDoubleDuplicate</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>uo</nowiki></span></code>
+| style="vertical-align: top"| WS[item2, item, ...] -> WS[item2, item, item2, item, ...]
+* Will duplicate the first two items on top of the Working Stack.
+|-
+| style="vertical-align: top"| <code><nowiki>Write</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>w</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[...]
+* Will write the item into rooms and the next rule will be after the last write.
+* If item is StackBottom item will become None.
+|
+ ~GATE
+ /ri44w.....~ha
+Memory
+ ri44wri44.~ha
+
+ ~GATE
+ /rs"cats"w+........~ha
+Memory
+ rs"cats"w+rs+cats+~ha
+
+ ~GATE
+ /rnw+........~ha
+Memory
+ rnwrn.......~ha
+
+ ~GATE
+ /rfw.........~ha
+Memory
+ rfwrf.......~ha
+|}
 
 '''Convert Functions'''<br>
 '''to_integer'''
@@ -441,6 +1080,48 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
 |-
 | style="text-align:center"| <code><nowiki>StackBottom</nowiki></code>
 | <code><nowiki>"StackBottom"</nowiki></code>
+|}
+
+'''to_hallway'''
+{| class="wikitable"
+!From
+!To
+|-
+| style="text-align:center"| <code><nowiki>Integer</nowiki></code>
+| <code><nowiki>Integer if hallway exist else 0, 0 if hallway exist else None</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>String</nowiki></code>
+| <code><nowiki>Integer if hallway name exist else len(String), len(String) if hallway exist else 0, 0 if hallway exist else None</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>None</nowiki></code>
+| <code><nowiki>0 if hallway exist else None</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>StackFrame</nowiki></code>
+| <code><nowiki>0 if hallway exist else None</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>StackBottom</nowiki></code>
+| <code><nowiki>0 if hallway exist else None</nowiki></code>
+|}
+
+'''to_floor'''
+{| class="wikitable"
+!From
+!To
+|-
+| style="text-align:center"| <code><nowiki>Integer</nowiki></code>
+| <code><nowiki>Integer</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>String</nowiki></code>
+| <code><nowiki>Finds floor level, if name does not exist then len.(String)</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>None</nowiki></code>
+| <code><nowiki>0</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>StackFrame</nowiki></code>
+| <code><nowiki>0</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>StackBottom</nowiki></code>
+| <code><nowiki>0</nowiki></code>
 |}
 
 == Scripts ==
@@ -497,13 +1178,13 @@ Although its not necessary for a backrooms interpreter to supply built-in script
 |-
 | style="vertical-align: top"| <code><nowiki>vars</nowiki></code>
 | style="vertical-align: top"| Allows a program to get, set and delete a variable.
-|-
-| style="vertical-align: top"| <code><nowiki>vars_load</nowiki></code>
-| style="vertical-align: top"| Used to include "vars".
 |
 * GET: WS[name, ...] -> WS[item, ...]
 * SET: WS[name item, ...] -> WS[...]
 * DEL: WS[name, ...] -> WS[...]
+|-
+| style="vertical-align: top"| <code><nowiki>vars_load</nowiki></code>
+| style="vertical-align: top"| Used to include "vars".
 |}
 
 == Programs ==
@@ -574,7 +1255,7 @@ Although its not necessary for a backrooms interpreter to supply built-in script
  /.     ^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<
  /.               rhp<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<.                                                                                            r
  />rs"READ"hcri1k0rs"FLIP"hc..............................................................................^
-  ~FLIP
+ ~FLIP
  />iaZV-ZVri0hr
  /    d  r
  /    h  i

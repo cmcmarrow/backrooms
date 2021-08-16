@@ -15,16 +15,16 @@ limitations under the License.
 
 This python module "backrooms" is a Esolang.
 
-backrooms was inspired by:
-    * backrooms Creepypasta/MEME
+Backrooms is inspired by:
+    * Backrooms Creepypasta/MEME
     * ASCIIDOTS Esolang
     * CISC Architecture
 
-backrooms was designed to be:
-    * hackable VIA memory overflow attacks and poor error handling.
-    * visually pleasing.
-    * enjoyable to write small/medium programs.
-    * capable to rewrite all of a program at run-time.
+Backrooms is designed to be:
+    * Hackable VIA memory overflow attacks and poor error handling.
+    * Visually pleasing.
+    * Enjoyable to write small/medium programs.
+    * Capable of rewriting all of a program at run-time.
 """
 
 
