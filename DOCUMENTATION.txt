@@ -164,14 +164,14 @@ The Translator throw's away any unnecessary <WHITESPACE>. The character "@" repr
 == Conscious ==
 The conscious "thread" holds its own state. Each conscious gets it own registers, work stack, hallway stack, branch condition, vectors and thread id.
 
-'''Registers:'''
+'''Registers'''<br>
 Each conscious gets 10 registers which can store all 5 data types.
 
-'''Work Stack:'''
+'''Work Stack''' <br>
 The work stack allows an unlimited amount of data to be pushed onto it. Note: StackBottom cant be pushed onto the stack.
 
-'''Hallway Stack:'''
-Hallway "Function" Stack preserves registers, current location and current vector. When a the program makes a hallway call.
+'''Hallway Stack'''<br>
+Hallway "Function" Stack preserves registers, current location and current vector. When a the program makes a hallway call. The first hallway with "GATE" to be found is the program entry point.
 
 '''Branch Condition'''
 {| class="wikitable"
@@ -211,26 +211,215 @@ Hallway "Function" Stack preserves registers, current location and current vecto
 
 == Rules ==
 The rules "instructions" do not care if they are read up, down, left, right, etc, as long as the order of characters matches the rules signature. If a character does not match a rule backrooms will run NOP.
+{| class="wikitable"
+!Name
+!Signatrue
+!Action
+!Example
+|-
+| style="vertical-align: top"| <code><nowiki>BackMirror</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>\</nowiki></span></code>
+| style="vertical-align: top"| Changes Vector based off the direction the conscious comes from.
+* <1, 0, 0> -> <0, -1, 0>
+* <0, -1, 0> -> <1, 0, 0>
+* <-1, 0, 0> -> <0, 1, 0>
+* <0, 1, 0> -> <-1, 0, 0>
+| style="vertical-align: top"|
+ ~GATE
+ /\    >~ha
+ />....\.....<
+ /     .     .
+ /     \.....^
+|-
+| style="vertical-align: top"| <code><nowiki>BranchLessThanZero</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>L</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to LESS_THAN_ZERO.
+|-
+| style="vertical-align: top"| <code><nowiki>BranchGreaterThanZero</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>G</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to GREATER_THAN_ZERO.
+|-
+| style="vertical-align: top"| <code><nowiki>BranchZero</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>Z</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to ZERO.
+|-
+| style="vertical-align: top"| <code><nowiki>BranchNotZero</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>N</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to NOT_ZERO.
+|-
+| style="vertical-align: top"| <code><nowiki>BranchIsInteger</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>I</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to IS_INTEGER.
+|-
+| style="vertical-align: top"| <code><nowiki>BranchIsString</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>S</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to IS_STRING.
+|-
+| style="vertical-align: top"| <code><nowiki>BranchIsNone</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>O</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to IS_NONE.
+|-
+| style="vertical-align: top"| <code><nowiki>BranchIsStackFrame</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>F</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to IS_STACK_FRAME.
+|-
+| style="vertical-align: top"| <code><nowiki>BranchIsStackBottom</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>B</nowiki></span></code>
+| style="vertical-align: top"| Sets branch condition to IS_STACK_BOTTOM.
+|-
+| style="vertical-align: top"| <code><nowiki>Cite</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>c</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[input, ...]
+* <nowiki>Gets input from user and removes all characters not in <INPUT_CHARACTER>.</nowiki>
+|
+ ~GATE
+ /ce~ha
+|-
+| style="vertical-align: top"| <code><nowiki>ClearStack</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>n</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[]
+* Clears the Stack of all data.
+|
+ ~GATE
+ /ri44rs"cats"ne~ha
+|-
+| style="vertical-align: top"| <code><nowiki>CoordinateX</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>x</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[x, ..]
+* Gets conscious current x coordinate.
+|-
+| style="vertical-align: top"| <code><nowiki>CoordinateY</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>y</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[y, ..]
+* Gets conscious current y coordinate.
+|-
+| style="vertical-align: top"| <code><nowiki>CoordinateFloor</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>f</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[floor, ..]
+* Gets conscious current floor coordinate.
+|-
+| style="vertical-align: top"| <code><nowiki>Decrement</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>-</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[results, ..]
+* results = to_integer(item) - 1
+* Subtract one from the item on top of the stack.
+|
+ ~GATE
+ /ri40-e~ha
+|-
+| style="vertical-align: top"| <code><nowiki>Duplicate</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>d</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[item, item, ...]
+* Copy the top item on the stack and place the copy onto the stack.
+|
+ ~GATE
+ /ri10depep~ha
+|-
+| style="vertical-align: top"| <code><nowiki>Echo</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>e</nowiki></span></code>
+| style="vertical-align: top"| WS[item, ...] -> WS[item, ...]
+* Print the item on top of the stack onto the console.
+|
+ ~GATE
+ /e~ha
+|-
+| style="vertical-align: top"| <code><nowiki>ForwardMirror</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>/</nowiki></span></code>
+| style="vertical-align: top"| Changes Vector based off the direction the conscious comes from.
+* <1, 0, 0> -> <0, 1, 0>
+* <0, 1, 0> -> <1, 0, 0>
+* <-1, 0, 0> -> <0, -1, 0>
+* <0, -1, 0> -> <-1, 0, 0>
+| style="vertical-align: top"|
+ ~GATE
+ /.....V
+ /     .   /.~ha
+ /     .   .
+ /   /./.../
+ /   . .
+ /   . .
+ /   >./
+|-
+| style="vertical-align: top"| <code><nowiki>HallwayCall</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hc</nowiki></span></code>
+| style="vertical-align: top"| WS[hallway, ...] -> WS[...]
+* to_hallway(hallway)
+* Jumps to a hallway on the same floor.
+* Saves registers onto the Function Stack.
+* If StackBottom is in a register it will be replaced by None when put on the Function Stack.
+* The return location and current vector will also be saved onto the Function Stack.
+| style="vertical-align: top"|
+ ~GATE
+ /ri3ri4rs"ADD"hc~ha
+ ~ADD
+ /iaephr
+|-
+| style="vertical-align: top"| <code><nowiki>HallwayLevelCall</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hl</nowiki></span></code>
+| style="vertical-align: top"| WS[hallway, floor, ...] -> WS[...]
+* to_hallway(hallway), to_floor(floor)
+* Jumps to a hallway on any floor.
+* Saves registers onto the Function Stack.
+* If StackBottom is in a register it will be replaced by None when put on the Function Stack.
+* The return location and current vector will also be saved onto the Function Stack.
+| style="vertical-align: top"|
+ ~GATE
+ /ri3ri4rs"math"rs"ADD"hl~ha
+ +math
+ ~ADD
+ /iaephr
+|-
+| style="vertical-align: top"| <code><nowiki>HallwayReturn</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hr</nowiki></span></code>
+| style="vertical-align: top"|
+* Restores registers.
+* Jump back to return location.
+* Restore vector.
+|-
+| style="vertical-align: top"| <code><nowiki>HallwayGetName</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hn</nowiki></span></code>
+| style="vertical-align: top"| WS[hallway, floor, ...] -> WS[name, ...]
+* to_integer(hallway), to_floor(floor)
+* If no name exist None will be given back.
+* The exact coordinates must be given.
+|
+ ~GATE
+ /fyhne~ha
+|-
+| style="vertical-align: top"| <code><nowiki>HallwayGetLocation</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hg</nowiki></span></code>
+| style="vertical-align: top"| WS[hallway, floor, ...] -> WS[name, ...]
+* to_floor(floor)
+* If no name exist None will be given back.
+* As long as the y coordinates is with in the hallway the hallway location will be found.
+* If coordinates are not in a hallway then None will be given back.
+|-
+| TODO write out all rules
+|
+ ~GATE
+ /fyhne~ha
+ |}
 
+'''Convert Functions'''<br>
 '''to_integer'''
 {| class="wikitable"
 !From
 !To
 |-
-| Integer
-| Integer
+| style="text-align:center"| <code><nowiki>Integer</nowiki></code>
+| <code><nowiki>Integer</nowiki></code>
 |-
-| String
-| len(String)
+| style="text-align:center"| <code><nowiki>String</nowiki></code>
+| <code><nowiki>len(String)</nowiki></code>
 |-
-| None
-| 0
+| style="text-align:center"| <code><nowiki>None</nowiki></code>
+| <code><nowiki>0</nowiki></code>
 |-
-| StackFrame
-| 0
+| style="text-align:center"| <code><nowiki>StackFrame</nowiki></code>
+| <code><nowiki>0</nowiki></code>
 |-
-| StackBottom
-| 0
+| style="text-align:center"| <code><nowiki>StackBottom</nowiki></code>
+| <code><nowiki>0</nowiki></code>
 |}
 
 '''to_string'''
@@ -238,20 +427,20 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
 !From
 !To
 |-
-| Integer
-| str(Integer)
+| style="text-align:center"| <code><nowiki>Integer</nowiki></code>
+| <code><nowiki>str(Integer)</nowiki></code>
 |-
-| String
-| String
+| style="text-align:center"| <code><nowiki>String</nowiki></code>
+| <code><nowiki>String</nowiki></code>
 |-
-| None
-| "None"
+| style="text-align:center"| <code><nowiki>None</nowiki></code>
+| <code><nowiki>"None"</nowiki></code>
 |-
-|StackFrame
-|"StackFrame"
+| style="text-align:center"| <code><nowiki>StackFrame</nowiki></code>
+| <code><nowiki>"StackFrame"</nowiki></code>
 |-
-|StackBottom
-|"StackBottom"
+| style="text-align:center"| <code><nowiki>StackBottom</nowiki></code>
+| <code><nowiki>"StackBottom"</nowiki></code>
 |}
 
 == Scripts ==
