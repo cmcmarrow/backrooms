@@ -33,7 +33,7 @@ Data can be stored across multiple rooms and can be read as instructions during 
 |-
 | Backrooms Creepypasta/MEME
 |-
-| ASCIIDOTS Esolang
+| [[AsciiDots]]
 |-
 | CISC Architecture
 |}
@@ -995,11 +995,17 @@ Memory
 |-
 | style="vertical-align: top"| <code><nowiki>UncommonSimpleDump</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>us</nowiki></span></code>
-| style="vertical-align: top"| WS[...] -> WS[...]
+| style="vertical-align: top"| WS[floor, y, x, item ,...] -> WS[...]
+* to_floor(floor) to_integer(x) to_string(item)
+* Will to_hallway(y) if y is not an Integer.
+* Will write the data starting out the location <x, y, floor> given. The write vector is the current conscious vector.
 |-
 | style="vertical-align: top"| <code><nowiki>UncommonDynamicDump</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>ud</nowiki></span></code>
-| style="vertical-align: top"| WS[...] -> WS[...]
+| style="vertical-align: top"| WS[v_floor, v_y, v_x, floor, y, x, item, ...] -> WS[...]
+* to_integer(v_floor) to_integer(v_y) to_integer(v_x) to_floor(floor) to_integer(x) to_string(item)
+* Will to_hallway(y) if y is not an Integer.
+* Will write the data starting out the location <x, y, floor> given using the given vector <x_v, y_v, floor_v>.
 |-
 | style="vertical-align: top"| <code><nowiki>UncommonDoubleDuplicate</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>uo</nowiki></span></code>
@@ -1009,6 +1015,28 @@ Memory
 | style="vertical-align: top"| <code><nowiki>Write</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>w</nowiki></span></code>
 | style="vertical-align: top"| WS[item, ...] -> WS[...]
+* Will write the item into rooms and the next rule will be after the last write.
+* If item is StackBottom item will become None.
+|
+ ~GATE
+ /ri44w.....~ha
+Memory
+ ri44wri44.~ha
+
+ ~GATE
+ /rs"cats"w+........~ha
+Memory
+ rs"cats"w+rs+cats+~ha
+
+ ~GATE
+ /rnw+........~ha
+Memory
+ rnwrn.......~ha
+
+ ~GATE
+ /rfw.........~ha
+Memory
+ rfwrf.......~ha
 |}
 
 '''Convert Functions'''<br>
