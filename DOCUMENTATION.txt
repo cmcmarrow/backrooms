@@ -393,6 +393,8 @@ The rules "instructions" do not care if they are read up, down, left, right, etc
 * If no name exist None will be given back.
 * As long as the y coordinates is with in the hallway the hallway location will be found.
 * If coordinates are not in a hallway then None will be given back.
+|-
+| TODO write out all rules
 |
  ~GATE
  /fyhne~ha
