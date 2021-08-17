@@ -1,3 +1,4 @@
+{{Lowercase}}
 '''backrooms''' uses a 3D memory space that holds a single Extended ASCII character per room “cell”.
 It has 10 registers and 2 built in stacks per conscious "thread". Rules “instructions” can be more than one character long.
 It also has 5 data types that can be used with the registers and stacks.
@@ -96,11 +97,11 @@ The Translator throw's away any unnecessary <WHITESPACE>. The character "@" repr
 * will write the row characters to memory
 * X axis will shift by 1 after every row character is written to memory
 * will shift the Y axis by -1 when all writes are done
-* X axis will reset to pervious value when all writes are done
+* X axis will reset to previous value when all writes are done
 |-
 | style="vertical-align: top"| <nowiki><COMMENT> ::= "#" { <COMMENT_CHARACTER> } <NEWLINE></nowiki>
 |
-* will just throws away the line
+* will just throw away the line
 |-
 | style="vertical-align: top"| <nowiki><HALLWAY> ::= "~" [ <NAME> | "@" ] <NEWLINE></nowiki>
 |
@@ -123,13 +124,13 @@ The Translator throw's away any unnecessary <WHITESPACE>. The character "@" repr
 | style="vertical-align: top"| <nowiki><PARALLEL> ::= "=" [<NAME> | "@"] [<NAME> | "@"] [<NUMBER> | "@"] [<NUMBER> | "@"] <NEWLINE></nowiki>
 |
 * will copy a floor onto another floor
-* arg 1 the name of the floor that will be copied
-* arg 2 the name assigned to the floor you copy to
-* arg 3 the location of the floor that will be copied
-* arg 4 the location which the floor will be copied onto
-* if arg 1 and arg 3 are both None then arg1 will default to current Floor
-* if arg 4 is None then default to current Floor - 1 and shift Floor by an additional -1 once all of the script has been read
-* cant provide both arg 1 and arg3 at the same time
+* arg 1: The name of the floor that will be copied
+* arg 2: The name assigned to the floor you copy to
+* arg 3: The location of the floor that will be copied
+* arg 4: The location which the floor will be copied onto
+* If arg 1 and arg 3 are both None then arg1 will default to current Floor
+* If arg 4 is None then default to current Floor - 1 and shift Floor by an additional -1 once all of the script has been read
+* Can't provide both arg 1 and arg3 at the same time
 |-
 | style="vertical-align: top"| <nowiki><X> ::= "X" <NUMBER> <NEWLINE></nowiki>
 |
@@ -1253,7 +1254,7 @@ Although its not necessary for a backrooms interpreter to supply built-in script
  /V>ri0k0pV        >p...V        >p...V        >p...V        >p...V        >p...V        >p...V        >p...V     rhp<
  /.     >2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV
  /.     ^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<
- /.               rhp<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<.                                                                                            r
+ /.               rhp<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<.
  />rs"READ"hcri1k0rs"FLIP"hc..............................................................................^
  ~FLIP
  />iaZV-ZVri0hr
