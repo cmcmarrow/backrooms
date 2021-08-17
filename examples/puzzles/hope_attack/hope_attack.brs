@@ -1,7 +1,6 @@
 # Try to get the program to halt!
 ~GATE
-/V
-/.             >~ha
+/V             >~ha
 /.             >
 /.             >
 />cw"................1V
