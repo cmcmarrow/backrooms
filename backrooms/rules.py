@@ -32,7 +32,7 @@ class RuleError(BackroomsError):
 
     @classmethod
     def bad_hope_start_character(cls, name: str):
-        return cls(f"Hope start character most be a single digit not: {repr(name)}!")
+        return cls(f"Hop start character most be a single digit not: {repr(name)}!")
 
 
 @lru_cache(2048)
@@ -1125,7 +1125,7 @@ class Halt(Rule):
                     yield
 
 
-class Hope(Rule):
+class Hop(Rule):
     def __init__(self,
                  start_character: str,
                  work_space: WorkSpace,
@@ -1133,7 +1133,7 @@ class Hope(Rule):
         if start_character not in string.digits:
             raise RuleError.bad_hope_start_character(start_character)
 
-        super(Hope, self).__init__(start_character, work_space, yields)
+        super(Hop, self).__init__(start_character, work_space, yields)
         self._jump_count = int(start_character)
 
     def __call__(self,
@@ -1158,67 +1158,67 @@ class Hope(Rule):
             conscious.step()
 
 
-class HopeOne(Hope):
+class HopOne(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeOne, self).__init__("1", work_space, yields)
+        super(HopOne, self).__init__("1", work_space, yields)
 
 
-class HopeTwo(Hope):
+class HopTwo(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeTwo, self).__init__("2", work_space, yields)
+        super(HopTwo, self).__init__("2", work_space, yields)
 
 
-class HopeThree(Hope):
+class HopThree(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeThree, self).__init__("3", work_space, yields)
+        super(HopThree, self).__init__("3", work_space, yields)
 
 
-class HopeFour(Hope):
+class HopFour(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeFour, self).__init__("4", work_space, yields)
+        super(HopFour, self).__init__("4", work_space, yields)
 
 
-class HopeFive(Hope):
+class HopFive(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeFive, self).__init__("5", work_space, yields)
+        super(HopFive, self).__init__("5", work_space, yields)
 
 
-class HopeSix(Hope):
+class HopSix(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeSix, self).__init__("6", work_space, yields)
+        super(HopSix, self).__init__("6", work_space, yields)
 
 
-class HopeSeven(Hope):
+class HopSeven(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeSeven, self).__init__("7", work_space, yields)
+        super(HopSeven, self).__init__("7", work_space, yields)
 
 
-class HopeEighth(Hope):
+class HopEighth(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeEighth, self).__init__("8", work_space, yields)
+        super(HopEighth, self).__init__("8", work_space, yields)
 
 
-class HopeNine(Hope):
+class HopNine(Hop):
     def __init__(self,
                  work_space: WorkSpace,
                  yields: bool):
-        super(HopeNine, self).__init__("9", work_space, yields)
+        super(HopNine, self).__init__("9", work_space, yields)
 
 
 class Increment(Rule):
@@ -2688,15 +2688,15 @@ RULES = (BackMirror,
          ForwardMirror,
          HallwayModule,
          Halt,
-         HopeOne,
-         HopeTwo,
-         HopeThree,
-         HopeFour,
-         HopeFive,
-         HopeSix,
-         HopeSeven,
-         HopeEighth,
-         HopeNine,
+         HopOne,
+         HopTwo,
+         HopThree,
+         HopFour,
+         HopFive,
+         HopSix,
+         HopSeven,
+         HopEighth,
+         HopNine,
          Increment,
          IntegerModule,
          LevelModule,

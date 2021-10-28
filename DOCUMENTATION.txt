@@ -464,74 +464,74 @@ Output
  ~GATE
  /~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeOne</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopOne</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>1</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over one room.
+* Will hop over one room.
 |
  ~GATE
  /1^~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeTwo</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopTwo</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>2</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over two rooms.
+* Will hop over two rooms.
 |
  ~GATE
  /2^^~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeThree</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopThree</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>3</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over three rooms.
+* Will hop over three rooms.
 |
  ~GATE
  /3^w^~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeFour</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopFour</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>4</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over four rooms.
+* Will hop over four rooms.
 |
  ~GATE
  /4^^^^~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeFive</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopFive</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>5</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over five rooms.
+* Will hop over five rooms.
 |
  ~GATE
  /5^OwO^~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeSix</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopSix</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>6</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over six rooms.
+* Will hop over six rooms.
 |
  ~GATE
  /6^^^^^^~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeSeven</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopSeven</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>7</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over seven rooms.
+* Will hop over seven rooms.
 |
  ~GATE
  /7^^^^^^^~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeEighth</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopEighth</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>8</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over eighth rooms.
+* Will hop over eighth rooms.
 |
  ~GATE
  /8^^^^^^^^~ha
 |-
-| style="vertical-align: top"| <code><nowiki>HopeNine</nowiki></code>
+| style="vertical-align: top"| <code><nowiki>HopNine</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>9</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[...]
-* Will hope over nine rooms.
+* Will hop over nine rooms.
 |
  ~GATE
  /9^^^^^^^^^~ha
