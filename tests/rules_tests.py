@@ -156,32 +156,32 @@ class RulesTests(unittest.TestCase):
     def test_halt_2(self):
         full_test("halt_2.brs")
 
-    def test_hope_one(self):
-        full_test("hope_one.brs")
+    def test_hop_one(self):
+        full_test("hop_one.brs")
 
-    def test_hope_two(self):
-        full_test("hope_two.brs")
+    def test_hop_two(self):
+        full_test("hop_two.brs")
 
-    def test_hope_three(self):
-        full_test("hope_three.brs")
+    def test_hop_three(self):
+        full_test("hop_three.brs")
 
-    def test_hope_four(self):
-        full_test("hope_four.brs")
+    def test_hop_four(self):
+        full_test("hop_four.brs")
 
-    def test_hope_five(self):
-        full_test("hope_five.brs")
+    def test_hop_five(self):
+        full_test("hop_five.brs")
 
-    def test_hope_six(self):
-        full_test("hope_six.brs")
+    def test_hop_six(self):
+        full_test("hop_six.brs")
 
-    def test_hope_seven(self):
-        full_test("hope_seven.brs")
+    def test_hop_seven(self):
+        full_test("hop_seven.brs")
 
-    def test_hope_eighth(self):
-        full_test("hope_eighth.brs")
+    def test_hop_eighth(self):
+        full_test("hop_eighth.brs")
 
-    def test_hope_nine(self):
-        full_test("hope_nine.brs")
+    def test_hop_nine(self):
+        full_test("hop_nine.brs")
 
     def test_increment(self):
         stream = full_test("increment.brs").get_output_stream()
