@@ -42,5 +42,5 @@ from . import whisper
 
 AUTHOR = "Charles McMarrow"
 
-MAJOR, MINOR, MAINTENANCE = 1, 0, 0
+MAJOR, MINOR, MAINTENANCE = 1, 0, 1
 VERSION = (MAJOR, MINOR, MAINTENANCE)
