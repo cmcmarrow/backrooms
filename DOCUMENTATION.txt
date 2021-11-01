@@ -947,6 +947,11 @@ Output
 Output
  cats0w0cats0w0
 |-
+| style="vertical-align: top"| <code><nowiki>ThreadUnLock</nowiki></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>tu</nowiki></span></code>
+| style="vertical-align: top"| WS[...] -> WS[...]
+* Will unlock a single thread lock if conscious has the lock.
+|-
 | style="vertical-align: top"| <code><nowiki>UncommonReadFlip</nowiki></code>
 | style="vertical-align: top"| <code><span style="color:red"><nowiki>ur</nowiki></span></code>
 | style="vertical-align: top"| WS[...] -> WS[item, ...]
