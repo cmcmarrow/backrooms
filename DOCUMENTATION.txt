@@ -51,163 +51,110 @@ Data can be stored across multiple rooms and can be read as instructions during 
 | Capable of rewriting all of a program at run-time.
 |}
 
-== Hello World ==
+== Programs ==
+=== Hello World ===
  ~GATE
  /rs"Hello World!"e~ha
 
-== Data Types ==
-{| class="wikitable"
-!Type
-!Description
-|-
-| style="text-align:center"| <code><nowiki>Integer</nowiki></code>
-| -infinity to infinity
-|-
-| style="text-align:center"| <code><nowiki>String</nowiki></code>
-| extended ASCII characters with a size 0 to infinity
-|-
-| style="text-align:center"| <code><nowiki>None</nowiki></code>
-| null
-|-
-| style="text-align:center"| <code><nowiki>StackFrame</nowiki></code>
-| indicates a frame on the stack
-|-
-| style="text-align:center"| <code><nowiki>StackBottom</nowiki></code>
-| indicates that the stack is empty
-|}
+=== bottles ===
+ ~GATE
+ /ri10ibri99>ers" bottles of beer on the wall, "epers" bottles of beer."epzez-V
+ /V".llaw eht no reeb fo selttob "srepe" ,dnuora ti ssap dna nwod eno ekaT"sr.<
+ /e>e~ha    1 >rs"1 bottle of beer on the wall, 1 bottle of beer."epers"Take one"epV
+ /pp        p pVe".llaw eht no reeb fo selttob erom on ,dnuora ti ssap dna nwod "sr<
+ /ze        . p>peers"No more bottles of beer on the wall, no more bottles of beer"V
+ />...eezd-N^.^                                                                    e
+ / ^".llaw eht no reeb fo selttob 99 ,erom emos yub dna erots eht ot oG"srepe"."srp<
 
-== Memory ==
-backrooms memory space is 3D with the axis X, Y, Floor every room "cell" holds <CHARACTER> and the default character is " ". Every axis is an integer. It is infinite in every direction. backrooms also allows some parts of the 3D memory space to be named <NAME>.
+=== [[truth-machine]] ===
+ # 1 will echo forever and 0 will echo a single time.
+ # Any other input will default to a 1.
+ ~GATE
+ /cicOvZVpri1V
+ /    p >.e>NV~ha
+ /    >ri1e^e<
 
-'''Floor:'''
-Every Floor can be given its own name <NAME> or have the name of None. During runtime you can change or remove names. No two floors can have the same name. The last floor to be given the same name will keep it. The others will default to None. A Floor cord looks like <Floor>.
+=== fibonacci ===
+ ~GATE
+ /V         ah~<
+ />ri0>dri18isZ^pdrs"FIB"V
+ /    ^+pe" "srpech......<
+ ~FIB
+ />ZVdri3isLVpd-rs"FIB"hcz--rs"FIB"hciahr
+ /rh<rh1irpp<
 
-'''Hallways:'''
-Every Floor can be given multiple Hallways. A Hallway an be given its own name <NAME> or have the name of None or not exist. A Hallway cord looks like <Y, Floor> X is all ways 0. No two hallways on the same floor can have the same name. The last hallway to be given the same name will keep it. The others will default to None on that floor.
+=== tic tac toe ===
+ ~GATE
+ />ri0>...+dri10isNVpprs"x"k0pri10ibrs"Tic Tac Toe!"epepri0V
+ /.   .            p           a                    >p+....>dri9isNVpprs"E_BOARD"hcrs"Cats!"ep...V
+ /.   .            d           h   >..rs"C_BOARD"hcZ^rs"E_BOARD"hceprs" won!"epri10ibeppVpebi01ir<
+ /.   ^..hujbz"k"sr<           ~   ^................huch"DRAOB_U"sr<                    .
+ /^...........................p^Zeb"a"srcpe+ >>+srpebi01irpe+!niaga yalp ot "a" retnE+sr<
+ # Echo board
+ ~E_BOARD
+ />ri10ibrs"#"s1epes2epes3epzezeeeeezezs4epes5epes6epzezeeeeezezs7epes8epes9eppephr
+ # Update board
+ ~U_BOARD
+ />rs"rs+"s0bjrs"+k"bjV                      >pbjrs"prs+"bjs0rs"x"beZVprs"o">bjrs"+k0p">bjhr
+ /  Vpe0sch"DRAOB_E"sr<.pebi01irpe"RORRE"srpp^Nib"123456789"sr<      >prs"x"^
+ /  >rs": "epcdri10ibeprs"1~2~3~4~5~6~7~8~9"biZVpdrs"s"zbjuh..^
+ /                    ^....ebi01irpe"RORRE"srpp<
+ # Check for winner
+ ~C_BOARD
+ /V                         >ppzphr
+ />s5ds1beNVpd.....V    >beN^ppp..V                  >ppzphr
+ /         >pds9beZVphr ^oupp<    3            V..ppp^Neb<
+ /                 >pds3beNVpd.....V           .    >ppuo^
+ /                         >pds7beZVphr  V+....<pppp^Nebou..hujbz"s"srai3ir<
+ /                           2     >ppri0>dri3isNVpprs""hr                 z
+ /         >rs"s"zbjuh..uobeN^pppp>d+....drs"s"z1pbjuh..zri3iadrs"s"zbjuh..^
+ /         ^+z..hujbz"s"srd+z..hujbz"s"srd+mi3ird<
 
-== Translator ==
-The translator "assembler" of backrooms simplifies the way you can load a program into backrooms. It will ingest a script "file" or scripts and raise a syntax error if one is present.
-The Translator throw's away any unnecessary <WHITESPACE>. The character "@" represents the data type None and the translator will replace "@" when necessary.
-{| class="wikitable"
-! Translator Definitions
-! Description
-|-
-| style="vertical-align: top"| <nowiki><ROW> ::= "/" { <ROW_CHARACTER> } <NEWLINE></nowiki>
-|
-* will write the row characters to memory
-* X axis will shift by 1 after every row character is written to memory
-* will shift the Y axis by -1 when all writes are done
-* X axis will reset to previous value when all writes are done
-|-
-| style="vertical-align: top"| <nowiki><COMMENT> ::= "#" { <COMMENT_CHARACTER> } <NEWLINE></nowiki>
-|
-* will just throw away the line
-|-
-| style="vertical-align: top"| <nowiki><HALLWAY> ::= "~" [ <NAME> | "@" ] <NEWLINE></nowiki>
-|
-* will make and set a hallway with the current location
-|-
-| style="vertical-align: top"| <nowiki><FLOOR> ::= "+" [ <NAME> | "@" ] <NEWLINE></nowiki>
-|
-* will set the name of a floor of the next floor
-* will shift Floor axis by -1
-|-
-| style="vertical-align: top"| <nowiki><INCLUDE> ::= "%" <NAME> <NEWLINE></nowiki>
-|
-* will include another script if not all ready included
-|-
-| style="vertical-align: top"| <nowiki><MUST_INCLUDE> ::= "!" <NAME> <NEWLINE></nowiki>
-|
-* will include another script if not all ready included
-* will raise an error if script is all ready included
-|-
-| style="vertical-align: top"| <nowiki><PARALLEL> ::= "=" [<NAME> | "@"] [<NAME> | "@"] [<NUMBER> | "@"] [<NUMBER> | "@"] <NEWLINE></nowiki>
-|
-* will copy a floor onto another floor
-* arg 1: The name of the floor that will be copied
-* arg 2: The name assigned to the floor you copy to
-* arg 3: The location of the floor that will be copied
-* arg 4: The location which the floor will be copied onto
-* If arg 1 and arg 3 are both None then arg1 will default to current Floor
-* If arg 4 is None then default to current Floor - 1 and shift Floor by an additional -1 once all of the script has been read
-* Can't provide both arg 1 and arg3 at the same time
-|-
-| style="vertical-align: top"| <nowiki><X> ::= "X" <NUMBER> <NEWLINE></nowiki>
-|
-* will set the current X location
-|-
-| style="vertical-align: top"| <nowiki><XS> ::= "XS" <NUMBER> <NEWLINE></nowiki>
-|
-* will shift the current X location
-|-
-| style="vertical-align: top"| <nowiki><Y> ::= "Y" <NUMBER> <NEWLINE></nowiki>
-|
-* will set the current Y location
-|-
-| style="vertical-align: top"| <nowiki><YS> ::= "YS" <NUMBER> <NEWLINE></nowiki>
-|
-* will shift the current Y location
-|-
-| style="vertical-align: top"| <nowiki><F> ::= "F" <NUMBER> <NEWLINE></nowiki>
-|
-* will set the current Floor location
-|-
-| style="vertical-align: top"| <nowiki><FS> ::= "FS" <NUMBER> <NEWLINE></nowiki>
-|
-* will shift the current Floor location
-|-
-| style="vertical-align: top"| <nowiki><Translator> ::= {<ROW> | <COMMENT> | <HALLWAY> | <FLOOR> | <INCLUDE> | <MUST_INCLUDE> | <PARALLEL> | <X> | <XS> | <Y> | <YS> | <F> | <FS>}</nowiki>
-|
-* root definition for translator
-|}
+=== 8 bit ===
+ ~GATE
+ /V       >p~ha
+ />ri512>Z^rs"READ"hcrs"INC"hcbjV
+ /      ^-pebi01irpejbjbjbjbjbjb<
+ ~READ
+ />V
+ ~INC
+ /V>ri0k0pV        >p...V        >p...V        >p...V        >p...V        >p...V        >p...V        >p...V     rhp<
+ /.     >2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV
+ /.     ^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<
+ /.               rhp<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<.
+ />rs"READ"hcri1k0rs"FLIP"hc..............................................................................^
+ ~FLIP
+ />iaZV-ZVri0hr
+ /    d  r
+ /    h  i
+ /    r  1
+ /       h
+ /       r
 
-== Conscious ==
-The conscious "thread" holds its own state. Each conscious gets it own registers, work stack, hallway stack, branch condition, vectors and thread id.
-
-'''Registers'''<br>
-Each conscious gets 10 registers which can store all 5 data types.
-
-'''Work Stack''' <br>
-The work stack allows an unlimited amount of data to be pushed onto it. Note: StackBottom cant be pushed onto the stack.
-
-'''Hallway Stack'''<br>
-Hallway "Function" Stack preserves registers, current location and current vector. When a the program makes a hallway call. The first hallway with "GATE" to be found is the program entry point.
-
-'''Branch Condition'''
-{| class="wikitable"
-! Conditions
-! Operation
-|-
-| style="text-align:center"| <code><nowiki>Clear</nowiki></code>
-| <code><nowiki>True</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>LESS_THAN_ZERO</nowiki></code>
-| <code><nowiki>to_integer(item) < 0</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>GREATER_THAN_ZERO</nowiki></code>
-| <code><nowiki>to_integer(item) > 0</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>ZERO</nowiki></code>
-| <code><nowiki>to_integer(item) == 0</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>NOT_ZERO</nowiki></code>
-| <code><nowiki>to_integer(item) != 0</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>IS_INTEGER</nowiki></code>
-| <code><nowiki>type(item) == Integer</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>IS_STRING</nowiki></code>
-| <code><nowiki>type(item) == String</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>IS_NONE</nowiki></code>
-| <code><nowiki>type(item) == None</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>IS_STACK_FRAME</nowiki></code>
-| <code><nowiki>type(item) == StackFrame</nowiki></code>
-|-
-| style="text-align:center"| <code><nowiki>IS_STACK_BOTTOM</nowiki></code>
-| <code><nowiki>type(item) == StackBottom</nowiki></code>
-|}
+=== dynamic ===
+ ~GATE
+ /rs"Vrs+hello!+epri10ibep"ri47ri0ri0ri0ri-1ri0ud
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /
+ /                                               >~ha
 
 == Rules ==
 The rules "instructions" do not care if they are read up, down, left, right, etc, as long as the order of characters matches the rules signature. If a character does not match a rule backrooms will run NOP.
@@ -1130,6 +1077,160 @@ Memory
 | <code><nowiki>0</nowiki></code>
 |}
 
+== Memory ==
+backrooms memory space is 3D with the axis X, Y, Floor every room "cell" holds <CHARACTER> and the default character is " ". Every axis is an integer. It is infinite in every direction. backrooms also allows some parts of the 3D memory space to be named <NAME>.
+
+'''Floor:'''
+Every Floor can be given its own name <NAME> or have the name of None. During runtime you can change or remove names. No two floors can have the same name. The last floor to be given the same name will keep it. The others will default to None. A Floor cord looks like <Floor>.
+
+'''Hallways:'''
+Every Floor can be given multiple Hallways. A Hallway an be given its own name <NAME> or have the name of None or not exist. A Hallway cord looks like <Y, Floor> X is all ways 0. No two hallways on the same floor can have the same name. The last hallway to be given the same name will keep it. The others will default to None on that floor.
+
+== Data Types ==
+{| class="wikitable"
+!Type
+!Description
+|-
+| style="text-align:center"| <code><nowiki>Integer</nowiki></code>
+| -infinity to infinity
+|-
+| style="text-align:center"| <code><nowiki>String</nowiki></code>
+| extended ASCII characters with a size 0 to infinity
+|-
+| style="text-align:center"| <code><nowiki>None</nowiki></code>
+| null
+|-
+| style="text-align:center"| <code><nowiki>StackFrame</nowiki></code>
+| indicates a frame on the stack
+|-
+| style="text-align:center"| <code><nowiki>StackBottom</nowiki></code>
+| indicates that the stack is empty
+|}
+
+== Conscious ==
+The conscious "thread" holds its own state. Each conscious gets it own registers, work stack, hallway stack, branch condition, vectors and thread id.
+
+'''Registers'''<br>
+Each conscious gets 10 registers which can store all 5 data types.
+
+'''Work Stack''' <br>
+The work stack allows an unlimited amount of data to be pushed onto it. Note: StackBottom cant be pushed onto the stack.
+
+'''Hallway Stack'''<br>
+Hallway "Function" Stack preserves registers, current location and current vector. When a the program makes a hallway call. The first hallway with "GATE" to be found is the program entry point.
+
+'''Branch Condition'''
+{| class="wikitable"
+! Conditions
+! Operation
+|-
+| style="text-align:center"| <code><nowiki>Clear</nowiki></code>
+| <code><nowiki>True</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>LESS_THAN_ZERO</nowiki></code>
+| <code><nowiki>to_integer(item) < 0</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>GREATER_THAN_ZERO</nowiki></code>
+| <code><nowiki>to_integer(item) > 0</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>ZERO</nowiki></code>
+| <code><nowiki>to_integer(item) == 0</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>NOT_ZERO</nowiki></code>
+| <code><nowiki>to_integer(item) != 0</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>IS_INTEGER</nowiki></code>
+| <code><nowiki>type(item) == Integer</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>IS_STRING</nowiki></code>
+| <code><nowiki>type(item) == String</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>IS_NONE</nowiki></code>
+| <code><nowiki>type(item) == None</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>IS_STACK_FRAME</nowiki></code>
+| <code><nowiki>type(item) == StackFrame</nowiki></code>
+|-
+| style="text-align:center"| <code><nowiki>IS_STACK_BOTTOM</nowiki></code>
+| <code><nowiki>type(item) == StackBottom</nowiki></code>
+|}
+
+== Translator ==
+The translator "assembler" of backrooms simplifies the way you can load a program into backrooms. It will ingest a script "file" or scripts and raise a syntax error if one is present.
+The Translator throw's away any unnecessary <WHITESPACE>. The character "@" represents the data type None and the translator will replace "@" when necessary.
+{| class="wikitable"
+! Translator Definitions
+! Description
+|-
+| style="vertical-align: top"| <nowiki><ROW> ::= "/" { <ROW_CHARACTER> } <NEWLINE></nowiki>
+|
+* will write the row characters to memory
+* X axis will shift by 1 after every row character is written to memory
+* will shift the Y axis by -1 when all writes are done
+* X axis will reset to previous value when all writes are done
+|-
+| style="vertical-align: top"| <nowiki><COMMENT> ::= "#" { <COMMENT_CHARACTER> } <NEWLINE></nowiki>
+|
+* will just throw away the line
+|-
+| style="vertical-align: top"| <nowiki><HALLWAY> ::= "~" [ <NAME> | "@" ] <NEWLINE></nowiki>
+|
+* will make and set a hallway with the current location
+|-
+| style="vertical-align: top"| <nowiki><FLOOR> ::= "+" [ <NAME> | "@" ] <NEWLINE></nowiki>
+|
+* will set the name of a floor of the next floor
+* will shift Floor axis by -1
+|-
+| style="vertical-align: top"| <nowiki><INCLUDE> ::= "%" <NAME> <NEWLINE></nowiki>
+|
+* will include another script if not all ready included
+|-
+| style="vertical-align: top"| <nowiki><MUST_INCLUDE> ::= "!" <NAME> <NEWLINE></nowiki>
+|
+* will include another script if not all ready included
+* will raise an error if script is all ready included
+|-
+| style="vertical-align: top"| <nowiki><PARALLEL> ::= "=" [<NAME> | "@"] [<NAME> | "@"] [<NUMBER> | "@"] [<NUMBER> | "@"] <NEWLINE></nowiki>
+|
+* will copy a floor onto another floor
+* arg 1: The name of the floor that will be copied
+* arg 2: The name assigned to the floor you copy to
+* arg 3: The location of the floor that will be copied
+* arg 4: The location which the floor will be copied onto
+* If arg 1 and arg 3 are both None then arg1 will default to current Floor
+* If arg 4 is None then default to current Floor - 1 and shift Floor by an additional -1 once all of the script has been read
+* Can't provide both arg 1 and arg3 at the same time
+|-
+| style="vertical-align: top"| <nowiki><X> ::= "X" <NUMBER> <NEWLINE></nowiki>
+|
+* will set the current X location
+|-
+| style="vertical-align: top"| <nowiki><XS> ::= "XS" <NUMBER> <NEWLINE></nowiki>
+|
+* will shift the current X location
+|-
+| style="vertical-align: top"| <nowiki><Y> ::= "Y" <NUMBER> <NEWLINE></nowiki>
+|
+* will set the current Y location
+|-
+| style="vertical-align: top"| <nowiki><YS> ::= "YS" <NUMBER> <NEWLINE></nowiki>
+|
+* will shift the current Y location
+|-
+| style="vertical-align: top"| <nowiki><F> ::= "F" <NUMBER> <NEWLINE></nowiki>
+|
+* will set the current Floor location
+|-
+| style="vertical-align: top"| <nowiki><FS> ::= "FS" <NUMBER> <NEWLINE></nowiki>
+|
+* will shift the current Floor location
+|-
+| style="vertical-align: top"| <nowiki><Translator> ::= {<ROW> | <COMMENT> | <HALLWAY> | <FLOOR> | <INCLUDE> | <MUST_INCLUDE> | <PARALLEL> | <X> | <XS> | <Y> | <YS> | <F> | <FS>}</nowiki>
+|
+* root definition for translator
+|}
+
 == Scripts ==
 * Scripts can have the file extension ".brs" or no extension at all.
 * Other Scripts in the same main directory can be included.
@@ -1192,107 +1293,6 @@ Although its not necessary for a backrooms interpreter to supply built-in script
 | style="vertical-align: top"| <code><nowiki>vars_load</nowiki></code>
 | style="vertical-align: top"| Used to include "vars".
 |}
-
-== Programs ==
-=== bottles ===
- ~GATE
- /ri10ibri99>ers" bottles of beer on the wall, "epers" bottles of beer."epzez-V
- /V".llaw eht no reeb fo selttob "srepe" ,dnuora ti ssap dna nwod eno ekaT"sr.<
- /e>e~ha    1 >rs"1 bottle of beer on the wall, 1 bottle of beer."epers"Take one"epV
- /pp        p pVe".llaw eht no reeb fo selttob erom on ,dnuora ti ssap dna nwod "sr<
- /ze        . p>peers"No more bottles of beer on the wall, no more bottles of beer"V
- />...eezd-N^.^                                                                    e
- / ^".llaw eht no reeb fo selttob 99 ,erom emos yub dna erots eht ot oG"srepe"."srp<
-
-=== [[truth-machine]] ===
- # 1 will echo forever and 0 will echo a single time.
- # Any other input will default to a 1.
- ~GATE
- /cicOvZVpri1V
- /    p >.e>NV~ha
- /    >ri1e^e<
-
-=== fibonacci ===
- ~GATE
- /V         ah~<
- />ri0>dri18isZ^pdrs"FIB"V
- /    ^+pe" "srpech......<
- ~FIB
- />ZVdri3isLVpd-rs"FIB"hcz--rs"FIB"hciahr
- /rh<rh1irpp<
-
-=== tic tac toe ===
- ~GATE
- />ri0>...+dri10isNVpprs"x"k0pri10ibrs"Tic Tac Toe!"epepri0V
- /.   .            p           a                    >p+....>dri9isNVpprs"E_BOARD"hcrs"Cats!"ep...V
- /.   .            d           h   >..rs"C_BOARD"hcZ^rs"E_BOARD"hceprs" won!"epri10ibeppVpebi01ir<
- /.   ^..hujbz"k"sr<           ~   ^................huch"DRAOB_U"sr<                    .
- /^...........................p^Zeb"a"srcpe+ >>+srpebi01irpe+!niaga yalp ot "a" retnE+sr<
- # Echo board
- ~E_BOARD
- />ri10ibrs"#"s1epes2epes3epzezeeeeezezs4epes5epes6epzezeeeeezezs7epes8epes9eppephr
- # Update board
- ~U_BOARD
- />rs"rs+"s0bjrs"+k"bjV                      >pbjrs"prs+"bjs0rs"x"beZVprs"o">bjrs"+k0p">bjhr
- /  Vpe0sch"DRAOB_E"sr<.pebi01irpe"RORRE"srpp^Nib"123456789"sr<      >prs"x"^
- /  >rs": "epcdri10ibeprs"1~2~3~4~5~6~7~8~9"biZVpdrs"s"zbjuh..^
- /                    ^....ebi01irpe"RORRE"srpp<
- # Check for winner
- ~C_BOARD
- /V                         >ppzphr
- />s5ds1beNVpd.....V    >beN^ppp..V                  >ppzphr
- /         >pds9beZVphr ^oupp<    3            V..ppp^Neb<
- /                 >pds3beNVpd.....V           .    >ppuo^
- /                         >pds7beZVphr  V+....<pppp^Nebou..hujbz"s"srai3ir<
- /                           2     >ppri0>dri3isNVpprs""hr                 z
- /         >rs"s"zbjuh..uobeN^pppp>d+....drs"s"z1pbjuh..zri3iadrs"s"zbjuh..^
- /         ^+z..hujbz"s"srd+z..hujbz"s"srd+mi3ird<
-
-=== 8 bit ===
- ~GATE
- /V       >p~ha
- />ri512>Z^rs"READ"hcrs"INC"hcbjV
- /      ^-pebi01irpejbjbjbjbjbjb<
- ~READ
- />V
- ~INC
- /V>ri0k0pV        >p...V        >p...V        >p...V        >p...V        >p...V        >p...V        >p...V     rhp<
- /.     >2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV>2>1wri0s0Z^pV
- /.     ^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<
- /.               rhp<^................ch"PILF"sr<^................ch"PILF"sr<^................ch"PILF"sr<.
- />rs"READ"hcri1k0rs"FLIP"hc..............................................................................^
- ~FLIP
- />iaZV-ZVri0hr
- /    d  r
- /    h  i
- /    r  1
- /       h
- /       r
-
-=== dynamic ===
- ~GATE
- /rs"Vrs+hello!+epri10ibep"ri47ri0ri0ri0ri-1ri0ud
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /
- /                                               >~ha
 
 == Meta-Language ==
 {| class="wikitable"
