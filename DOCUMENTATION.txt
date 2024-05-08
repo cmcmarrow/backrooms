@@ -370,7 +370,7 @@ Output
 * Will make a hallway and remove the hallway with the same name on the same floor if it exists.
 |-
 | style="vertical-align: top"| <code><nowiki>HallwayRemove</nowiki></code>
-| style="vertical-align: top"| <code><span style="color:red"><nowiki>hr</nowiki></span></code>
+| style="vertical-align: top"| <code><span style="color:red"><nowiki>hd</nowiki></span></code>
 | style="vertical-align: top"| WS[hallway, floor, ...] -> WS[...]
 * to_hallway(hallway), to_floor(floor)
 * Will remove the specified hallway.
